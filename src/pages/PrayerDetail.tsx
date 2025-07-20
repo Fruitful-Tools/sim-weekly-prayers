@@ -152,18 +152,19 @@ const PrayerDetail = () => {
 
   // Safely extract translation and ensure all values are strings
   const translation = prayer?.prayer_translations?.[0];
-  const safeTitle = (translation?.title && typeof translation.title === 'string') ? translation.title : 'Prayer';
-  const rawContent = (translation?.content && typeof translation.content === 'string') ? translation.content : 'Weekly Prayer';
+  const safeTitle = String((translation?.title && typeof translation.title === 'string') ? translation.title : 'Prayer');
+  const rawContent = String((translation?.content && typeof translation.content === 'string') ? translation.content : 'Weekly Prayer');
   
   // Sanitize content for meta descriptions - remove newlines and limit length
-  const safeContent = rawContent
+  const safeContent = String(rawContent)
     .replace(/\n/g, ' ')
     .replace(/\s+/g, ' ')
+    .replace(/[^\w\s\u4e00-\u9fff]/g, '') // Remove special characters except Chinese characters
     .trim()
     .substring(0, 160);
   
-  const safeImageUrl = (prayer?.image_url && typeof prayer.image_url === 'string') ? prayer.image_url : '';
-  const currentUrl = `${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`;
+  const safeImageUrl = String((prayer?.image_url && typeof prayer.image_url === 'string') ? prayer.image_url : '');
+  const currentUrl = String(`${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`);
 
   console.log('Prayer data:', {
     prayer,
