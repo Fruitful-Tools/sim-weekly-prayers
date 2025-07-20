@@ -11,7 +11,7 @@ const LanguageSwitcher = () => {
   };
 
   const getCurrentLanguageLabel = () => {
-    return i18n.language === 'en' ? 'English' : '繁體中文';
+    return i18n.language === 'en' ? '繁體中文' : 'English';
   };
 
   return (

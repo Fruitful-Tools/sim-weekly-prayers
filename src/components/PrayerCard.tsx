@@ -35,46 +35,42 @@ const PrayerCard = ({ prayer, isPreview = false }: PrayerCardProps) => {
   };
 
   return (
-    <Card className="group h-full overflow-hidden bg-gradient-to-br from-card to-card/80 border-border hover:shadow-prayer transition-all duration-300 hover:-translate-y-1">
-      {prayer.image_url && (
-        <div className="overflow-hidden">
-          <img 
-            src={prayer.image_url} 
-            alt={prayer.title}
-            className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-300"
-          />
-        </div>
-      )}
-      
-      <CardHeader className="pb-3">
-        <div className="flex items-center text-xs text-muted-foreground mb-2">
-          <Calendar className="h-3 w-3 mr-1" />
-          {formatDate(prayer.week_date)}
-        </div>
-        <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-          {prayer.title}
-        </h3>
-      </CardHeader>
-      
-      <CardContent className="pt-0">
-        {isPreview && (
-          <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-            {getPreviewContent(prayer.content)}
-          </p>
+    <Link to={`/prayer/${prayer.week_date}`} className="block h-full">
+      <Card className="group h-full overflow-hidden bg-gradient-to-br from-card to-card/80 border-border hover:shadow-prayer transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+        {prayer.image_url && (
+          <div className="overflow-hidden">
+            <img 
+              src={prayer.image_url} 
+              alt={prayer.title}
+              className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-300"
+            />
+          </div>
         )}
         
-        <Link to={`/prayer/${prayer.week_date}`}>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className="w-full justify-between group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-          >
+        <CardHeader className="pb-3">
+          <div className="flex items-center text-xs text-muted-foreground mb-2">
+            <Calendar className="h-3 w-3 mr-1" />
+            {formatDate(prayer.week_date)}
+          </div>
+          <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+            {prayer.title}
+          </h3>
+        </CardHeader>
+        
+        <CardContent className="pt-0">
+          {isPreview && (
+            <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+              {getPreviewContent(prayer.content)}
+            </p>
+          )}
+          
+          <div className="w-full justify-between group-hover:bg-primary group-hover:text-primary-foreground transition-colors flex items-center text-sm font-medium">
             {t('prayer.readMore')}
             <ChevronRight className="h-4 w-4" />
-          </Button>
-        </Link>
-      </CardContent>
-    </Card>
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
   );
 };
 
