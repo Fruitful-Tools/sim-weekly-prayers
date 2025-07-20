@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ImagePlus, Upload, X } from 'lucide-react';
+import { ImagePlus, Upload, X, Link } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -33,18 +33,38 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(prayer?.image_url || null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageInputMode, setImageInputMode] = useState<'upload' | 'url'>('upload');
 
   const form = useForm<PrayerFormData>({
     defaultValues: {
-      week_date: prayer?.week_date || new Date().toISOString().split('T')[0],
-      image_url: prayer?.image_url || '',
-      en_title: prayer?.translations?.find((t: any) => t.language === 'en')?.title || '',
-      en_content: prayer?.translations?.find((t: any) => t.language === 'en')?.content || '',
-      zh_title: prayer?.translations?.find((t: any) => t.language === 'zh-TW')?.title || '',
-      zh_content: prayer?.translations?.find((t: any) => t.language === 'zh-TW')?.content || '',
+      week_date: new Date().toISOString().split('T')[0],
+      image_url: '',
+      en_title: '',
+      en_content: '',
+      zh_title: '',
+      zh_content: '',
     },
   });
+
+  // Reset form when prayer prop changes or dialog opens
+  useEffect(() => {
+    if (open) {
+      const defaultValues = {
+        week_date: prayer?.week_date || new Date().toISOString().split('T')[0],
+        image_url: prayer?.image_url || '',
+        en_title: prayer?.translations?.find((t: any) => t.language === 'en')?.title || '',
+        en_content: prayer?.translations?.find((t: any) => t.language === 'en')?.content || '',
+        zh_title: prayer?.translations?.find((t: any) => t.language === 'zh-TW')?.title || '',
+        zh_content: prayer?.translations?.find((t: any) => t.language === 'zh-TW')?.content || '',
+      };
+      
+      form.reset(defaultValues);
+      setImagePreview(prayer?.image_url || null);
+      setImageFile(null);
+      setImageInputMode('upload');
+    }
+  }, [open, prayer, form]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -59,6 +79,12 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
     setImageFile(null);
     setImagePreview(null);
     form.setValue('image_url', '');
+  };
+
+  const handleImageUrlChange = (url: string) => {
+    setImagePreview(url || null);
+    setImageFile(null);
+    form.setValue('image_url', url);
   };
 
   const uploadImage = async (file: File): Promise<string | null> => {
@@ -213,43 +239,102 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
               )}
             />
 
-            {/* Image Upload */}
-            <div className="space-y-2">
+            {/* Image Upload/URL */}
+            <div className="space-y-4">
               <label className="text-sm font-medium">{t('prayer.image')}</label>
-              {imagePreview ? (
-                <div className="relative">
-                  <img 
-                    src={imagePreview} 
-                    alt="Prayer preview" 
-                    className="w-full h-48 object-cover rounded-lg"
-                  />
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    className="absolute top-2 right-2"
-                    onClick={removeImage}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-                  <ImagePlus className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground mb-4">{t('prayer.uploadImage')}</p>
-                  <Button type="button" variant="outline" onClick={() => document.getElementById('image-upload')?.click()}>
+              
+              {/* Toggle between upload and URL */}
+              <Tabs value={imageInputMode} onValueChange={(value) => setImageInputMode(value as 'upload' | 'url')}>
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="upload">
                     <Upload className="h-4 w-4 mr-2" />
-                    {t('prayer.selectImage')}
-                  </Button>
-                  <input
-                    id="image-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
+                    Upload
+                  </TabsTrigger>
+                  <TabsTrigger value="url">
+                    <Link className="h-4 w-4 mr-2" />
+                    URL
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="upload" className="space-y-2">
+                  {imagePreview && !form.watch('image_url')?.startsWith('http') ? (
+                    <div className="relative">
+                      <img 
+                        src={imagePreview} 
+                        alt="Prayer preview" 
+                        className="w-full h-48 object-cover rounded-lg"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="absolute top-2 right-2"
+                        onClick={removeImage}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
+                      <ImagePlus className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                      <p className="text-muted-foreground mb-4">{t('prayer.uploadImage')}</p>
+                      <Button type="button" variant="outline" onClick={() => document.getElementById('image-upload')?.click()}>
+                        <Upload className="h-4 w-4 mr-2" />
+                        {t('prayer.selectImage')}
+                      </Button>
+                      <input
+                        id="image-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                      />
+                    </div>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="url" className="space-y-2">
+                  <FormField
+                    control={form.control}
+                    name="image_url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Image URL</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="https://example.com/image.jpg"
+                            {...field}
+                            onChange={(e) => {
+                              field.onChange(e);
+                              handleImageUrlChange(e.target.value);
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
-              )}
+                  {imagePreview && form.watch('image_url')?.startsWith('http') && (
+                    <div className="relative">
+                      <img 
+                        src={imagePreview} 
+                        alt="Prayer preview" 
+                        className="w-full h-48 object-cover rounded-lg"
+                        onError={() => setImagePreview(null)}
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="absolute top-2 right-2"
+                        onClick={removeImage}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </TabsContent>
+              </Tabs>
             </div>
 
             {/* Bilingual Content */}
