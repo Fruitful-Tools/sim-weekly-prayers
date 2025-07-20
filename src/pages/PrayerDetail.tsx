@@ -32,6 +32,14 @@ const PrayerDetail = () => {
     }
   }, [date, id, i18n.language]);
 
+  const formatUrlDateToDbDate = (urlDate: string) => {
+    // Convert "20240115" to "2024-01-15"
+    if (urlDate.length === 8) {
+      return `${urlDate.slice(0, 4)}-${urlDate.slice(4, 6)}-${urlDate.slice(6, 8)}`;
+    }
+    return urlDate; // fallback for existing format
+  };
+
   const fetchPrayer = async () => {
     try {
       let query = supabase
@@ -45,7 +53,8 @@ const PrayerDetail = () => {
         .eq('prayer_translations.language', i18n.language);
 
       if (date) {
-        query = query.eq('week_date', date);
+        const formattedDate = formatUrlDateToDbDate(date);
+        query = query.eq('week_date', formattedDate);
       } else if (id) {
         query = query.eq('id', id);
       }
@@ -70,8 +79,12 @@ const PrayerDetail = () => {
     });
   };
 
+  const formatDateForUrl = (dateString: string) => {
+    return dateString.replace(/-/g, '');
+  };
+
   const handleCopyLink = async () => {
-    const url = `${window.location.origin}/prayer/${prayer?.week_date}`;
+    const url = `${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`;
     try {
       await navigator.clipboard.writeText(url);
       toast({
@@ -88,13 +101,13 @@ const PrayerDetail = () => {
   };
 
   const handleShareFacebook = () => {
-    const url = `${window.location.origin}/prayer/${prayer?.week_date}`;
+    const url = `${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`;
     const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
     window.open(shareUrl, '_blank');
   };
 
   const handleShareTwitter = () => {
-    const url = `${window.location.origin}/prayer/${prayer?.week_date}`;
+    const url = `${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`;
     const text = prayer?.prayer_translations[0]?.title || '';
     const shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
     window.open(shareUrl, '_blank');
@@ -125,7 +138,7 @@ const PrayerDetail = () => {
   }
 
   const translation = prayer.prayer_translations[0];
-  const currentUrl = `${window.location.origin}/prayer/${prayer.week_date}`;
+  const currentUrl = `${window.location.origin}/prayer/${formatDateForUrl(prayer.week_date)}`;
 
   return (
     <>

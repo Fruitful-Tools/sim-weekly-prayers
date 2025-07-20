@@ -34,8 +34,12 @@ const PrayerCard = ({ prayer, isPreview = false }: PrayerCardProps) => {
     return plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText;
   };
 
+  const formatDateForUrl = (dateString: string) => {
+    return dateString.replace(/-/g, '');
+  };
+
   return (
-    <Link to={`/prayer/${prayer.week_date}`} className="block h-full">
+    <Link to={`/prayer/${formatDateForUrl(prayer.week_date)}`} className="block h-full">
       <Card className="group h-full overflow-hidden bg-gradient-to-br from-card to-card/80 border-border hover:shadow-prayer transition-all duration-300 hover:-translate-y-1 cursor-pointer">
         {prayer.image_url && (
           <div className="overflow-hidden">
