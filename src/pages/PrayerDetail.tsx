@@ -34,7 +34,7 @@ const PrayerDetail = () => {
 
   const formatUrlDateToDbDate = (urlDate: string) => {
     // Convert "20240115" to "2024-01-15"
-    if (urlDate.length === 8) {
+    if (urlDate && urlDate.length === 8) {
       return `${urlDate.slice(0, 4)}-${urlDate.slice(4, 6)}-${urlDate.slice(6, 8)}`;
     }
     return urlDate; // fallback for existing format
@@ -42,6 +42,8 @@ const PrayerDetail = () => {
 
   const fetchPrayer = async () => {
     try {
+      console.log('Fetching prayer for date:', date, 'or id:', id);
+      
       let query = supabase
         .from('prayers')
         .select(`
@@ -54,17 +56,28 @@ const PrayerDetail = () => {
 
       if (date) {
         const formattedDate = formatUrlDateToDbDate(date);
+        console.log('Formatted date for query:', formattedDate);
         query = query.eq('week_date', formattedDate);
       } else if (id) {
         query = query.eq('id', id);
       }
 
       const { data, error } = await query.single();
+      
+      console.log('Query result:', { data, error });
 
       if (error) throw error;
-      setPrayer(data);
+      
+      // Validate the data structure
+      if (data && (!data.prayer_translations || data.prayer_translations.length === 0)) {
+        console.warn('No translations found for prayer');
+        setPrayer(null);
+      } else {
+        setPrayer(data);
+      }
     } catch (error) {
       console.error('Error fetching prayer:', error);
+      setPrayer(null);
     } finally {
       setLoading(false);
     }
@@ -138,14 +151,24 @@ const PrayerDetail = () => {
   }
 
   // Safely extract translation and ensure all values are strings
-  const translation = prayer.prayer_translations?.[0];
-  const safeTitle = typeof translation?.title === 'string' ? translation.title : 'Prayer';
-  const safeContent = typeof translation?.content === 'string' ? translation.content : 'Weekly Prayer';
-  const safeImageUrl = typeof prayer.image_url === 'string' ? prayer.image_url : '';
-  const currentUrl = `${window.location.origin}/prayer/${formatDateForUrl(prayer.week_date)}`;
+  const translation = prayer?.prayer_translations?.[0];
+  const safeTitle = (translation?.title && typeof translation.title === 'string') ? translation.title : 'Prayer';
+  const safeContent = (translation?.content && typeof translation.content === 'string') ? translation.content : 'Weekly Prayer';
+  const safeImageUrl = (prayer?.image_url && typeof prayer.image_url === 'string') ? prayer.image_url : '';
+  const currentUrl = `${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`;
+
+  console.log('Prayer data:', {
+    prayer,
+    translation,
+    safeTitle,
+    safeContent,
+    safeImageUrl
+  });
 
   return (
     <>
+      {/* Temporarily comment out Helmet to isolate the issue */}
+      {/*
       <Helmet>
         <title>{safeTitle}</title>
         <meta name="description" content={safeContent.substring(0, 160)} />
@@ -165,6 +188,7 @@ const PrayerDetail = () => {
         <meta name="twitter:description" content={safeContent.substring(0, 160)} />
         {safeImageUrl && <meta name="twitter:image" content={safeImageUrl} />}
       </Helmet>
+      */}
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
         <div className="container mx-auto px-4 py-8">
           {/* Back Button */}
