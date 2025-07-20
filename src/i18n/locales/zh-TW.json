@@ -89,5 +89,12 @@
     "cancel": "取消",
     "saving": "保存中...",
     "loading": "載入中..."
+  },
+  "pagination": {
+    "showing": "顯示第 {{start}} 到 {{end}} 項，共 {{total}} 項禱告",
+    "results": "{{count}} 個搜尋結果 \"{{query}}\"",
+    "result": "{{count}} 個搜尋結果 \"{{query}}\"",
+    "previous": "上一頁",
+    "next": "下一頁"
   }
 }

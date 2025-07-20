@@ -89,5 +89,12 @@
     "cancel": "Cancel",
     "saving": "Saving...",
     "loading": "Loading..."
+  },
+  "pagination": {
+    "showing": "Showing {{start}} to {{end}} of {{total}} prayers",
+    "results": "{{count}} results for \"{{query}}\"",
+    "result": "{{count}} result for \"{{query}}\"",
+    "previous": "Previous",
+    "next": "Next"
   }
 }

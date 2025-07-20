@@ -241,14 +241,21 @@ const Prayers = () => {
         {/* Results Count */}
         {searchQuery && (
           <div className="text-center text-sm text-muted-foreground mb-6">
-            {filteredPrayers.length} {filteredPrayers.length === 1 ? 'result' : 'results'} for "{searchQuery}"
+            {t(filteredPrayers.length === 1 ? 'pagination.result' : 'pagination.results', {
+              count: filteredPrayers.length,
+              query: searchQuery
+            })}
           </div>
         )}
         
         {/* Pagination Info */}
         {!searchQuery && filteredPrayers.length > 0 && (
           <div className="text-center text-sm text-muted-foreground mb-6">
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredPrayers.length)} of {filteredPrayers.length} prayers
+            {t('pagination.showing', {
+              start: startIndex + 1,
+              end: Math.min(endIndex, filteredPrayers.length),
+              total: filteredPrayers.length
+            })}
           </div>
         )}
 
