@@ -68,7 +68,8 @@
     "signOut": "登出",
     "signedOut": "已登出",
     "signedOutSuccess": "您已成功登出。",
-    "signOutError": "登出時發生錯誤，請重試。"
+    "signOutError": "登出時發生錯誤，請重試。",
+    "contactAdmin": "請聯絡網站管理人來註冊"
   },
   "profile": {
     "title": "個人資料",

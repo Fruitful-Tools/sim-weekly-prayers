@@ -119,16 +119,19 @@ export default function Auth() {
             </TabsContent>
             
             <TabsContent value="signup">
-              <form onSubmit={handleSignUp} className="space-y-4">
+              <div className="space-y-4">
+                <div className="text-center p-6 bg-muted/50 rounded-lg border-2 border-dashed border-muted-foreground/25">
+                  <p className="text-muted-foreground text-sm">
+                    {t('auth.contactAdmin')}
+                  </p>
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">{t('auth.email')}</Label>
                   <Input
                     id="signup-email"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    disabled={loading}
+                    disabled
+                    placeholder={t('auth.email')}
                   />
                 </div>
                 <div className="space-y-2">
@@ -136,17 +139,14 @@ export default function Auth() {
                   <Input
                     id="signup-password"
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    disabled={loading}
-                    minLength={6}
+                    disabled
+                    placeholder={t('auth.password')}
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? t('auth.signingUp') : t('auth.signUp')}
+                <Button type="button" className="w-full" disabled>
+                  {t('auth.signUp')}
                 </Button>
-              </form>
+              </div>
             </TabsContent>
           </Tabs>
         </CardContent>

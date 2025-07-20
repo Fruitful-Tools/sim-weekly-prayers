@@ -68,7 +68,8 @@
     "signOut": "Sign Out",
     "signedOut": "Signed out",
     "signedOutSuccess": "You have been signed out successfully.",
-    "signOutError": "Error signing out. Please try again."
+    "signOutError": "Error signing out. Please try again.",
+    "contactAdmin": "Please contact the site administrator to create your account"
   },
   "profile": {
     "title": "Profile",
