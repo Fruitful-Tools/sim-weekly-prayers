@@ -13,7 +13,28 @@
     "noResults": "No prayers found",
     "loading": "Loading prayers...",
     "readMore": "Read More",
-    "backToList": "Back to Prayers"
+    "backToList": "Back to Prayers",
+    "content": "Prayer Content",
+    "createPrayer": "Create Prayer",
+    "editPrayer": "Edit Prayer",
+    "updatePrayer": "Update Prayer",
+    "formDescription": "Create or edit a weekly prayer with bilingual content and optional image",
+    "weekDate": "Week Date", 
+    "image": "Prayer Image",
+    "uploadImage": "Upload an image for this prayer",
+    "selectImage": "Select Image",
+    "title": "Title",
+    "content": "Content",
+    "success": "Success",
+    "error": "Error",
+    "created": "Prayer created successfully!",
+    "updated": "Prayer updated successfully!",
+    "deleted": "Prayer deleted successfully!",
+    "saveError": "Error saving prayer. Please try again.",
+    "fetchError": "Error loading prayer data.",
+    "deleteError": "Error deleting prayer. Please try again.",
+    "imageUploadError": "Error uploading image. Please try again.",
+    "confirmDelete": "Are you sure you want to delete this prayer?"
   },
   "home": {
     "title": "SIM Weekly Prayers",
@@ -58,5 +79,10 @@
     "canCreatePrayers": "Create new prayers",
     "canEditPrayers": "Edit existing prayers", 
     "canDeletePrayers": "Delete prayers"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "loading": "Loading..."
   }
 }

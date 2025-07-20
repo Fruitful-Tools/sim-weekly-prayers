@@ -13,7 +13,28 @@
     "noResults": "找不到禱告內容",
     "loading": "載入中...",
     "readMore": "閱讀更多",
-    "backToList": "返回禱告列表"
+    "backToList": "返回禱告列表",
+    "content": "禱告內容",
+    "createPrayer": "建立禱告",
+    "editPrayer": "編輯禱告",
+    "updatePrayer": "更新禱告",
+    "formDescription": "建立或編輯每週禱告，包含雙語內容和可選圖片",
+    "weekDate": "禱告週日期",
+    "image": "禱告圖片",
+    "uploadImage": "為此禱告上傳圖片",
+    "selectImage": "選擇圖片",
+    "title": "標題",
+    "content": "內容",
+    "success": "成功",
+    "error": "錯誤",
+    "created": "禱告建立成功！",
+    "updated": "禱告更新成功！",
+    "deleted": "禱告刪除成功！",
+    "saveError": "保存禱告時發生錯誤，請重試。",
+    "fetchError": "載入禱告資料時發生錯誤。",
+    "deleteError": "刪除禱告時發生錯誤，請重試。",
+    "imageUploadError": "上傳圖片時發生錯誤，請重試。",
+    "confirmDelete": "您確定要刪除此禱告嗎？"
   },
   "home": {
     "title": "SIM 每週禱告",
@@ -58,5 +79,10 @@
     "canCreatePrayers": "建立新的禱告事項",
     "canEditPrayers": "編輯現有的禱告事項",
     "canDeletePrayers": "刪除禱告事項"
+  },
+  "common": {
+    "cancel": "取消",
+    "saving": "保存中...",
+    "loading": "載入中..."
   }
 }
