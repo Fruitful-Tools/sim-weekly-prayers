@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { Button } from '@/components/ui/button';
 import { Heart, User } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
+import ThemeToggle from './ThemeToggle';
 import { useAuth } from '@/hooks/useAuth';
 
 const Navigation = () => {
@@ -63,6 +64,7 @@ const Navigation = () => {
             </Link>
           )}
           
+          <ThemeToggle />
           <LanguageSwitcher />
         </div>
       </div>
