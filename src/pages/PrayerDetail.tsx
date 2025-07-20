@@ -167,8 +167,6 @@ const PrayerDetail = () => {
 
   return (
     <>
-      {/* Temporarily comment out Helmet to isolate the issue */}
-      {/*
       <Helmet>
         <title>{safeTitle}</title>
         <meta name="description" content={safeContent.substring(0, 160)} />
@@ -188,7 +186,6 @@ const PrayerDetail = () => {
         <meta name="twitter:description" content={safeContent.substring(0, 160)} />
         {safeImageUrl && <meta name="twitter:image" content={safeImageUrl} />}
       </Helmet>
-      */}
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
         <div className="container mx-auto px-4 py-8">
           {/* Back Button */}
