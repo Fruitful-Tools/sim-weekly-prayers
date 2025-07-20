@@ -130,10 +130,10 @@ const PrayerDetail = () => {
   return (
     <>
       <Helmet>
-        <title>{translation.title}</title>
-        <meta name="description" content={translation.content.substring(0, 160)} />
-        <meta property="og:title" content={translation.title} />
-        <meta property="og:description" content={translation.content.substring(0, 160)} />
+        <title>{translation?.title || 'Prayer'}</title>
+        <meta name="description" content={translation?.content?.substring(0, 160) || 'Weekly Prayer'} />
+        <meta property="og:title" content={translation?.title || 'Prayer'} />
+        <meta property="og:description" content={translation?.content?.substring(0, 160) || 'Weekly Prayer'} />
         <meta property="og:url" content={currentUrl} />
         <meta property="og:type" content="article" />
         {prayer.image_url && (
@@ -144,8 +144,8 @@ const PrayerDetail = () => {
           </>
         )}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={translation.title} />
-        <meta name="twitter:description" content={translation.content.substring(0, 160)} />
+        <meta name="twitter:title" content={translation?.title || 'Prayer'} />
+        <meta name="twitter:description" content={translation?.content?.substring(0, 160) || 'Weekly Prayer'} />
         {prayer.image_url && <meta name="twitter:image" content={prayer.image_url} />}
       </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
