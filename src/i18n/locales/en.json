@@ -3,7 +3,9 @@
     "home": "Home",
     "prayers": "Prayers",
     "search": "Search",
-    "language": "Language"
+    "language": "Language",
+    "profile": "Profile",
+    "signIn": "Sign In"
   },
   "prayer": {
     "title": "Prayer for {{country}}",
@@ -22,5 +24,39 @@
   "meta": {
     "title": "SIM Weekly Prayers Hub",
     "description": "Weekly prayers for nations around the world"
+  },
+  "auth": {
+    "welcome": "Welcome to SIM Prayer",
+    "description": "Sign in to manage weekly prayers",
+    "signIn": "Sign In",
+    "signUp": "Sign Up", 
+    "email": "Email",
+    "password": "Password",
+    "signingIn": "Signing in...",
+    "signingUp": "Signing up...",
+    "error": "Authentication Error",
+    "signInSuccess": "Successfully signed in!",
+    "signUpSuccess": "Account created successfully!",
+    "welcomeBack": "Welcome back!",
+    "checkEmail": "Please check your email to verify your account.",
+    "signOut": "Sign Out",
+    "signedOut": "Signed out",
+    "signedOutSuccess": "You have been signed out successfully.",
+    "signOutError": "Error signing out. Please try again."
+  },
+  "profile": {
+    "title": "Profile",
+    "description": "Manage your account and permissions",
+    "email": "Email",
+    "userId": "User ID",
+    "status": "Account Status",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "joinedAt": "Joined",
+    "permissions": "Permissions",
+    "permissionsDescription": "As a logged-in user, you can:",
+    "canCreatePrayers": "Create new prayers",
+    "canEditPrayers": "Edit existing prayers", 
+    "canDeletePrayers": "Delete prayers"
   }
 }

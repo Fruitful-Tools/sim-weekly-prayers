@@ -3,7 +3,9 @@
     "home": "首頁",
     "prayers": "禱告",
     "search": "搜尋",
-    "language": "語言"
+    "language": "語言",
+    "profile": "個人資料",
+    "signIn": "登入"
   },
   "prayer": {
     "title": "為{{country}}禱告",
@@ -22,5 +24,39 @@
   "meta": {
     "title": "SIM 每週禱告中心",
     "description": "為世界各國的每週禱告"
+  },
+  "auth": {
+    "welcome": "歡迎來到 SIM 禱告",
+    "description": "登入以管理每週禱告事項",
+    "signIn": "登入",
+    "signUp": "註冊",
+    "email": "電子郵件",
+    "password": "密碼",
+    "signingIn": "登入中...",
+    "signingUp": "註冊中...",
+    "error": "驗證錯誤",
+    "signInSuccess": "登入成功！",
+    "signUpSuccess": "帳戶建立成功！",
+    "welcomeBack": "歡迎回來！",
+    "checkEmail": "請檢查您的電子郵件以驗證帳戶。",
+    "signOut": "登出",
+    "signedOut": "已登出",
+    "signedOutSuccess": "您已成功登出。",
+    "signOutError": "登出時發生錯誤，請重試。"
+  },
+  "profile": {
+    "title": "個人資料",
+    "description": "管理您的帳戶與權限",
+    "email": "電子郵件",
+    "userId": "用戶 ID",
+    "status": "帳戶狀態",
+    "verified": "已驗證",
+    "unverified": "未驗證",
+    "joinedAt": "加入時間",
+    "permissions": "權限",
+    "permissionsDescription": "作為已登入的用戶，您可以：",
+    "canCreatePrayers": "建立新的禱告事項",
+    "canEditPrayers": "編輯現有的禱告事項",
+    "canDeletePrayers": "刪除禱告事項"
   }
 }

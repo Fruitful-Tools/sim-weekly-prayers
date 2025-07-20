@@ -7,6 +7,8 @@ import Navigation from "./components/Navigation";
 import Home from "./pages/Home";
 import Prayers from "./pages/Prayers";
 import PrayerDetail from "./pages/PrayerDetail";
+import Auth from "./pages/Auth";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +25,8 @@ const App = () => (
             <Route path="/" element={<Home />} />
             <Route path="/prayers" element={<Prayers />} />
             <Route path="/prayer/:id" element={<PrayerDetail />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/profile" element={<Profile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

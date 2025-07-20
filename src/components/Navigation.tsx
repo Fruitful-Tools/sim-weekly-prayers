@@ -1,12 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
+import { Heart, User } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
-import { Heart } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 const Navigation = () => {
   const { t } = useTranslation();
   const location = useLocation();
+  const { user } = useAuth();
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -44,7 +47,24 @@ const Navigation = () => {
           </div>
         </div>
         
-        <LanguageSwitcher />
+        <div className="flex items-center space-x-4">
+          {user ? (
+            <Link to="/profile">
+              <Button variant="outline" size="sm" className="space-x-2">
+                <User className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('nav.profile')}</span>
+              </Button>
+            </Link>
+          ) : (
+            <Link to="/auth">
+              <Button variant="default" size="sm">
+                {t('nav.signIn')}
+              </Button>
+            </Link>
+          )}
+          
+          <LanguageSwitcher />
+        </div>
       </div>
     </nav>
   );
