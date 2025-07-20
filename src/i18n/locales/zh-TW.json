@@ -34,7 +34,12 @@
     "fetchError": "載入禱告資料時發生錯誤。",
     "deleteError": "刪除禱告時發生錯誤，請重試。",
     "imageUploadError": "上傳圖片時發生錯誤，請重試。",
-    "confirmDelete": "您確定要刪除此禱告嗎？"
+    "confirmDelete": "您確定要刪除此禱告嗎？",
+    "copyLink": "複製連結",
+    "linkCopied": "連結已複製！",
+    "linkCopiedDesc": "禱告連結已複製到剪貼板",
+    "copyFailed": "複製失敗",
+    "copyFailedDesc": "無法複製連結到剪貼板"
   },
   "home": {
     "title": "SIM 每週禱告",

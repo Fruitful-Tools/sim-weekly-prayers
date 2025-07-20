@@ -24,7 +24,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/prayers" element={<Prayers />} />
-            <Route path="/prayer/:id" element={<PrayerDetail />} />
+          <Route path="/prayer/:date" element={<PrayerDetail />} />
+          <Route path="/prayer/id/:id" element={<PrayerDetail />} /> {/* Fallback for old URLs */}
             <Route path="/auth" element={<Auth />} />
             <Route path="/profile" element={<Profile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

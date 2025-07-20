@@ -34,7 +34,12 @@
     "fetchError": "Error loading prayer data.",
     "deleteError": "Error deleting prayer. Please try again.",
     "imageUploadError": "Error uploading image. Please try again.",
-    "confirmDelete": "Are you sure you want to delete this prayer?"
+    "confirmDelete": "Are you sure you want to delete this prayer?",
+    "copyLink": "Copy Link",
+    "linkCopied": "Link Copied!",
+    "linkCopiedDesc": "Prayer link has been copied to clipboard",
+    "copyFailed": "Copy Failed",
+    "copyFailedDesc": "Failed to copy link to clipboard"
   },
   "home": {
     "title": "SIM Weekly Prayers",

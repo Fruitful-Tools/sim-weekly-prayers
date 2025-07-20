@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
+import { Helmet } from 'react-helmet';
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Calendar } from 'lucide-react';
+import { ArrowLeft, Calendar, Share2, Copy, ExternalLink } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
 
 interface Prayer {
   id: string;
@@ -18,20 +20,21 @@ interface Prayer {
 }
 
 const PrayerDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { date, id } = useParams<{ date?: string; id?: string }>();
   const { t, i18n } = useTranslation();
   const [prayer, setPrayer] = useState<Prayer | null>(null);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (id) {
+    if (date || id) {
       fetchPrayer();
     }
-  }, [id, i18n.language]);
+  }, [date, id, i18n.language]);
 
   const fetchPrayer = async () => {
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('prayers')
         .select(`
           id,
@@ -39,9 +42,15 @@ const PrayerDetail = () => {
           image_url,
           prayer_translations!inner(title, content)
         `)
-        .eq('id', id)
-        .eq('prayer_translations.language', i18n.language)
-        .single();
+        .eq('prayer_translations.language', i18n.language);
+
+      if (date) {
+        query = query.eq('week_date', date);
+      } else if (id) {
+        query = query.eq('id', id);
+      }
+
+      const { data, error } = await query.single();
 
       if (error) throw error;
       setPrayer(data);
@@ -59,6 +68,36 @@ const PrayerDetail = () => {
       month: 'long', 
       day: 'numeric' 
     });
+  };
+
+  const handleCopyLink = async () => {
+    const url = `${window.location.origin}/prayer/${prayer?.week_date}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast({
+        title: t('prayer.linkCopied'),
+        description: t('prayer.linkCopiedDesc'),
+      });
+    } catch (err) {
+      toast({
+        title: t('prayer.copyFailed'),
+        description: t('prayer.copyFailedDesc'),
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleShareFacebook = () => {
+    const url = `${window.location.origin}/prayer/${prayer?.week_date}`;
+    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+    window.open(shareUrl, '_blank');
+  };
+
+  const handleShareTwitter = () => {
+    const url = `${window.location.origin}/prayer/${prayer?.week_date}`;
+    const text = prayer?.prayer_translations[0]?.title || '';
+    const shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+    window.open(shareUrl, '_blank');
   };
 
   if (loading) {
@@ -86,70 +125,123 @@ const PrayerDetail = () => {
   }
 
   const translation = prayer.prayer_translations[0];
+  const currentUrl = `${window.location.origin}/prayer/${prayer.week_date}`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
-      <div className="container mx-auto px-4 py-8">
-        {/* Back Button */}
-        <div className="mb-6">
-          <Link to="/prayers">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              {t('prayer.backToList')}
-            </Button>
-          </Link>
-        </div>
+    <>
+      <Helmet>
+        <title>{translation.title}</title>
+        <meta name="description" content={translation.content.substring(0, 160)} />
+        <meta property="og:title" content={translation.title} />
+        <meta property="og:description" content={translation.content.substring(0, 160)} />
+        <meta property="og:url" content={currentUrl} />
+        <meta property="og:type" content="article" />
+        {prayer.image_url && (
+          <>
+            <meta property="og:image" content={prayer.image_url} />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+          </>
+        )}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={translation.title} />
+        <meta name="twitter:description" content={translation.content.substring(0, 160)} />
+        {prayer.image_url && <meta name="twitter:image" content={prayer.image_url} />}
+      </Helmet>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
+        <div className="container mx-auto px-4 py-8">
+          {/* Back Button */}
+          <div className="mb-6">
+            <Link to="/prayers">
+              <Button variant="ghost" className="mb-4">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                {t('prayer.backToList')}
+              </Button>
+            </Link>
+          </div>
 
-        {/* Prayer Content */}
-        <div className="max-w-4xl mx-auto">
-          {prayer.image_url && (
-            <div className="mb-8 overflow-hidden rounded-lg shadow-prayer">
-              <img 
-                src={prayer.image_url} 
-                alt={translation.title}
-                className="w-full h-auto object-contain"
-              />
-            </div>
-          )}
-
-          <Card className="bg-gradient-to-br from-card to-card/80 border-border shadow-prayer">
-            <CardContent className="p-8">
-              {/* Date */}
-              <div className="flex items-center text-sm text-muted-foreground mb-4">
-                <Calendar className="h-4 w-4 mr-2" />
-                {formatDate(prayer.week_date)}
+          {/* Prayer Content */}
+          <div className="max-w-4xl mx-auto">
+            {prayer.image_url && (
+              <div className="mb-8 overflow-hidden rounded-lg shadow-prayer">
+                <img 
+                  src={prayer.image_url} 
+                  alt={translation.title}
+                  className="w-full h-auto object-contain"
+                />
               </div>
+            )}
 
-              {/* Title */}
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8 leading-tight">
-                {translation.title}
-              </h1>
+            <Card className="bg-gradient-to-br from-card to-card/80 border-border shadow-prayer">
+              <CardContent className="p-8">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    {formatDate(prayer.week_date)}
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleCopyLink}
+                      className="flex items-center gap-2"
+                    >
+                      <Copy className="h-4 w-4" />
+                      {t('prayer.copyLink')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleShareFacebook}
+                      className="flex items-center gap-2"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      Facebook
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleShareTwitter}
+                      className="flex items-center gap-2"
+                    >
+                      <Share2 className="h-4 w-4" />
+                      Twitter
+                    </Button>
+                  </div>
+                </div>
 
-              {/* Content */}
-              <div className="prose prose-lg max-w-none text-foreground">
-                <ReactMarkdown 
-                  components={{
-                    h1: ({ children }) => <h1 className="text-2xl font-bold text-foreground mt-8 mb-4">{children}</h1>,
-                    h2: ({ children }) => <h2 className="text-xl font-semibold text-foreground mt-6 mb-3">{children}</h2>,
-                    h3: ({ children }) => <h3 className="text-lg font-medium text-foreground mt-4 mb-2">{children}</h3>,
-                    p: ({ children }) => <p className="text-foreground mb-4 leading-relaxed">{children}</p>,
-                    blockquote: ({ children }) => (
-                      <blockquote className="border-l-4 border-primary pl-4 my-4 italic text-muted-foreground">
-                        {children}
-                      </blockquote>
-                    ),
-                    ul: ({ children }) => <ul className="list-disc list-inside mb-4 text-foreground space-y-1">{children}</ul>,
-                    ol: ({ children }) => <ol className="list-decimal list-inside mb-4 text-foreground space-y-1">{children}</ol>,
-                  }}
-                >
-                  {translation.content}
-                </ReactMarkdown>
-              </div>
-            </CardContent>
-          </Card>
+                {/* Title */}
+                <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8 leading-tight">
+                  {translation.title}
+                </h1>
+
+                {/* Content */}
+                <div className="prose prose-lg max-w-none text-foreground">
+                  <ReactMarkdown 
+                    components={{
+                      h1: ({ children }) => <h1 className="text-2xl font-bold text-foreground mt-8 mb-4">{children}</h1>,
+                      h2: ({ children }) => <h2 className="text-xl font-semibold text-foreground mt-6 mb-3">{children}</h2>,
+                      h3: ({ children }) => <h3 className="text-lg font-medium text-foreground mt-4 mb-2">{children}</h3>,
+                      p: ({ children }) => <p className="text-foreground mb-4 leading-relaxed">{children}</p>,
+                      blockquote: ({ children }) => (
+                        <blockquote className="border-l-4 border-primary pl-4 my-4 italic text-muted-foreground">
+                          {children}
+                        </blockquote>
+                      ),
+                      ul: ({ children }) => <ul className="list-disc list-inside mb-4 text-foreground space-y-1">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal list-inside mb-4 text-foreground space-y-1">{children}</ol>,
+                    }}
+                  >
+                    {translation.content}
+                  </ReactMarkdown>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

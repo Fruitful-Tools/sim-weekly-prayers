@@ -63,7 +63,7 @@ const PrayerCard = ({ prayer, isPreview = false }: PrayerCardProps) => {
           </p>
         )}
         
-        <Link to={`/prayer/${prayer.id}`}>
+        <Link to={`/prayer/${prayer.week_date}`}>
           <Button 
             variant="ghost" 
             size="sm"
