@@ -108,7 +108,7 @@ const PrayerDetail = () => {
 
   const handleShareTwitter = () => {
     const url = `${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`;
-    const text = prayer?.prayer_translations[0]?.title || '';
+    const text = prayer?.prayer_translations?.[0]?.title || 'Prayer';
     const shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
     window.open(shareUrl, '_blank');
   };
@@ -137,29 +137,33 @@ const PrayerDetail = () => {
     );
   }
 
-  const translation = prayer.prayer_translations[0];
+  // Safely extract translation and ensure all values are strings
+  const translation = prayer.prayer_translations?.[0];
+  const safeTitle = typeof translation?.title === 'string' ? translation.title : 'Prayer';
+  const safeContent = typeof translation?.content === 'string' ? translation.content : 'Weekly Prayer';
+  const safeImageUrl = typeof prayer.image_url === 'string' ? prayer.image_url : '';
   const currentUrl = `${window.location.origin}/prayer/${formatDateForUrl(prayer.week_date)}`;
 
   return (
     <>
       <Helmet>
-        <title>{translation?.title || 'Prayer'}</title>
-        <meta name="description" content={translation?.content?.substring(0, 160) || 'Weekly Prayer'} />
-        <meta property="og:title" content={translation?.title || 'Prayer'} />
-        <meta property="og:description" content={translation?.content?.substring(0, 160) || 'Weekly Prayer'} />
+        <title>{safeTitle}</title>
+        <meta name="description" content={safeContent.substring(0, 160)} />
+        <meta property="og:title" content={safeTitle} />
+        <meta property="og:description" content={safeContent.substring(0, 160)} />
         <meta property="og:url" content={currentUrl} />
         <meta property="og:type" content="article" />
-        {prayer.image_url && (
+        {safeImageUrl && (
           <>
-            <meta property="og:image" content={prayer.image_url} />
+            <meta property="og:image" content={safeImageUrl} />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
           </>
         )}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={translation?.title || 'Prayer'} />
-        <meta name="twitter:description" content={translation?.content?.substring(0, 160) || 'Weekly Prayer'} />
-        {prayer.image_url && <meta name="twitter:image" content={prayer.image_url} />}
+        <meta name="twitter:title" content={safeTitle} />
+        <meta name="twitter:description" content={safeContent.substring(0, 160)} />
+        {safeImageUrl && <meta name="twitter:image" content={safeImageUrl} />}
       </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
         <div className="container mx-auto px-4 py-8">
@@ -175,11 +179,11 @@ const PrayerDetail = () => {
 
           {/* Prayer Content */}
           <div className="max-w-4xl mx-auto">
-            {prayer.image_url && (
+            {safeImageUrl && (
               <div className="mb-8 overflow-hidden rounded-lg shadow-prayer">
                 <img 
-                  src={prayer.image_url} 
-                  alt={translation.title}
+                  src={safeImageUrl} 
+                  alt={safeTitle}
                   className="w-full h-auto object-contain"
                 />
               </div>
@@ -226,7 +230,7 @@ const PrayerDetail = () => {
 
                 {/* Title */}
                 <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8 leading-tight">
-                  {translation.title}
+                  {safeTitle}
                 </h1>
 
                 {/* Content */}
@@ -246,7 +250,7 @@ const PrayerDetail = () => {
                       ol: ({ children }) => <ol className="list-decimal list-inside mb-4 text-foreground space-y-1">{children}</ol>,
                     }}
                   >
-                    {translation.content}
+                    {safeContent}
                   </ReactMarkdown>
                 </div>
               </CardContent>
