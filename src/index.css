@@ -8,33 +8,48 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Spiritual design system with peaceful blues and warm whites */
+    --background: 210 25% 98%;
+    --foreground: 215 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 212 85% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 212 85% 65%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 40% 94%;
+    --secondary-foreground: 215 25% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 25% 96%;
+    --muted-foreground: 215 15% 55%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 195 85% 88%;
+    --accent-foreground: 215 25% 25%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 210 20% 90%;
+    --input: 210 20% 94%;
+    --ring: 212 85% 45%;
+
+    /* Spiritual gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(212 85% 45%), hsl(212 85% 65%));
+    --gradient-peaceful: linear-gradient(180deg, hsl(210 25% 98%), hsl(210 20% 95%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 25% 98%));
+
+    /* Sacred shadows */
+    --shadow-gentle: 0 4px 20px -4px hsl(212 85% 45% / 0.1);
+    --shadow-prayer: 0 8px 30px -8px hsl(212 85% 45% / 0.15);
+    --shadow-divine: 0 12px 40px -12px hsl(212 85% 45% / 0.2);
+
+    /* Smooth transitions */
+    --transition-peaceful: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --radius: 0.5rem;
 
