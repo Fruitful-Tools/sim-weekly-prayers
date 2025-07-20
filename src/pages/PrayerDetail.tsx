@@ -103,11 +103,11 @@ const PrayerDetail = () => {
         {/* Prayer Content */}
         <div className="max-w-4xl mx-auto">
           {prayer.image_url && (
-            <div className="aspect-video mb-8 overflow-hidden rounded-lg shadow-prayer">
+            <div className="mb-8 overflow-hidden rounded-lg shadow-prayer">
               <img 
                 src={prayer.image_url} 
                 alt={translation.title}
-                className="w-full h-full object-cover"
+                className="w-full h-auto object-contain"
               />
             </div>
           )}
