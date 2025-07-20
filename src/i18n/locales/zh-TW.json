@@ -96,5 +96,10 @@
     "result": "{{count}} 個搜尋結果 \"{{query}}\"",
     "previous": "上一頁",
     "next": "下一頁"
+  },
+  "share": {
+    "shareButton": "分享",
+    "instagramNote": "已複製連結",
+    "instagramDesc": "請開啟 Instagram 並貼上連結到您的貼文或限時動態中"
   }
 }

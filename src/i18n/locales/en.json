@@ -96,5 +96,10 @@
     "result": "{{count}} result for \"{{query}}\"",
     "previous": "Previous",
     "next": "Next"
+  },
+  "share": {
+    "shareButton": "Share",
+    "instagramNote": "Link Copied",
+    "instagramDesc": "Please open Instagram and paste the link in your post or story"
   }
 }

@@ -6,8 +6,9 @@ import { Helmet } from 'react-helmet';
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Calendar, Share2, Copy, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Calendar } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import SocialShareDropdown from '@/components/SocialShareDropdown';
 
 interface Prayer {
   id: string;
@@ -96,35 +97,6 @@ const PrayerDetail = () => {
     return dateString.replace(/-/g, '');
   };
 
-  const handleCopyLink = async () => {
-    const url = `${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      toast({
-        title: t('prayer.linkCopied'),
-        description: t('prayer.linkCopiedDesc'),
-      });
-    } catch (err) {
-      toast({
-        title: t('prayer.copyFailed'),
-        description: t('prayer.copyFailedDesc'),
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleShareFacebook = () => {
-    const url = `${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`;
-    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-    window.open(shareUrl, '_blank');
-  };
-
-  const handleShareTwitter = () => {
-    const url = `${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`;
-    const text = prayer?.prayer_translations?.[0]?.title || 'Prayer';
-    const shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
-    window.open(shareUrl, '_blank');
-  };
 
   if (loading) {
     return (
@@ -230,35 +202,10 @@ const PrayerDetail = () => {
                     {formatDate(prayer.week_date)}
                   </div>
                   
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleCopyLink}
-                      className="flex items-center gap-2"
-                    >
-                      <Copy className="h-4 w-4" />
-                      {t('prayer.copyLink')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleShareFacebook}
-                      className="flex items-center gap-2"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      Facebook
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleShareTwitter}
-                      className="flex items-center gap-2"
-                    >
-                      <Share2 className="h-4 w-4" />
-                      Twitter
-                    </Button>
-                  </div>
+                  <SocialShareDropdown 
+                    url={`${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`}
+                    title={safeTitle}
+                  />
                 </div>
 
                 {/* Title */}
