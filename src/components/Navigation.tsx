@@ -28,15 +28,6 @@ const Navigation = () => {
           
           <div className="hidden md:flex items-center space-x-6">
             <Link
-              to="/"
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-primary",
-                isActive('/') ? 'text-primary' : 'text-muted-foreground'
-              )}
-            >
-              {t('nav.home')}
-            </Link>
-            <Link
               to="/prayers"
               className={cn(
                 "text-sm font-medium transition-colors hover:text-primary",
