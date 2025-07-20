@@ -8,6 +8,7 @@ import SearchBox from '@/components/SearchBox';
 import PrayerDialog from '@/components/PrayerDialog';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 
 interface Prayer {
   id: string;
@@ -35,6 +36,8 @@ const Prayers = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingPrayer, setEditingPrayer] = useState<Prayer | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
 
   useEffect(() => {
     fetchPrayers();
@@ -43,6 +46,10 @@ const Prayers = () => {
   useEffect(() => {
     filterPrayers();
   }, [prayers, searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset to first page when search changes
+  }, [searchQuery]);
 
   const fetchPrayers = async () => {
     try {
@@ -166,6 +173,47 @@ const Prayers = () => {
     fetchPrayers();
   };
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredPrayers.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentPrayers = filteredPrayers.slice(startIndex, endIndex);
+
+  const generatePageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i);
+        }
+        pages.push('ellipsis');
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push('ellipsis');
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push('ellipsis');
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push('ellipsis');
+        pages.push(totalPages);
+      }
+    }
+    
+    return pages;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
       <div className="container mx-auto px-4 py-8">
@@ -196,6 +244,13 @@ const Prayers = () => {
             {filteredPrayers.length} {filteredPrayers.length === 1 ? 'result' : 'results'} for "{searchQuery}"
           </div>
         )}
+        
+        {/* Pagination Info */}
+        {!searchQuery && filteredPrayers.length > 0 && (
+          <div className="text-center text-sm text-muted-foreground mb-6">
+            Showing {startIndex + 1} to {Math.min(endIndex, filteredPrayers.length)} of {filteredPrayers.length} prayers
+          </div>
+        )}
 
         {/* Prayers Grid */}
         {loading ? (
@@ -203,38 +258,90 @@ const Prayers = () => {
             {t('prayer.loading')}
           </div>
         ) : filteredPrayers.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPrayers.map((prayer) => (
-              <div key={prayer.id} className="relative group">
-                <PrayerCard 
-                  prayer={formatPrayerForCard(prayer)} 
-                  isPreview 
-                />
-                {user && (
-                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="flex gap-1">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={() => handleEditPrayer(prayer.id)}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Edit className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleDeletePrayer(prayer.id)}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {currentPrayers.map((prayer) => (
+                <div key={prayer.id} className="relative group">
+                  <PrayerCard 
+                    prayer={formatPrayerForCard(prayer)} 
+                    isPreview 
+                  />
+                  {user && (
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex gap-1">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => handleEditPrayer(prayer.id)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDeletePrayer(prayer.id)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-8">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious 
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage > 1) setCurrentPage(currentPage - 1);
+                        }}
+                        className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                      />
+                    </PaginationItem>
+                    
+                    {generatePageNumbers().map((page, index) => (
+                      <PaginationItem key={index}>
+                        {page === 'ellipsis' ? (
+                          <PaginationEllipsis />
+                        ) : (
+                          <PaginationLink
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentPage(page as number);
+                            }}
+                            isActive={currentPage === page}
+                          >
+                            {page}
+                          </PaginationLink>
+                        )}
+                      </PaginationItem>
+                    ))}
+                    
+                    <PaginationItem>
+                      <PaginationNext 
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                        }}
+                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         ) : (
           <div className="text-center text-muted-foreground py-12">
             {t('prayer.noResults')}

@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import PrayerCard from '@/components/PrayerCard';
 import { ArrowRight, Globe2 } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Prayer {
   id: string;
@@ -18,15 +19,17 @@ interface Prayer {
 
 const Home = () => {
   const { t, i18n } = useTranslation();
+  const isMobile = useIsMobile();
   const [latestPrayers, setLatestPrayers] = useState<Prayer[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchLatestPrayers();
-  }, [i18n.language]);
+  }, [i18n.language, isMobile]);
 
   const fetchLatestPrayers = async () => {
     try {
+      const limit = isMobile ? 2 : 3;
       const { data, error } = await supabase
         .from('prayers')
         .select(`
@@ -37,7 +40,7 @@ const Home = () => {
         `)
         .eq('prayer_translations.language', i18n.language)
         .order('week_date', { ascending: false })
-        .limit(3);
+        .limit(limit);
 
       if (error) throw error;
       setLatestPrayers(data || []);
@@ -98,15 +101,25 @@ const Home = () => {
               {t('prayer.loading')}
             </div>
           ) : latestPrayers.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {latestPrayers.map((prayer) => (
-                <PrayerCard 
-                  key={prayer.id} 
-                  prayer={formatPrayerForCard(prayer)} 
-                  isPreview 
-                />
-              ))}
-            </div>
+            <>
+              <div className={`grid gap-6 ${isMobile ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
+                {latestPrayers.map((prayer) => (
+                  <PrayerCard 
+                    key={prayer.id} 
+                    prayer={formatPrayerForCard(prayer)} 
+                    isPreview 
+                  />
+                ))}
+              </div>
+              <div className="text-center mt-8">
+                <Link to="/prayers">
+                  <Button variant="outline" size="lg">
+                    查看所有禱告
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </>
           ) : (
             <div className="text-center text-muted-foreground">
               {t('prayer.noResults')}
