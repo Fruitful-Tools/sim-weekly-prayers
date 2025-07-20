@@ -37,11 +37,11 @@ const PrayerCard = ({ prayer, isPreview = false }: PrayerCardProps) => {
   return (
     <Card className="group h-full overflow-hidden bg-gradient-to-br from-card to-card/80 border-border hover:shadow-prayer transition-all duration-300 hover:-translate-y-1">
       {prayer.image_url && (
-        <div className="aspect-video overflow-hidden">
+        <div className="overflow-hidden">
           <img 
             src={prayer.image_url} 
             alt={prayer.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-300"
           />
         </div>
       )}
