@@ -7,6 +7,7 @@ import Navigation from "./components/Navigation";
 import Home from "./pages/Home";
 import Prayers from "./pages/Prayers";
 import PrayerDetail from "./pages/PrayerDetail";
+import Register from "./pages/Register";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
@@ -25,7 +26,8 @@ const App = () => (
             <Route path="/" element={<Home />} />
             <Route path="/prayers" element={<Prayers />} />
           <Route path="/prayer/:date" element={<PrayerDetail />} />
-          <Route path="/prayer/id/:id" element={<PrayerDetail />} /> {/* Fallback for old URLs */}
+            <Route path="/prayer/id/:id" element={<PrayerDetail />} /> {/* Fallback for old URLs */}
+            <Route path="/register" element={<Register />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/profile" element={<Profile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
