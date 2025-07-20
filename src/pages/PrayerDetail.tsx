@@ -153,7 +153,15 @@ const PrayerDetail = () => {
   // Safely extract translation and ensure all values are strings
   const translation = prayer?.prayer_translations?.[0];
   const safeTitle = (translation?.title && typeof translation.title === 'string') ? translation.title : 'Prayer';
-  const safeContent = (translation?.content && typeof translation.content === 'string') ? translation.content : 'Weekly Prayer';
+  const rawContent = (translation?.content && typeof translation.content === 'string') ? translation.content : 'Weekly Prayer';
+  
+  // Sanitize content for meta descriptions - remove newlines and limit length
+  const safeContent = rawContent
+    .replace(/\n/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .substring(0, 160);
+  
   const safeImageUrl = (prayer?.image_url && typeof prayer.image_url === 'string') ? prayer.image_url : '';
   const currentUrl = `${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`;
 
@@ -269,10 +277,10 @@ const PrayerDetail = () => {
                       ),
                       ul: ({ children }) => <ul className="list-disc list-inside mb-4 text-foreground space-y-1">{children}</ul>,
                       ol: ({ children }) => <ol className="list-decimal list-inside mb-4 text-foreground space-y-1">{children}</ol>,
-                    }}
-                  >
-                    {safeContent}
-                  </ReactMarkdown>
+                     }}
+                   >
+                     {rawContent}
+                   </ReactMarkdown>
                 </div>
               </CardContent>
             </Card>
