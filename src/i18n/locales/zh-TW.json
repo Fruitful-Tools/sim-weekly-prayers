@@ -1,0 +1,26 @@
+{
+  "nav": {
+    "home": "首頁",
+    "prayers": "禱告",
+    "search": "搜尋",
+    "language": "語言"
+  },
+  "prayer": {
+    "title": "為{{country}}禱告",
+    "searchPlaceholder": "搜尋禱告內容...",
+    "noResults": "找不到禱告內容",
+    "loading": "載入中...",
+    "readMore": "閱讀更多",
+    "backToList": "返回禱告列表"
+  },
+  "home": {
+    "title": "SIM 每週禱告",
+    "subtitle": "與我們一同為世界各國禱告",
+    "latestPrayer": "最新禱告",
+    "viewAllPrayers": "查看所有禱告"
+  },
+  "meta": {
+    "title": "SIM 每週禱告中心",
+    "description": "為世界各國的每週禱告"
+  }
+}

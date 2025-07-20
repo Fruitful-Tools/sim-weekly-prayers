@@ -106,6 +106,68 @@ export type Database = {
           },
         ]
       }
+      prayer_translations: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          language: string
+          prayer_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          language: string
+          prayer_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          language?: string
+          prayer_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prayer_translations_prayer_id_fkey"
+            columns: ["prayer_id"]
+            isOneToOne: false
+            referencedRelation: "prayers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prayers: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          updated_at: string
+          week_date: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          updated_at?: string
+          week_date: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          updated_at?: string
+          week_date?: string
+        }
+        Relationships: []
+      }
       series: {
         Row: {
           created_at: string

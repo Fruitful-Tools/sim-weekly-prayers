@@ -1,0 +1,26 @@
+{
+  "nav": {
+    "home": "Home",
+    "prayers": "Prayers",
+    "search": "Search",
+    "language": "Language"
+  },
+  "prayer": {
+    "title": "Prayer for {{country}}",
+    "searchPlaceholder": "Search prayers...",
+    "noResults": "No prayers found",
+    "loading": "Loading prayers...",
+    "readMore": "Read More",
+    "backToList": "Back to Prayers"
+  },
+  "home": {
+    "title": "SIM Weekly Prayers",
+    "subtitle": "Join us in prayer for nations around the world",
+    "latestPrayer": "Latest Prayer",
+    "viewAllPrayers": "View All Prayers"
+  },
+  "meta": {
+    "title": "SIM Weekly Prayers Hub",
+    "description": "Weekly prayers for nations around the world"
+  }
+}

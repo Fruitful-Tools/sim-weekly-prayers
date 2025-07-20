@@ -1,0 +1,121 @@
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import PrayerCard from '@/components/PrayerCard';
+import { ArrowRight, Globe2 } from 'lucide-react';
+
+interface Prayer {
+  id: string;
+  week_date: string;
+  image_url?: string;
+  prayer_translations: {
+    title: string;
+    content: string;
+  }[];
+}
+
+const Home = () => {
+  const { t, i18n } = useTranslation();
+  const [latestPrayers, setLatestPrayers] = useState<Prayer[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchLatestPrayers();
+  }, [i18n.language]);
+
+  const fetchLatestPrayers = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('prayers')
+        .select(`
+          id,
+          week_date,
+          image_url,
+          prayer_translations!inner(title, content)
+        `)
+        .eq('prayer_translations.language', i18n.language)
+        .order('week_date', { ascending: false })
+        .limit(3);
+
+      if (error) throw error;
+      setLatestPrayers(data || []);
+    } catch (error) {
+      console.error('Error fetching prayers:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatPrayerForCard = (prayer: Prayer) => ({
+    id: prayer.id,
+    week_date: prayer.week_date,
+    image_url: prayer.image_url,
+    title: prayer.prayer_translations[0]?.title || '',
+    content: prayer.prayer_translations[0]?.content || ''
+  });
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
+      {/* Hero Section */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto text-center">
+          <div className="mb-8">
+            <Globe2 className="h-16 w-16 mx-auto text-primary mb-6" />
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent mb-4">
+              {t('home.title')}
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              {t('home.subtitle')}
+            </p>
+          </div>
+          
+          <Link to="/prayers">
+            <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-primary to-primary-glow hover:shadow-prayer transition-all duration-300"
+            >
+              {t('home.viewAllPrayers')}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </section>
+
+      {/* Latest Prayers Section */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              {t('home.latestPrayer')}
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-primary-glow mx-auto"></div>
+          </div>
+
+          {loading ? (
+            <div className="text-center text-muted-foreground">
+              {t('prayer.loading')}
+            </div>
+          ) : latestPrayers.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {latestPrayers.map((prayer) => (
+                <PrayerCard 
+                  key={prayer.id} 
+                  prayer={formatPrayerForCard(prayer)} 
+                  isPreview 
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-muted-foreground">
+              {t('prayer.noResults')}
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Home;
