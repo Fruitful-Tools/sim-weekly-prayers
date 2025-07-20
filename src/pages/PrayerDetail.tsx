@@ -176,25 +176,28 @@ const PrayerDetail = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{safeTitle}</title>
-        <meta name="description" content={safeContent.substring(0, 160)} />
-        <meta property="og:title" content={safeTitle} />
-        <meta property="og:description" content={safeContent.substring(0, 160)} />
-        <meta property="og:url" content={currentUrl} />
-        <meta property="og:type" content="article" />
-        {safeImageUrl && (
-          <>
-            <meta property="og:image" content={safeImageUrl} />
-            <meta property="og:image:width" content="1200" />
-            <meta property="og:image:height" content="630" />
-          </>
-        )}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={safeTitle} />
-        <meta name="twitter:description" content={safeContent.substring(0, 160)} />
-        {safeImageUrl && <meta name="twitter:image" content={safeImageUrl} />}
-      </Helmet>
+      {/* Helmet temporarily disabled to isolate Symbol error */}
+      {false && (
+        <Helmet>
+          <title>{safeTitle}</title>
+          <meta name="description" content={safeContent.substring(0, 160)} />
+          <meta property="og:title" content={safeTitle} />
+          <meta property="og:description" content={safeContent.substring(0, 160)} />
+          <meta property="og:url" content={currentUrl} />
+          <meta property="og:type" content="article" />
+          {safeImageUrl && (
+            <>
+              <meta property="og:image" content={safeImageUrl} />
+              <meta property="og:image:width" content="1200" />
+              <meta property="og:image:height" content="630" />
+            </>
+          )}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={safeTitle} />
+          <meta name="twitter:description" content={safeContent.substring(0, 160)} />
+          {safeImageUrl && <meta name="twitter:image" content={safeImageUrl} />}
+        </Helmet>
+      )}
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
         <div className="container mx-auto px-4 py-8">
           {/* Back Button */}
