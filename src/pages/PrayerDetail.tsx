@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -138,6 +137,13 @@ const PrayerDetail = () => {
   const safeImageUrl = prayer?.image_url || '';
   const currentUrl = `${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`;
 
+  // Check if we're in Lovable preview environment
+  const isLovablePreview = window.location.hostname.includes('lovable.dev');
+  
+  if (isLovablePreview) {
+    console.log('Lovable preview detected - Helmet disabled to prevent Symbol error');
+  }
+
   console.log('Prayer data:', {
     prayer,
     translation,
@@ -149,25 +155,27 @@ const PrayerDetail = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{safeTitle}</title>
-        <meta name="description" content={safeContent} />
-        <meta property="og:title" content={safeTitle} />
-        <meta property="og:description" content={safeContent} />
-        <meta property="og:url" content={currentUrl} />
-        <meta property="og:type" content="article" />
-        {safeImageUrl && (
-          <>
-            <meta property="og:image" content={safeImageUrl} />
-            <meta property="og:image:width" content="1200" />
-            <meta property="og:image:height" content="630" />
-          </>
-        )}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={safeTitle} />
-        <meta name="twitter:description" content={safeContent} />
-        {safeImageUrl && <meta name="twitter:image" content={safeImageUrl} />}
-      </Helmet>
+      {!isLovablePreview && (
+        <Helmet>
+          <title>{safeTitle}</title>
+          <meta name="description" content={safeContent} />
+          <meta property="og:title" content={safeTitle} />
+          <meta property="og:description" content={safeContent} />
+          <meta property="og:url" content={currentUrl} />
+          <meta property="og:type" content="article" />
+          {safeImageUrl && (
+            <>
+              <meta property="og:image" content={safeImageUrl} />
+              <meta property="og:image:width" content="1200" />
+              <meta property="og:image:height" content="630" />
+            </>
+          )}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={safeTitle} />
+          <meta name="twitter:description" content={safeContent} />
+          {safeImageUrl && <meta name="twitter:image" content={safeImageUrl} />}
+        </Helmet>
+      )}
       
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
         <div className="container mx-auto px-4 py-8">
