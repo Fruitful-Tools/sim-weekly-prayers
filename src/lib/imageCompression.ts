@@ -34,16 +34,17 @@ export const compressImage = async (
       
       new Compressor(file, {
         quality: currentQuality,
-        maxWidth: maxWidthOrHeight,
-        maxHeight: maxWidthOrHeight,
-        convertSize: 5000000, // Convert PNG to JPEG if larger than 5MB
+        maxWidth: attempt === 1 ? maxWidthOrHeight : Math.max(800, maxWidthOrHeight * (1 - attempt * 0.1)),
+        maxHeight: attempt === 1 ? maxWidthOrHeight : Math.max(600, maxWidthOrHeight * (1 - attempt * 0.1)),
+        convertSize: 1000000, // Convert PNG to JPEG if larger than 1MB (more aggressive)
         convertTypes: ['image/png', 'image/webp'],
-        mimeType: file.type === 'image/png' && file.size > 5000000 ? 'image/jpeg' : file.type,
-        checkOrientation: false, // Preserve aspect ratio
-        retainExif: false, // Remove EXIF data to reduce size
+        mimeType: attempt >= 2 ? 'image/jpeg' : (file.type === 'image/png' && file.size > 1000000 ? 'image/jpeg' : file.type),
+        checkOrientation: false,
+        retainExif: false,
+        strict: false, // Allow more aggressive compression
         success: (compressedFile: File) => {
           const compressedSizeMB = compressedFile.size / 1024 / 1024;
-          console.log(`📊 Compressed to: ${compressedSizeMB.toFixed(2)}MB`);
+          console.log(`📊 Compressed to: ${compressedSizeMB.toFixed(2)}MB (${compressedFile.type}, ${compressedFile.name})`);
           
           // If compressed file meets size requirement, return it
           if (compressedFile.size <= targetSizeBytes) {
