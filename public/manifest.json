@@ -1,10 +1,11 @@
 {
-  "name": "My Web App",
-  "short_name": "WebApp",
-  "start_url": ".",
+  "name": "SIM Weekly Prayers",
+  "short_name": "SIM Prayers",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
+  "description": "Weekly Prayers for the Nations from SIM",
   "icons": [
     {
       "src": "icons/icon-16x16.png",
