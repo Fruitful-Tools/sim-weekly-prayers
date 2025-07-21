@@ -25,6 +25,7 @@ import { ImagePlus, Upload, X, Link } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { compressImage, isCompressibleImageType } from '@/lib/imageCompression';
+import { deleteImageFromStorage } from '@/lib/storageUtils';
 
 interface PrayerFormData {
   week_date: string;
@@ -337,7 +338,6 @@ export default function PrayerDialog({
 
       // Delete old image if a new one was uploaded and they're different
       if (oldImageUrl && imageFile && oldImageUrl !== imageUrl) {
-        const { deleteImageFromStorage } = await import('@/lib/storageUtils');
         await deleteImageFromStorage(oldImageUrl);
       }
 
