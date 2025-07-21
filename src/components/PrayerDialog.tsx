@@ -174,9 +174,16 @@ export default function PrayerDialog({
         const previewUrl = URL.createObjectURL(finalFile);
         setImagePreview(previewUrl);
       } catch (error) {
+        console.error('Compression error:', error);
+        
+        // Check if it's the specific "too large" error from our compression algorithm
+        const errorMessage = error instanceof Error && error.message.includes('Unable to compress image below') 
+          ? t('prayer.fileTooLarge')
+          : t('prayer.compressionFailed');
+          
         toast({
           title: t('prayer.error'),
-          description: t('prayer.compressionFailed'),
+          description: errorMessage,
           variant: 'destructive',
         });
         event.target.value = ''; // Clear the input
