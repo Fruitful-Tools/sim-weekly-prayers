@@ -24,6 +24,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ImagePlus, Upload, X, Link } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { compressImage, isCompressibleImageType } from '@/lib/imageCompression';
 
 interface PrayerFormData {
   week_date: string;
@@ -68,6 +69,7 @@ export default function PrayerDialog({
   const [imageInputMode, setImageInputMode] = useState<'upload' | 'url'>(
     'upload'
   );
+  const [isCompressing, setIsCompressing] = useState(false);
 
   const form = useForm<PrayerFormData>({
     defaultValues: {
@@ -105,7 +107,7 @@ export default function PrayerDialog({
     }
   }, [open, prayer, form]);
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       // Validate file type (only images)
@@ -119,21 +121,54 @@ export default function PrayerDialog({
         return;
       }
 
-      // Validate file size (1MB limit)
-      const maxSize = 1024 * 1024; // 1MB in bytes
-      if (file.size > maxSize) {
+      // Check if it's a compressible image type
+      if (!isCompressibleImageType(file)) {
         toast({
           title: t('prayer.error'),
-          description: t('prayer.fileTooLarge'),
+          description: t('prayer.unsupportedImageType'),
           variant: 'destructive',
         });
         event.target.value = ''; // Clear the input
         return;
       }
 
-      setImageFile(file);
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
+      setIsCompressing(true);
+      
+      try {
+        let finalFile = file;
+        
+        // Check file size and compress if needed
+        const maxSize = 1024 * 1024; // 1MB in bytes
+        if (file.size > maxSize) {
+          toast({
+            title: t('prayer.compressingImage'),
+            description: t('prayer.compressingImageDesc'),
+          });
+          
+          finalFile = await compressImage(file, { maxSizeInMB: 1 });
+          
+          toast({
+            title: t('prayer.imageCompressed'),
+            description: t('prayer.imageCompressedDesc', { 
+              originalSize: (file.size / 1024 / 1024).toFixed(2),
+              compressedSize: (finalFile.size / 1024 / 1024).toFixed(2)
+            }),
+          });
+        }
+
+        setImageFile(finalFile);
+        const previewUrl = URL.createObjectURL(finalFile);
+        setImagePreview(previewUrl);
+      } catch (error) {
+        toast({
+          title: t('prayer.error'),
+          description: t('prayer.compressionFailed'),
+          variant: 'destructive',
+        });
+        event.target.value = ''; // Clear the input
+      } finally {
+        setIsCompressing(false);
+      }
     }
   };
 
@@ -141,6 +176,7 @@ export default function PrayerDialog({
     setImageFile(null);
     setImagePreview(null);
     form.setValue('image_url', '');
+    setIsCompressing(false);
   };
 
   const handleImageUrlChange = (url: string) => {
@@ -359,10 +395,19 @@ export default function PrayerDialog({
                       <input
                         id="image-upload"
                         type="file"
-                        accept="image/*"
+                        accept="image/jpeg,image/jpg,image/png,image/webp"
                         onChange={handleImageChange}
+                        disabled={isCompressing}
                         className="hidden"
                       />
+                      {isCompressing && (
+                        <p className="text-xs text-muted-foreground mt-2">
+                          {t('prayer.compressingInProgress')}
+                        </p>
+                      )}
+                      <p className="text-xs text-muted-foreground mt-2">
+                        {t('prayer.imageCompressionHint')}
+                      </p>
                     </div>
                   )}
                 </TabsContent>
