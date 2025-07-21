@@ -163,12 +163,28 @@ const Prayers = () => {
     if (!window.confirm(t('prayer.confirmDelete'))) return;
 
     try {
+      // First get the prayer to get its image URL
+      const { data: prayer, error: fetchError } = await supabase
+        .from('prayers')
+        .select('image_url')
+        .eq('id', prayerId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Delete the prayer (this will cascade delete translations)
       const { error } = await supabase
         .from('prayers')
         .delete()
         .eq('id', prayerId);
 
       if (error) throw error;
+
+      // Delete the image from storage if it exists
+      if (prayer?.image_url) {
+        const { deleteImageFromStorage } = await import('@/lib/storageUtils');
+        await deleteImageFromStorage(prayer.image_url);
+      }
 
       toast({
         title: t('prayer.success'),

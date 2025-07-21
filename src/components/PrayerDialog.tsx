@@ -216,6 +216,12 @@ export default function PrayerDialog({
 
     try {
       let imageUrl = data.image_url;
+      let oldImageUrl: string | null = null;
+
+      // Store old image URL for deletion if we're updating
+      if (prayer && prayer.image_url) {
+        oldImageUrl = prayer.image_url;
+      }
 
       // Upload new image if one was selected
       if (imageFile) {
@@ -288,6 +294,12 @@ export default function PrayerDialog({
         .insert(translations);
 
       if (translationsError) throw translationsError;
+
+      // Delete old image if a new one was uploaded and they're different
+      if (oldImageUrl && imageFile && oldImageUrl !== imageUrl) {
+        const { deleteImageFromStorage } = await import('@/lib/storageUtils');
+        await deleteImageFromStorage(oldImageUrl);
+      }
 
       toast({
         title: t('prayer.success'),
