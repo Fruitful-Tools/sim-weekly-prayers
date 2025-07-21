@@ -44,7 +44,7 @@ export const deleteImageFromStorage = async (imageUrl: string): Promise<boolean>
   }
   
   try {
-    const { error } = await supabase.storage
+    const { data, error } = await supabase.storage
       .from('prayer-images')
       .remove([filePath]);
     
@@ -53,7 +53,30 @@ export const deleteImageFromStorage = async (imageUrl: string): Promise<boolean>
       return false;
     }
     
-    console.log('Successfully deleted image:', filePath);
+    // Check if the file was actually deleted
+    // Supabase returns an array of deleted file info or empty array if nothing was deleted
+    if (!data || data.length === 0) {
+      console.warn('File deletion returned empty data - file may not have been deleted:', filePath);
+      
+      // Verify if file still exists by trying to get its public URL and checking if accessible
+      const { data: urlData } = supabase.storage
+        .from('prayer-images')
+        .getPublicUrl(filePath);
+      
+      // Try to fetch the URL to see if file still exists
+      try {
+        const response = await fetch(urlData.publicUrl, { method: 'HEAD' });
+        if (response.ok) {
+          console.error('File still exists after deletion attempt:', filePath);
+          return false;
+        }
+      } catch (fetchError) {
+        // If fetch fails, the file might be deleted (or network issue)
+        console.log('File appears to be deleted (fetch failed):', filePath);
+      }
+    }
+    
+    console.log('Successfully deleted image:', filePath, 'Response data:', data);
     return true;
   } catch (error) {
     console.error('Error deleting image:', error);
