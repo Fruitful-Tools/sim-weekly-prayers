@@ -1,3 +1,5 @@
+import Compressor from 'compressorjs';
+
 export interface CompressionOptions {
   maxSizeInMB?: number;
   maxWidthOrHeight?: number;
@@ -14,87 +16,49 @@ export const compressImage = async (
     quality = 0.8
   } = options;
 
+  const targetSizeBytes = maxSizeInMB * 1024 * 1024;
+
+  // If file is already small enough, return it
+  if (file.size <= targetSizeBytes) {
+    return file;
+  }
+
   return new Promise((resolve, reject) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
+    const attemptCompression = (currentQuality: number, attempt: number = 1): void => {
+      new Compressor(file, {
+        quality: currentQuality,
+        maxWidth: maxWidthOrHeight,
+        maxHeight: maxWidthOrHeight,
+        convertSize: 5000000, // Convert PNG to JPEG if larger than 5MB
+        convertTypes: ['image/png', 'image/webp'],
+        mimeType: file.type === 'image/png' && file.size > 5000000 ? 'image/jpeg' : file.type,
+        checkOrientation: false, // Preserve aspect ratio
+        retainExif: false, // Remove EXIF data to reduce size
+        success: (compressedFile: File) => {
+          // If compressed file meets size requirement, return it
+          if (compressedFile.size <= targetSizeBytes) {
+            resolve(compressedFile);
+            return;
+          }
 
-    if (!ctx) {
-      reject(new Error('Canvas context not available'));
-      return;
-    }
+          // If we've tried enough times or quality is too low, give up
+          if (attempt >= 6 || currentQuality <= 0.1) {
+            reject(new Error(`Unable to compress image below ${maxSizeInMB}MB. Please use a smaller image or lower resolution.`));
+            return;
+          }
 
-    img.onload = () => {
-      // Calculate new dimensions while maintaining aspect ratio
-      let { width, height } = img;
-      const aspectRatio = width / height;
-      
-      if (width > height) {
-        if (width > maxWidthOrHeight) {
-          width = maxWidthOrHeight;
-          height = width / aspectRatio;
+          // Try again with lower quality
+          const nextQuality = Math.max(0.1, currentQuality - 0.15);
+          attemptCompression(nextQuality, attempt + 1);
+        },
+        error: (err: Error) => {
+          reject(new Error(`Image compression failed: ${err.message}`));
         }
-      } else {
-        if (height > maxWidthOrHeight) {
-          height = maxWidthOrHeight;
-          width = height * aspectRatio;
-        }
-      }
-
-      canvas.width = width;
-      canvas.height = height;
-
-      // Draw and compress
-      ctx.drawImage(img, 0, 0, width, height);
-
-      const compressAndCheck = (currentQuality: number, attempts: number = 0): void => {
-        canvas.toBlob(
-          (blob) => {
-            if (!blob) {
-              reject(new Error('Failed to compress image'));
-              return;
-            }
-
-            const compressedFile = new File([blob], file.name, {
-              type: file.type,
-              lastModified: Date.now(),
-            });
-
-            // If compressed file is larger than original and we haven't tried much, return original
-            if (blob.size >= file.size && attempts === 0) {
-              resolve(file);
-              return;
-            }
-
-            // Check if file size is acceptable
-            if (blob.size <= maxSizeInMB * 1024 * 1024) {
-              resolve(compressedFile);
-              return;
-            }
-
-            // If we've tried many attempts or quality is very low, reject with clear error
-            if (attempts >= 10 || currentQuality <= 0.05) {
-              reject(new Error(`Unable to compress image below ${maxSizeInMB}MB. Please use a smaller image or lower resolution.`));
-              return;
-            }
-
-            // Try with lower quality, more aggressive reduction
-            const nextQuality = Math.max(0.05, currentQuality - 0.15);
-            compressAndCheck(nextQuality, attempts + 1);
-          },
-          file.type,
-          currentQuality
-        );
-      };
-
-      compressAndCheck(quality, 0);
+      });
     };
 
-    img.onerror = () => {
-      reject(new Error('Failed to load image'));
-    };
-
-    img.src = URL.createObjectURL(file);
+    // Start compression with the specified quality
+    attemptCompression(quality);
   });
 };
 
@@ -102,7 +66,8 @@ export const isCompressibleImageType = (file: File): boolean => {
   const compressibleTypes = [
     'image/jpeg',
     'image/jpg', 
-    'image/png'
+    'image/png',
+    'image/webp'
   ];
   return compressibleTypes.includes(file.type.toLowerCase());
 };
