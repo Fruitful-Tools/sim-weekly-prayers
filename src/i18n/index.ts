@@ -6,11 +6,11 @@ import zhTW from './locales/zh-TW.json';
 
 const resources = {
   en: {
-    translation: en
+    translation: en,
   },
   'zh-TW': {
-    translation: zhTW
-  }
+    translation: zhTW,
+  },
 };
 
 // Get saved language from localStorage or default to Traditional Chinese
@@ -19,17 +19,15 @@ const getInitialLanguage = () => {
   return savedLanguage || 'zh-TW';
 };
 
-i18n
-  .use(initReactI18next)
-  .init({
-    resources,
-    lng: getInitialLanguage(),
-    fallbackLng: 'zh-TW',
-    debug: false,
-    interpolation: {
-      escapeValue: false
-    }
-  });
+i18n.use(initReactI18next).init({
+  resources,
+  lng: getInitialLanguage(),
+  fallbackLng: 'zh-TW',
+  debug: false,
+  interpolation: {
+    escapeValue: false,
+  },
+});
 
 // Save language changes to localStorage
 i18n.on('languageChanged', (lng) => {

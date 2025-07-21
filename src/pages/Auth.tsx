@@ -4,7 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -30,7 +36,7 @@ export default function Auth() {
     setLoading(true);
 
     const { error } = await signIn(email, password);
-    
+
     if (error) {
       toast({
         title: t('auth.error'),
@@ -44,7 +50,7 @@ export default function Auth() {
       });
       navigate('/');
     }
-    
+
     setLoading(false);
   };
 
@@ -53,7 +59,7 @@ export default function Auth() {
     setLoading(true);
 
     const { error } = await signUp(email, password);
-    
+
     if (error) {
       toast({
         title: t('auth.error'),
@@ -66,7 +72,7 @@ export default function Auth() {
         description: t('auth.checkEmail'),
       });
     }
-    
+
     setLoading(false);
   };
 
@@ -77,9 +83,7 @@ export default function Auth() {
           <CardTitle className="text-2xl font-bold text-primary">
             {t('auth.welcome')}
           </CardTitle>
-          <CardDescription>
-            {t('auth.description')}
-          </CardDescription>
+          <CardDescription>{t('auth.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin" className="w-full">
@@ -87,7 +91,7 @@ export default function Auth() {
               <TabsTrigger value="signin">{t('auth.signIn')}</TabsTrigger>
               <TabsTrigger value="signup">{t('auth.signUp')}</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="signin">
               <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
@@ -117,7 +121,7 @@ export default function Auth() {
                 </Button>
               </form>
             </TabsContent>
-            
+
             <TabsContent value="signup">
               <div className="space-y-4">
                 <div className="text-center p-6 bg-muted/50 rounded-lg border-2 border-dashed border-muted-foreground/25">

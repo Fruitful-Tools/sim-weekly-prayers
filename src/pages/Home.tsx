@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
 import PrayerCard from '@/components/PrayerCard';
 import { ArrowRight, Globe2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -23,21 +23,19 @@ const Home = () => {
   const [latestPrayers, setLatestPrayers] = useState<Prayer[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchLatestPrayers();
-  }, [i18n.language, isMobile]);
-
-  const fetchLatestPrayers = async () => {
+  const fetchLatestPrayers = useCallback(async () => {
     try {
       const limit = isMobile ? 2 : 3;
       const { data, error } = await supabase
         .from('prayers')
-        .select(`
+        .select(
+          `
           id,
           week_date,
           image_url,
           prayer_translations!inner(title, content)
-        `)
+        `
+        )
         .eq('prayer_translations.language', i18n.language)
         .order('week_date', { ascending: false })
         .limit(limit);
@@ -49,14 +47,18 @@ const Home = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [i18n.language, isMobile]);
+
+  useEffect(() => {
+    fetchLatestPrayers();
+  }, [fetchLatestPrayers]);
 
   const formatPrayerForCard = (prayer: Prayer) => ({
     id: prayer.id,
     week_date: prayer.week_date,
     image_url: prayer.image_url,
     title: prayer.prayer_translations[0]?.title || '',
-    content: prayer.prayer_translations[0]?.content || ''
+    content: prayer.prayer_translations[0]?.content || '',
   });
 
   return (
@@ -73,10 +75,10 @@ const Home = () => {
               {t('home.subtitle')}
             </p>
           </div>
-          
+
           <Link to="/prayers">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="bg-gradient-to-r from-primary to-primary-glow hover:shadow-prayer transition-all duration-300"
             >
               {t('home.viewAllPrayers')}
@@ -102,12 +104,14 @@ const Home = () => {
             </div>
           ) : latestPrayers.length > 0 ? (
             <>
-              <div className={`grid gap-6 ${isMobile ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
+              <div
+                className={`grid gap-6 ${isMobile ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}
+              >
                 {latestPrayers.map((prayer) => (
-                  <PrayerCard 
-                    key={prayer.id} 
-                    prayer={formatPrayerForCard(prayer)} 
-                    isPreview 
+                  <PrayerCard
+                    key={prayer.id}
+                    prayer={formatPrayerForCard(prayer)}
+                    isPreview
                   />
                 ))}
               </div>

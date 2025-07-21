@@ -40,8 +40,16 @@ All colors MUST be HSL.
     --ring: 212 85% 45%;
 
     /* Spiritual gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(212 85% 45%), hsl(212 85% 65%));
-    --gradient-peaceful: linear-gradient(180deg, hsl(210 25% 98%), hsl(210 20% 95%));
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(212 85% 45%),
+      hsl(212 85% 65%)
+    );
+    --gradient-peaceful: linear-gradient(
+      180deg,
+      hsl(210 25% 98%),
+      hsl(210 20% 95%)
+    );
     --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 25% 98%));
 
     /* Sacred shadows */

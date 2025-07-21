@@ -1,14 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus, Edit, Trash2 } from 'lucide-react';
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import PrayerCard from '@/components/PrayerCard';
 import SearchBox from '@/components/SearchBox';
 import PrayerDialog from '@/components/PrayerDialog';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 
 interface Prayer {
   id: string;
@@ -39,72 +47,79 @@ const Prayers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 6;
 
-  useEffect(() => {
-    fetchPrayers();
-  }, [i18n.language]);
-
-  useEffect(() => {
-    filterPrayers();
-  }, [prayers, searchQuery]);
-
-  useEffect(() => {
-    setCurrentPage(1); // Reset to first page when search changes
-  }, [searchQuery]);
-
-  const fetchPrayers = async () => {
+  const fetchPrayers = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('prayers')
-        .select(`
+        .select(
+          `
           id,
           week_date,
           image_url,
           prayer_translations(title, content, language)
-        `)
+        `
+        )
         .order('week_date', { ascending: false });
 
       if (error) throw error;
-      
+
       // Filter and format prayers for current language
-      const formattedPrayers = data?.map(prayer => ({
-        ...prayer,
-        prayer_translations: prayer.prayer_translations.filter(
-          (t: any) => t.language === i18n.language
-        )
-      })).filter(prayer => prayer.prayer_translations.length > 0) || [];
-      
+      const formattedPrayers =
+        data
+          ?.map((prayer) => ({
+            ...prayer,
+            prayer_translations: prayer.prayer_translations.filter(
+              (t) => t.language === i18n.language
+            ),
+          }))
+          .filter((prayer) => prayer.prayer_translations.length > 0) || [];
+
       setPrayers(formattedPrayers);
     } catch (error) {
       console.error('Error fetching prayers:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [i18n.language]);
 
-  const filterPrayers = () => {
+  const filterPrayers = useCallback(() => {
     if (!searchQuery.trim()) {
       setFilteredPrayers(prayers);
       return;
     }
 
-    const filtered = prayers.filter(prayer => {
+    const filtered = prayers.filter((prayer) => {
       const translation = prayer.prayer_translations[0];
       if (!translation) return false;
-      
+
       const searchLower = searchQuery.toLowerCase();
-      return translation.title.toLowerCase().includes(searchLower) ||
-             translation.content.toLowerCase().includes(searchLower);
+      return (
+        translation.title.toLowerCase().includes(searchLower) ||
+        translation.content.toLowerCase().includes(searchLower)
+      );
     });
-    
+
     setFilteredPrayers(filtered);
-  };
+  }, [prayers, searchQuery]);
+
+  useEffect(() => {
+    fetchPrayers();
+  }, [fetchPrayers]);
+
+  useEffect(() => {
+    filterPrayers();
+  }, [filterPrayers]);
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset to first page when search changes
+  }, [searchQuery]);
 
   const formatPrayerForCard = (prayer: Prayer) => ({
     id: prayer.id,
     week_date: prayer.week_date,
     image_url: prayer.image_url,
     title: prayer.prayer_translations[0]?.title || '',
-    content: prayer.prayer_translations[0]?.content || ''
+    content: prayer.prayer_translations[0]?.content || '',
   });
 
   const handleCreatePrayer = () => {
@@ -116,12 +131,14 @@ const Prayers = () => {
     try {
       const { data, error } = await supabase
         .from('prayers')
-        .select(`
+        .select(
+          `
           id,
           week_date,
           image_url,
           prayer_translations(title, content, language)
-        `)
+        `
+        )
         .eq('id', prayerId)
         .single();
 
@@ -129,7 +146,7 @@ const Prayers = () => {
 
       setEditingPrayer({
         ...data,
-        translations: data.prayer_translations
+        translations: data.prayer_translations,
       });
       setDialogOpen(true);
     } catch (error) {
@@ -182,7 +199,7 @@ const Prayers = () => {
   const generatePageNumbers = () => {
     const pages = [];
     const maxVisiblePages = 5;
-    
+
     if (totalPages <= maxVisiblePages) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -210,7 +227,7 @@ const Prayers = () => {
         pages.push(totalPages);
       }
     }
-    
+
     return pages;
   };
 
@@ -231,7 +248,7 @@ const Prayers = () => {
             )}
           </div>
           <div className="w-24 h-1 bg-gradient-to-r from-primary to-primary-glow mx-auto mb-8"></div>
-          
+
           {/* Search */}
           <div className="flex justify-center">
             <SearchBox onSearch={setSearchQuery} />
@@ -241,20 +258,25 @@ const Prayers = () => {
         {/* Results Count */}
         {searchQuery && (
           <div className="text-center text-sm text-muted-foreground mb-6">
-            {t(filteredPrayers.length === 1 ? 'pagination.result' : 'pagination.results', {
-              count: filteredPrayers.length,
-              query: searchQuery
-            })}
+            {t(
+              filteredPrayers.length === 1
+                ? 'pagination.result'
+                : 'pagination.results',
+              {
+                count: filteredPrayers.length,
+                query: searchQuery,
+              }
+            )}
           </div>
         )}
-        
+
         {/* Pagination Info */}
         {!searchQuery && filteredPrayers.length > 0 && (
           <div className="text-center text-sm text-muted-foreground mb-6">
             {t('pagination.showing', {
               start: startIndex + 1,
               end: Math.min(endIndex, filteredPrayers.length),
-              total: filteredPrayers.length
+              total: filteredPrayers.length,
             })}
           </div>
         )}
@@ -269,10 +291,7 @@ const Prayers = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {currentPrayers.map((prayer) => (
                 <div key={prayer.id} className="relative group">
-                  <PrayerCard 
-                    prayer={formatPrayerForCard(prayer)} 
-                    isPreview 
-                  />
+                  <PrayerCard prayer={formatPrayerForCard(prayer)} isPreview />
                   {user && (
                     <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="flex gap-1">
@@ -298,23 +317,27 @@ const Prayers = () => {
                 </div>
               ))}
             </div>
-            
+
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="mt-8">
                 <Pagination>
                   <PaginationContent>
                     <PaginationItem>
-                      <PaginationPrevious 
+                      <PaginationPrevious
                         href="#"
                         onClick={(e) => {
                           e.preventDefault();
                           if (currentPage > 1) setCurrentPage(currentPage - 1);
                         }}
-                        className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                        className={
+                          currentPage === 1
+                            ? 'pointer-events-none opacity-50'
+                            : ''
+                        }
                       />
                     </PaginationItem>
-                    
+
                     {generatePageNumbers().map((page, index) => (
                       <PaginationItem key={index}>
                         {page === 'ellipsis' ? (
@@ -333,15 +356,20 @@ const Prayers = () => {
                         )}
                       </PaginationItem>
                     ))}
-                    
+
                     <PaginationItem>
-                      <PaginationNext 
+                      <PaginationNext
                         href="#"
                         onClick={(e) => {
                           e.preventDefault();
-                          if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                          if (currentPage < totalPages)
+                            setCurrentPage(currentPage + 1);
                         }}
-                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                        className={
+                          currentPage === totalPages
+                            ? 'pointer-events-none opacity-50'
+                            : ''
+                        }
                       />
                     </PaginationItem>
                   </PaginationContent>

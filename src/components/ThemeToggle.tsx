@@ -12,7 +12,11 @@ const ThemeToggle = () => {
   }, []);
 
   if (!mounted) {
-    return <Button variant="ghost" size="sm" className="h-9 w-9 p-0"><Sun className="h-4 w-4" /></Button>;
+    return (
+      <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
+        <Sun className="h-4 w-4" />
+      </Button>
+    );
   }
 
   return (

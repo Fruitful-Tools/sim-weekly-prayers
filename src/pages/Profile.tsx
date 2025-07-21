@@ -2,7 +2,13 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -58,9 +64,7 @@ export default function Profile() {
           <CardTitle className="text-2xl font-bold text-primary">
             {t('profile.title')}
           </CardTitle>
-          <CardDescription>
-            {t('profile.description')}
-          </CardDescription>
+          <CardDescription>{t('profile.description')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
@@ -70,7 +74,7 @@ export default function Profile() {
               </label>
               <p className="text-lg">{user.email}</p>
             </div>
-            
+
             <div>
               <label className="text-sm font-medium text-muted-foreground">
                 {t('profile.userId')}
@@ -79,18 +83,20 @@ export default function Profile() {
                 {user.id}
               </p>
             </div>
-            
+
             <div>
               <label className="text-sm font-medium text-muted-foreground">
                 {t('profile.status')}
               </label>
               <div className="mt-1">
                 <Badge variant="secondary">
-                  {user.email_confirmed_at ? t('profile.verified') : t('profile.unverified')}
+                  {user.email_confirmed_at
+                    ? t('profile.verified')
+                    : t('profile.unverified')}
                 </Badge>
               </div>
             </div>
-            
+
             <div>
               <label className="text-sm font-medium text-muted-foreground">
                 {t('profile.joinedAt')}
@@ -100,7 +106,7 @@ export default function Profile() {
               </p>
             </div>
           </div>
-          
+
           <div className="pt-6 border-t">
             <div className="space-y-4">
               <div>
@@ -114,9 +120,7 @@ export default function Profile() {
                   <Badge variant="outline">
                     {t('profile.canCreatePrayers')}
                   </Badge>
-                  <Badge variant="outline">
-                    {t('profile.canEditPrayers')}
-                  </Badge>
+                  <Badge variant="outline">{t('profile.canEditPrayers')}</Badge>
                   <Badge variant="outline">
                     {t('profile.canDeletePrayers')}
                   </Badge>
@@ -124,9 +128,9 @@ export default function Profile() {
               </div>
             </div>
           </div>
-          
+
           <div className="pt-6 border-t">
-            <Button 
+            <Button
               onClick={handleSignOut}
               variant="destructive"
               className="w-full"

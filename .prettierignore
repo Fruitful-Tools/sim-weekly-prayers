@@ -1,0 +1,13 @@
+node_modules
+dist
+build
+coverage
+.next
+.cache
+*.min.js
+*.min.css
+public
+.git
+.env*
+*.md
+package-lock.json

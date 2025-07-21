@@ -34,6 +34,12 @@ npm i
 
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
+
+# Additional development commands:
+npm run lint        # Check code quality with ESLint
+npm run lint:fix    # Fix ESLint issues automatically
+npm run format      # Format code with Prettier
+npm run build       # Create production build
 ```
 
 **Edit a file directly in GitHub**
@@ -54,11 +60,14 @@ npm run dev
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Vite** - Fast build tool and development server
+- **TypeScript** - Type-safe JavaScript
+- **React 18** - UI framework
+- **shadcn-ui** - Component library
+- **Tailwind CSS** - Utility-first styling
+- **Supabase** - Backend as a service
+- **ESLint + Prettier** - Code quality and formatting
+- **Husky** - Pre-commit hooks for code quality
 
 ## How can I deploy this project?
 
@@ -71,3 +80,17 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## Development Workflow
+
+This project uses automated code quality tools:
+
+- **Pre-commit hooks**: Code is automatically linted and formatted before commits
+- **ESLint**: Catches code quality issues and enforces consistent patterns
+- **Prettier**: Ensures consistent code formatting across the project
+- **Husky**: Manages Git hooks to run quality checks
+
+When you commit changes, the following will run automatically:
+1. ESLint will check and fix TypeScript/React files
+2. Prettier will format all staged files
+3. Only clean, formatted code will be committed

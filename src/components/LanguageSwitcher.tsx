@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Button } from "@/components/ui/button";
-import { Globe } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { Globe } from 'lucide-react';
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
@@ -15,8 +15,8 @@ const LanguageSwitcher = () => {
   };
 
   return (
-    <Button 
-      variant="ghost" 
+    <Button
+      variant="ghost"
       size="sm"
       onClick={toggleLanguage}
       className="gap-2 text-muted-foreground hover:text-foreground transition-colors"

@@ -19,7 +19,7 @@
     "editPrayer": "Edit Prayer",
     "updatePrayer": "Update Prayer",
     "formDescription": "Create or edit a weekly prayer with bilingual content and optional image",
-    "weekDate": "Week Date", 
+    "weekDate": "Week Date",
     "image": "Prayer Image",
     "uploadImage": "Upload an image for this prayer",
     "selectImage": "Select Image",
@@ -55,7 +55,7 @@
     "welcome": "Welcome to SIM Prayer",
     "description": "Sign in to manage weekly prayers",
     "signIn": "Sign In",
-    "signUp": "Sign Up", 
+    "signUp": "Sign Up",
     "email": "Email",
     "password": "Password",
     "signingIn": "Signing in...",
@@ -83,7 +83,7 @@
     "permissions": "Permissions",
     "permissionsDescription": "As a logged-in user, you can:",
     "canCreatePrayers": "Create new prayers",
-    "canEditPrayers": "Edit existing prayers", 
+    "canEditPrayers": "Edit existing prayers",
     "canDeletePrayers": "Delete prayers"
   },
   "common": {

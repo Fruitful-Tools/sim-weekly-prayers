@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Calendar, ChevronRight } from "lucide-react";
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Calendar, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface Prayer {
@@ -22,16 +22,18 @@ const PrayerCard = ({ prayer, isPreview = false }: PrayerCardProps) => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString(undefined, { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   };
 
   const getPreviewContent = (content: string) => {
     const plainText = content.replace(/[#*`]/g, '').replace(/\n/g, ' ');
-    return plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText;
+    return plainText.length > 150
+      ? plainText.substring(0, 150) + '...'
+      : plainText;
   };
 
   const formatDateForUrl = (dateString: string) => {
@@ -39,18 +41,21 @@ const PrayerCard = ({ prayer, isPreview = false }: PrayerCardProps) => {
   };
 
   return (
-    <Link to={`/prayer/${formatDateForUrl(prayer.week_date)}`} className="block h-full">
+    <Link
+      to={`/prayer/${formatDateForUrl(prayer.week_date)}`}
+      className="block h-full"
+    >
       <Card className="group h-full overflow-hidden bg-gradient-to-br from-card to-card/80 border-border hover:shadow-prayer transition-all duration-300 hover:-translate-y-1 cursor-pointer">
         {prayer.image_url && (
           <div className="overflow-hidden">
-            <img 
-              src={prayer.image_url} 
+            <img
+              src={prayer.image_url}
               alt={prayer.title}
               className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-300"
             />
           </div>
         )}
-        
+
         <CardHeader className="pb-3">
           <div className="flex items-center text-xs text-muted-foreground mb-2">
             <Calendar className="h-3 w-3 mr-1" />
@@ -60,14 +65,14 @@ const PrayerCard = ({ prayer, isPreview = false }: PrayerCardProps) => {
             {prayer.title}
           </h3>
         </CardHeader>
-        
+
         <CardContent className="pt-0">
           {isPreview && (
             <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
               {getPreviewContent(prayer.content)}
             </p>
           )}
-          
+
           <div className="w-full justify-between group-hover:bg-primary group-hover:text-primary-foreground transition-colors flex items-center text-sm font-medium">
             {t('prayer.readMore')}
             <ChevronRight className="h-4 w-4" />

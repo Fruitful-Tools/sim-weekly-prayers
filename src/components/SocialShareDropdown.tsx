@@ -30,7 +30,7 @@ const SocialShareDropdown = ({ url, title }: SocialShareDropdownProps) => {
       toast({
         title: t('prayer.copyFailed'),
         description: t('prayer.copyFailedDesc'),
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
@@ -41,21 +41,21 @@ const SocialShareDropdown = ({ url, title }: SocialShareDropdownProps) => {
       action: () => {
         const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
         window.open(shareUrl, '_blank');
-      }
+      },
     },
     {
       name: 'X (Twitter)',
       action: () => {
         const shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
         window.open(shareUrl, '_blank');
-      }
+      },
     },
     {
       name: 'Threads',
       action: () => {
         const shareUrl = `https://threads.net/intent/post?text=${encodeURIComponent(title + ' ' + url)}`;
         window.open(shareUrl, '_blank');
-      }
+      },
     },
     {
       name: 'Instagram',
@@ -67,13 +67,13 @@ const SocialShareDropdown = ({ url, title }: SocialShareDropdownProps) => {
             description: t('share.instagramDesc'),
           });
         });
-      }
+      },
     },
     {
       name: t('prayer.copyLink'),
       action: handleCopyLink,
-      icon: <Copy className="h-4 w-4" />
-    }
+      icon: <Copy className="h-4 w-4" />,
+    },
   ];
 
   return (
@@ -84,7 +84,10 @@ const SocialShareDropdown = ({ url, title }: SocialShareDropdownProps) => {
           {t('share.shareButton')}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48 bg-popover border border-border shadow-lg">
+      <DropdownMenuContent
+        align="end"
+        className="w-48 bg-popover border border-border shadow-lg"
+      >
         {shareOptions.map((option, index) => (
           <DropdownMenuItem
             key={index}

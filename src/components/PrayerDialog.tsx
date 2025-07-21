@@ -2,8 +2,21 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -21,20 +34,40 @@ interface PrayerFormData {
   zh_content: string;
 }
 
+interface Translation {
+  title: string;
+  content: string;
+  language: string;
+}
+
+interface PrayerWithTranslations {
+  id: string;
+  week_date: string;
+  image_url?: string | null;
+  translations?: Translation[];
+}
+
 interface PrayerDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  prayer?: any;
+  prayer?: PrayerWithTranslations;
   onSuccess: () => void;
 }
 
-export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: PrayerDialogProps) {
+export default function PrayerDialog({
+  open,
+  onOpenChange,
+  prayer,
+  onSuccess,
+}: PrayerDialogProps) {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageInputMode, setImageInputMode] = useState<'upload' | 'url'>('upload');
+  const [imageInputMode, setImageInputMode] = useState<'upload' | 'url'>(
+    'upload'
+  );
 
   const form = useForm<PrayerFormData>({
     defaultValues: {
@@ -53,12 +86,18 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
       const defaultValues = {
         week_date: prayer?.week_date || new Date().toISOString().split('T')[0],
         image_url: prayer?.image_url || '',
-        en_title: prayer?.translations?.find((t: any) => t.language === 'en')?.title || '',
-        en_content: prayer?.translations?.find((t: any) => t.language === 'en')?.content || '',
-        zh_title: prayer?.translations?.find((t: any) => t.language === 'zh-TW')?.title || '',
-        zh_content: prayer?.translations?.find((t: any) => t.language === 'zh-TW')?.content || '',
+        en_title:
+          prayer?.translations?.find((t) => t.language === 'en')?.title || '',
+        en_content:
+          prayer?.translations?.find((t) => t.language === 'en')?.content || '',
+        zh_title:
+          prayer?.translations?.find((t) => t.language === 'zh-TW')?.title ||
+          '',
+        zh_content:
+          prayer?.translations?.find((t) => t.language === 'zh-TW')?.content ||
+          '',
       };
-      
+
       form.reset(defaultValues);
       setImagePreview(prayer?.image_url || null);
       setImageFile(null);
@@ -115,7 +154,7 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
 
   const onSubmit = async (data: PrayerFormData) => {
     setIsSubmitting(true);
-    
+
     try {
       let imageUrl = data.image_url;
 
@@ -217,9 +256,7 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
           <DialogTitle>
             {prayer ? t('prayer.editPrayer') : t('prayer.createPrayer')}
           </DialogTitle>
-          <DialogDescription>
-            {t('prayer.formDescription')}
-          </DialogDescription>
+          <DialogDescription>{t('prayer.formDescription')}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -242,9 +279,14 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
             {/* Image Upload/URL */}
             <div className="space-y-4">
               <label className="text-sm font-medium">{t('prayer.image')}</label>
-              
+
               {/* Toggle between upload and URL */}
-              <Tabs value={imageInputMode} onValueChange={(value) => setImageInputMode(value as 'upload' | 'url')}>
+              <Tabs
+                value={imageInputMode}
+                onValueChange={(value) =>
+                  setImageInputMode(value as 'upload' | 'url')
+                }
+              >
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="upload">
                     <Upload className="h-4 w-4 mr-2" />
@@ -257,11 +299,12 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
                 </TabsList>
 
                 <TabsContent value="upload" className="space-y-2">
-                  {imagePreview && !form.watch('image_url')?.startsWith('http') ? (
+                  {imagePreview &&
+                  !form.watch('image_url')?.startsWith('http') ? (
                     <div className="relative">
-                      <img 
-                        src={imagePreview} 
-                        alt="Prayer preview" 
+                      <img
+                        src={imagePreview}
+                        alt="Prayer preview"
                         className="w-full h-48 object-cover rounded-lg"
                       />
                       <Button
@@ -277,8 +320,16 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
                   ) : (
                     <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
                       <ImagePlus className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                      <p className="text-muted-foreground mb-4">{t('prayer.uploadImage')}</p>
-                      <Button type="button" variant="outline" onClick={() => document.getElementById('image-upload')?.click()}>
+                      <p className="text-muted-foreground mb-4">
+                        {t('prayer.uploadImage')}
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() =>
+                          document.getElementById('image-upload')?.click()
+                        }
+                      >
                         <Upload className="h-4 w-4 mr-2" />
                         {t('prayer.selectImage')}
                       </Button>
@@ -301,7 +352,7 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
                       <FormItem>
                         <FormLabel>Image URL</FormLabel>
                         <FormControl>
-                          <Input 
+                          <Input
                             placeholder="https://example.com/image.jpg"
                             {...field}
                             onChange={(e) => {
@@ -314,25 +365,26 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
                       </FormItem>
                     )}
                   />
-                  {imagePreview && form.watch('image_url')?.startsWith('http') && (
-                    <div className="relative">
-                      <img 
-                        src={imagePreview} 
-                        alt="Prayer preview" 
-                        className="w-full h-48 object-cover rounded-lg"
-                        onError={() => setImagePreview(null)}
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="absolute top-2 right-2"
-                        onClick={removeImage}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  )}
+                  {imagePreview &&
+                    form.watch('image_url')?.startsWith('http') && (
+                      <div className="relative">
+                        <img
+                          src={imagePreview}
+                          alt="Prayer preview"
+                          className="w-full h-48 object-cover rounded-lg"
+                          onError={() => setImagePreview(null)}
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="absolute top-2 right-2"
+                          onClick={removeImage}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
                 </TabsContent>
               </Tabs>
             </div>
@@ -357,9 +409,9 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
                         <FormItem>
                           <FormLabel>{t('prayer.title')}</FormLabel>
                           <FormControl>
-                            <Input 
-                              placeholder="Prayer for [Country Name]" 
-                              {...field} 
+                            <Input
+                              placeholder="Prayer for [Country Name]"
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
@@ -374,10 +426,10 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
                         <FormItem>
                           <FormLabel>{t('prayer.content')}</FormLabel>
                           <FormControl>
-                            <Textarea 
+                            <Textarea
                               placeholder="Enter prayer content in markdown format..."
                               rows={10}
-                              {...field} 
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
@@ -401,10 +453,7 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
                         <FormItem>
                           <FormLabel>{t('prayer.title')}</FormLabel>
                           <FormControl>
-                            <Input 
-                              placeholder="為[國家名稱]禱告" 
-                              {...field} 
-                            />
+                            <Input placeholder="為[國家名稱]禱告" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -418,10 +467,10 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
                         <FormItem>
                           <FormLabel>{t('prayer.content')}</FormLabel>
                           <FormControl>
-                            <Textarea 
+                            <Textarea
                               placeholder="請輸入禱告內容（支援 Markdown 格式）..."
                               rows={10}
-                              {...field} 
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
@@ -435,20 +484,19 @@ export default function PrayerDialog({ open, onOpenChange, prayer, onSuccess }: 
 
             {/* Submit Button */}
             <div className="flex justify-end space-x-2">
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 onClick={() => onOpenChange(false)}
               >
                 {t('common.cancel')}
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting 
-                  ? t('common.saving') 
-                  : prayer 
-                    ? t('prayer.updatePrayer') 
-                    : t('prayer.createPrayer')
-                }
+                {isSubmitting
+                  ? t('common.saving')
+                  : prayer
+                    ? t('prayer.updatePrayer')
+                    : t('prayer.createPrayer')}
               </Button>
             </div>
           </form>
