@@ -395,7 +395,7 @@ export default function PrayerDialog({
                       <input
                         id="image-upload"
                         type="file"
-                        accept="image/jpeg,image/jpg,image/png,image/webp"
+                        accept="image/jpeg,image/jpg,image/png"
                         onChange={handleImageChange}
                         disabled={isCompressing}
                         className="hidden"

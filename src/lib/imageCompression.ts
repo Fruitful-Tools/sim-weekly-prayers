@@ -25,18 +25,19 @@ export const compressImage = async (
     }
 
     img.onload = () => {
-      // Calculate new dimensions
+      // Calculate new dimensions while maintaining aspect ratio
       let { width, height } = img;
+      const aspectRatio = width / height;
       
       if (width > height) {
         if (width > maxWidthOrHeight) {
-          height = (height * maxWidthOrHeight) / width;
           width = maxWidthOrHeight;
+          height = width / aspectRatio;
         }
       } else {
         if (height > maxWidthOrHeight) {
-          width = (width * maxWidthOrHeight) / height;
           height = maxWidthOrHeight;
+          width = height * aspectRatio;
         }
       }
 
@@ -59,12 +60,18 @@ export const compressImage = async (
               lastModified: Date.now(),
             });
 
+            // If compressed file is larger than original, return original
+            if (blob.size >= file.size) {
+              resolve(file);
+              return;
+            }
+
             // Check if file size is acceptable or if we've tried enough
             if (blob.size <= maxSizeInMB * 1024 * 1024 || currentQuality <= 0.1) {
               resolve(compressedFile);
             } else {
               // Try with lower quality
-              compressAndCheck(currentQuality - 0.1);
+              compressAndCheck(Math.max(0.1, currentQuality - 0.1));
             }
           },
           file.type,
@@ -87,8 +94,7 @@ export const isCompressibleImageType = (file: File): boolean => {
   const compressibleTypes = [
     'image/jpeg',
     'image/jpg', 
-    'image/png',
-    'image/webp'
+    'image/png'
   ];
   return compressibleTypes.includes(file.type.toLowerCase());
 };

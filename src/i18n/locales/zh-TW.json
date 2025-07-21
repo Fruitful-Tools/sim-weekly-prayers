@@ -36,7 +36,7 @@
     "imageUploadError": "上傳圖片時發生錯誤，請重試。",
     "invalidFileType": "請選擇圖片檔案（JPEG、PNG、GIF 等）",
     "fileTooLarge": "檔案大小必須小於 1MB，請選擇較小的圖片。",
-    "unsupportedImageType": "請使用 JPEG、PNG 或 WebP 格式以進行自動壓縮",
+    "unsupportedImageType": "請使用 JPEG 或 PNG 格式以進行自動壓縮",
     "compressingImage": "正在壓縮圖片",
     "compressingImageDesc": "您的圖片正在被壓縮以減少檔案大小...",
     "imageCompressed": "圖片壓縮成功",
