@@ -9,17 +9,20 @@ export const extractFilePathFromUrl = (url: string): string | null => {
   if (!url) return null;
   
   try {
-    // Handle both full URLs and relative paths
+    // Only handle Supabase storage URLs
     if (url.includes('/storage/v1/object/public/prayer-images/')) {
       const parts = url.split('/storage/v1/object/public/prayer-images/');
       return parts[1] || null;
     }
     
-    // If it's already just a file path, return as is
-    if (!url.startsWith('http')) {
-      return url;
+    // Check if it's a Supabase domain (additional safety check)
+    if (url.includes('supabase.co') || url.includes('supabase.in')) {
+      // Extract file path for Supabase URLs even if format is slightly different
+      const match = url.match(/\/prayer-images\/(.+)$/);
+      return match ? match[1] : null;
     }
     
+    // External URLs (imgur, cloudinary, etc.) should not be deleted
     return null;
   } catch (error) {
     console.error('Error extracting file path from URL:', error);
@@ -35,8 +38,9 @@ export const deleteImageFromStorage = async (imageUrl: string): Promise<boolean>
   
   const filePath = extractFilePathFromUrl(imageUrl);
   if (!filePath) {
-    console.warn('Could not extract file path from URL:', imageUrl);
-    return false;
+    // This is expected for external URLs (imgur, etc.) - no cleanup needed
+    console.log('External URL detected, skipping storage deletion:', imageUrl);
+    return true;
   }
   
   try {
