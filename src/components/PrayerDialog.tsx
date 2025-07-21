@@ -108,8 +108,22 @@ export default function PrayerDialog({
   }, [open, prayer, form]);
 
   const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+
+      // Check file size first (before compression)
+      const maxSize = 10 * 1024 * 1024; // 10MB max before compression
+      if (file.size > maxSize) {
+        toast({
+          title: t('prayer.error'),
+          description: t('prayer.fileTooLargeForCompression'),
+          variant: 'destructive',
+        });
+        event.target.value = ''; // Clear the input
+        return;
+      }
+
       // Validate file type (only images)
       if (!file.type.startsWith('image/')) {
         toast({
@@ -197,6 +211,30 @@ export default function PrayerDialog({
 
       if (uploadError) {
         console.error('Upload error:', uploadError);
+        
+        // Map specific Supabase errors to user-friendly messages
+        let errorMessage = t('prayer.imageUploadError');
+        
+        if (uploadError.message?.includes('Payload too large')) {
+          errorMessage = t('prayer.fileTooLargeSupabase');
+        } else if (uploadError.message?.includes('Invalid file type')) {
+          errorMessage = t('prayer.invalidFileTypeSupabase');
+        } else if (uploadError.message?.includes('Bucket not found')) {
+          errorMessage = t('prayer.storageBucketError');
+        } else if (uploadError.message?.includes('Duplicate')) {
+          errorMessage = t('prayer.duplicateFileError');
+        } else if (uploadError.message?.includes('Permission denied') || uploadError.message?.includes('Unauthorized')) {
+          errorMessage = t('prayer.uploadPermissionError');
+        } else if (uploadError.message?.includes('Network')) {
+          errorMessage = t('prayer.networkError');
+        }
+        
+        toast({
+          title: t('prayer.error'),
+          description: errorMessage,
+          variant: 'destructive',
+        });
+        
         return null;
       }
 
@@ -207,6 +245,13 @@ export default function PrayerDialog({
       return data.publicUrl;
     } catch (error) {
       console.error('Error uploading image:', error);
+      
+      toast({
+        title: t('prayer.error'),
+        description: t('prayer.uploadUnexpectedError'),
+        variant: 'destructive',
+      });
+      
       return null;
     }
   };
@@ -229,11 +274,7 @@ export default function PrayerDialog({
         if (uploadedUrl) {
           imageUrl = uploadedUrl;
         } else {
-          toast({
-            title: t('prayer.error'),
-            description: t('prayer.imageUploadError'),
-            variant: 'destructive',
-          });
+          // Error already shown in uploadImage function
           return;
         }
       }
