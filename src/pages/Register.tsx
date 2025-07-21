@@ -19,7 +19,7 @@ const Register = () => {
   const { toast } = useToast();
 
   const validateEmail = (email: string) => {
-    return email.endsWith('@simtaiwan.org');
+    return email === 'taiwansim@gmail.com';
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -115,7 +115,7 @@ const Register = () => {
               Register Account
             </CardTitle>
             <p className="text-sm text-muted-foreground">
-              Only @simtaiwan.org email addresses are allowed
+              Only SIM taiwan email addresses are allowed
             </p>
           </CardHeader>
           <CardContent>
