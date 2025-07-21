@@ -22,7 +22,7 @@ const Navigation = () => {
             to="/" 
             className="flex items-center space-x-2 text-xl font-semibold text-primary hover:text-primary-glow transition-colors"
           >
-            <Heart className="h-6 w-6" />
+            <img src="/sim_logo.png" alt="SIM Logo" className="h-8 w-auto" />
             <span>{t('home.title')}</span>
           </Link>
           
