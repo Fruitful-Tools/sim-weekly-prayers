@@ -50,6 +50,7 @@
     "imageCompressed": "Image compressed successfully",
     "imageCompressedDesc": "Original: {{originalSize}}MB → Compressed: {{compressedSize}}MB",
     "compressionFailed": "Unable to compress image. Please try a different image.",
+    "fileTooLarge": "Image file is too large (maximum 1MB). Please use a smaller image or reduce the image quality.",
     "compressingInProgress": "Compressing image...",
     "imageCompressionHint": "Large images will be automatically compressed to under 1MB",
     "confirmDelete": "Are you sure you want to delete this prayer?",

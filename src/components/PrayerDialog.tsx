@@ -215,18 +215,10 @@ export default function PrayerDialog({
         // Map specific Supabase errors to user-friendly messages
         let errorMessage = t('prayer.imageUploadError');
         
-        if (uploadError.message?.includes('Payload too large')) {
-          errorMessage = t('prayer.fileTooLargeSupabase');
+        if (uploadError.message?.includes('Payload too large') || uploadError.message?.includes('object exceeded the maximum allowed size')) {
+          errorMessage = t('prayer.fileTooLarge');
         } else if (uploadError.message?.includes('Invalid file type')) {
-          errorMessage = t('prayer.invalidFileTypeSupabase');
-        } else if (uploadError.message?.includes('Bucket not found')) {
-          errorMessage = t('prayer.storageBucketError');
-        } else if (uploadError.message?.includes('Duplicate')) {
-          errorMessage = t('prayer.duplicateFileError');
-        } else if (uploadError.message?.includes('Permission denied') || uploadError.message?.includes('Unauthorized')) {
-          errorMessage = t('prayer.uploadPermissionError');
-        } else if (uploadError.message?.includes('Network')) {
-          errorMessage = t('prayer.networkError');
+          errorMessage = t('prayer.invalidFileType');
         }
         
         toast({

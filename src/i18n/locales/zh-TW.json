@@ -50,6 +50,7 @@
     "imageCompressed": "圖片壓縮成功",
     "imageCompressedDesc": "原始：{{originalSize}}MB → 壓縮後：{{compressedSize}}MB",
     "compressionFailed": "無法壓縮圖片，請嘗試其他圖片。",
+    "fileTooLarge": "圖片檔案過大（最大 1MB）。請使用較小的圖片或降低圖片品質。",
     "compressingInProgress": "正在壓縮圖片...",
     "imageCompressionHint": "大型圖片將自動壓縮至 1MB 以下",
     "confirmDelete": "您確定要刪除此禱告嗎？",

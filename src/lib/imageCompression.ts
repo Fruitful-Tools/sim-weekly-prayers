@@ -47,7 +47,7 @@ export const compressImage = async (
       // Draw and compress
       ctx.drawImage(img, 0, 0, width, height);
 
-      const compressAndCheck = (currentQuality: number): void => {
+      const compressAndCheck = (currentQuality: number, attempts: number = 0): void => {
         canvas.toBlob(
           (blob) => {
             if (!blob) {
@@ -60,26 +60,34 @@ export const compressImage = async (
               lastModified: Date.now(),
             });
 
-            // If compressed file is larger than original, return original
-            if (blob.size >= file.size) {
+            // If compressed file is larger than original and we haven't tried much, return original
+            if (blob.size >= file.size && attempts === 0) {
               resolve(file);
               return;
             }
 
-            // Check if file size is acceptable or if we've tried enough
-            if (blob.size <= maxSizeInMB * 1024 * 1024 || currentQuality <= 0.1) {
+            // Check if file size is acceptable
+            if (blob.size <= maxSizeInMB * 1024 * 1024) {
               resolve(compressedFile);
-            } else {
-              // Try with lower quality
-              compressAndCheck(Math.max(0.1, currentQuality - 0.1));
+              return;
             }
+
+            // If we've tried many attempts or quality is very low, reject with clear error
+            if (attempts >= 10 || currentQuality <= 0.05) {
+              reject(new Error(`Unable to compress image below ${maxSizeInMB}MB. Please use a smaller image or lower resolution.`));
+              return;
+            }
+
+            // Try with lower quality, more aggressive reduction
+            const nextQuality = Math.max(0.05, currentQuality - 0.15);
+            compressAndCheck(nextQuality, attempts + 1);
           },
           file.type,
           currentQuality
         );
       };
 
-      compressAndCheck(quality);
+      compressAndCheck(quality, 0);
     };
 
     img.onerror = () => {
