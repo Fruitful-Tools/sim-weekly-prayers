@@ -137,11 +137,13 @@ const PrayerDetail = () => {
   const safeImageUrl = prayer?.image_url || '';
   const currentUrl = `${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`;
 
-  // Check if we're in Lovable preview environment
-  const isLovablePreview = window.location.hostname.includes('lovable.dev');
+  // Check if we're in preview environment
+  const isPreviewEnvironment = window.location.hostname.includes('lovable') || 
+                               window.location.hostname.includes('fruitful-tools') || 
+                               window.location.hostname.includes('simtaiwan');
   
-  if (isLovablePreview) {
-    console.log('Lovable preview detected - Helmet disabled to prevent Symbol error');
+  if (isPreviewEnvironment) {
+    console.log('Preview environment detected - Helmet disabled to prevent Symbol error');
   }
 
   console.log('Prayer data:', {
@@ -155,7 +157,7 @@ const PrayerDetail = () => {
 
   return (
     <>
-      {!isLovablePreview && (
+      {!isPreviewEnvironment && (
         <Helmet>
           <title>{safeTitle}</title>
           <meta name="description" content={safeContent} />
