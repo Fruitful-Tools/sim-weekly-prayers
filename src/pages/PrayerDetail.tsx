@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -97,7 +98,6 @@ const PrayerDetail = () => {
     return dateString.replace(/-/g, '');
   };
 
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10 flex items-center justify-center">
@@ -124,52 +124,51 @@ const PrayerDetail = () => {
 
   // Safely extract translation and ensure all values are strings
   const translation = prayer?.prayer_translations?.[0];
-  const safeTitle = String((translation?.title && typeof translation.title === 'string') ? translation.title : 'Prayer');
-  const rawContent = String((translation?.content && typeof translation.content === 'string') ? translation.content : 'Weekly Prayer');
+  const safeTitle = translation?.title || 'Prayer';
+  const rawContent = translation?.content || 'Weekly Prayer';
   
   // Sanitize content for meta descriptions - remove newlines and limit length
-  const safeContent = String(rawContent)
+  const safeContent = rawContent
     .replace(/\n/g, ' ')
     .replace(/\s+/g, ' ')
     .replace(/[^\w\s\u4e00-\u9fff]/g, '') // Remove special characters except Chinese characters
     .trim()
     .substring(0, 160);
   
-  const safeImageUrl = String((prayer?.image_url && typeof prayer.image_url === 'string') ? prayer.image_url : '');
-  const currentUrl = String(`${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`);
+  const safeImageUrl = prayer?.image_url || '';
+  const currentUrl = `${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`;
 
   console.log('Prayer data:', {
     prayer,
     translation,
     safeTitle,
     safeContent,
-    safeImageUrl
+    safeImageUrl,
+    currentUrl
   });
 
   return (
     <>
-      {/* Helmet temporarily disabled to isolate Symbol error */}
-      {false && (
-        <Helmet>
-          <title>{safeTitle}</title>
-          <meta name="description" content={safeContent.substring(0, 160)} />
-          <meta property="og:title" content={safeTitle} />
-          <meta property="og:description" content={safeContent.substring(0, 160)} />
-          <meta property="og:url" content={currentUrl} />
-          <meta property="og:type" content="article" />
-          {safeImageUrl && (
-            <>
-              <meta property="og:image" content={safeImageUrl} />
-              <meta property="og:image:width" content="1200" />
-              <meta property="og:image:height" content="630" />
-            </>
-          )}
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={safeTitle} />
-          <meta name="twitter:description" content={safeContent.substring(0, 160)} />
-          {safeImageUrl && <meta name="twitter:image" content={safeImageUrl} />}
-        </Helmet>
-      )}
+      <Helmet>
+        <title>{safeTitle}</title>
+        <meta name="description" content={safeContent} />
+        <meta property="og:title" content={safeTitle} />
+        <meta property="og:description" content={safeContent} />
+        <meta property="og:url" content={currentUrl} />
+        <meta property="og:type" content="article" />
+        {safeImageUrl && (
+          <>
+            <meta property="og:image" content={safeImageUrl} />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+          </>
+        )}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={safeTitle} />
+        <meta name="twitter:description" content={safeContent} />
+        {safeImageUrl && <meta name="twitter:image" content={safeImageUrl} />}
+      </Helmet>
+      
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
         <div className="container mx-auto px-4 py-8">
           {/* Back Button */}
@@ -203,7 +202,7 @@ const PrayerDetail = () => {
                   </div>
                   
                   <SocialShareDropdown 
-                    url={`${window.location.origin}/prayer/${formatDateForUrl(prayer?.week_date || '')}`}
+                    url={currentUrl}
                     title={safeTitle}
                   />
                 </div>
