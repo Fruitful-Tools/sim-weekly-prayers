@@ -108,6 +108,29 @@ export default function PrayerDialog({
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      // Validate file type (only images)
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: t('prayer.error'),
+          description: t('prayer.invalidFileType'),
+          variant: 'destructive',
+        });
+        event.target.value = ''; // Clear the input
+        return;
+      }
+
+      // Validate file size (1MB limit)
+      const maxSize = 1024 * 1024; // 1MB in bytes
+      if (file.size > maxSize) {
+        toast({
+          title: t('prayer.error'),
+          description: t('prayer.fileTooLarge'),
+          variant: 'destructive',
+        });
+        event.target.value = ''; // Clear the input
+        return;
+      }
+
       setImageFile(file);
       const previewUrl = URL.createObjectURL(file);
       setImagePreview(previewUrl);
