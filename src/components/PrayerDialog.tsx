@@ -104,7 +104,19 @@ export default function PrayerDialog({
       form.reset(defaultValues);
       setImagePreview(prayer?.image_url || null);
       setImageFile(null);
-      setImageInputMode('upload');
+      
+      // Set the correct input mode based on the existing image URL
+      if (prayer?.image_url) {
+        // If it's a Supabase storage URL, use upload mode since it's an uploaded image
+        if (prayer.image_url.includes('/storage/v1/object/public/prayer-images/')) {
+          setImageInputMode('upload');
+        } else {
+          // External URL, use URL mode
+          setImageInputMode('url');
+        }
+      } else {
+        setImageInputMode('upload');
+      }
     }
   }, [open, prayer, form]);
 
@@ -410,8 +422,8 @@ export default function PrayerDialog({
                 </TabsList>
 
                 <TabsContent value="upload" className="space-y-2">
-                  {imagePreview &&
-                  !form.watch('image_url')?.startsWith('http') ? (
+                  {imagePreview && (imageFile || 
+                  form.watch('image_url')?.includes('/storage/v1/object/public/prayer-images/')) ? (
                     <div className="relative">
                       <img
                         src={imagePreview}
