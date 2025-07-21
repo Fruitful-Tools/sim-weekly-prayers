@@ -123,7 +123,40 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    /* Support for environment variables for safe areas */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
   body {
     @apply bg-background text-foreground;
+    /* Prevent Safari mobile viewport issues */
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    /* Ensure content doesn't go behind Safari UI */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Safari-specific fixes */
+  @supports (-webkit-touch-callout: none) {
+    body {
+      /* Additional padding for Safari mobile bottom bar */
+      padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
+    }
+    
+    /* Fix for viewport height in Safari mobile */
+    .min-h-screen {
+      min-height: -webkit-fill-available;
+    }
+  }
+
+  /* Ensure main content area respects safe areas */
+  main, .main-content {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Fix for modals and dialogs in Safari */
+  [data-radix-popper-content-wrapper] {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
