@@ -182,8 +182,10 @@ const Prayers = () => {
 
       // Delete the image from storage if it exists
       if (prayer?.image_url) {
+        console.log('Attempting to delete image:', prayer.image_url);
         const { deleteImageFromStorage } = await import('@/lib/storageUtils');
-        await deleteImageFromStorage(prayer.image_url);
+        const deleteResult = await deleteImageFromStorage(prayer.image_url);
+        console.log('Image deletion result:', deleteResult);
       }
 
       toast({
