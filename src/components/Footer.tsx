@@ -2,13 +2,18 @@ import { useTranslation } from 'react-i18next';
 import { ExternalLink } from 'lucide-react';
 
 const Footer = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isChineseLanguage = i18n.language === 'zh-TW';
 
   return (
     <footer className="bg-muted/30 border-t mt-auto">
       <div className="container mx-auto px-4 py-6">
-        <div className="text-center text-sm text-muted-foreground">
+        <div className="text-center text-sm text-muted-foreground space-y-4">
+          <div className="max-w-2xl mx-auto">
+            <p className="text-xs leading-relaxed">
+              {t('home.footerMotto')}
+            </p>
+          </div>
           <div className="mb-2">
             © 2025{' '}
             <a

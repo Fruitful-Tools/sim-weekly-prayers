@@ -45,9 +45,10 @@
   },
   "home": {
     "title": "Weekly Prayers",
-    "subtitle": "Join us in prayer for nations around the world",
+    "subtitle": "Join us in prayer for nations around the world with current news pulse",
     "latestPrayer": "Latest Prayer",
-    "viewAllPrayers": "View All Prayers"
+    "viewAllPrayers": "View All Prayers",
+    "footerMotto": "\"By Prayer\" has always been the motto of SIM, as an international mission organization. We encourage churches and Christians to begin their involvement in cross-cultural missions with prayer, and to continue calling on God through persistent prayer."
   },
   "meta": {
     "title": "SIM Weekly Prayers Hub",
