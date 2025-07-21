@@ -20,10 +20,10 @@ const Navigation = () => {
         <div className="flex items-center space-x-8">
           <Link 
             to="/" 
-            className="flex items-center space-x-2 text-xl font-semibold text-primary hover:text-primary-glow transition-colors"
+            className="flex items-center space-x-2 text-xl font-semibold transition-colors"
           >
             <img src="/sim_logo.png" alt="SIM Logo" className="h-8 w-auto" />
-            <span>{t('home.title')}</span>
+            <span className="text-[hsl(var(--logo-red))] hover:text-[hsl(var(--logo-red))]">{t('home.title')}</span>
           </Link>
           
           <div className="hidden md:flex items-center space-x-6">
