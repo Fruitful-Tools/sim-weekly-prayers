@@ -143,7 +143,7 @@ All colors MUST be HSL.
       /* Additional padding for Safari mobile bottom bar */
       padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
     }
-    
+
     /* Fix for viewport height in Safari mobile */
     .min-h-screen {
       min-height: -webkit-fill-available;
@@ -151,7 +151,8 @@ All colors MUST be HSL.
   }
 
   /* Ensure main content area respects safe areas */
-  main, .main-content {
+  main,
+  .main-content {
     padding-bottom: env(safe-area-inset-bottom);
   }
 

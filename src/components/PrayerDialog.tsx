@@ -104,11 +104,13 @@ export default function PrayerDialog({
       form.reset(defaultValues);
       setImagePreview(prayer?.image_url || null);
       setImageFile(null);
-      
+
       // Set the correct input mode based on the existing image URL
       if (prayer?.image_url) {
         // If it's a Supabase storage URL, use upload mode since it's an uploaded image
-        if (prayer.image_url.includes('/storage/v1/object/public/prayer-images/')) {
+        if (
+          prayer.image_url.includes('/storage/v1/object/public/prayer-images/')
+        ) {
           setImageInputMode('upload');
         } else {
           // External URL, use URL mode
@@ -120,7 +122,9 @@ export default function PrayerDialog({
     }
   }, [open, prayer, form]);
 
-  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = event.target.files;
     if (files && files.length > 0) {
       const file = files[0];
@@ -160,10 +164,10 @@ export default function PrayerDialog({
       }
 
       setIsCompressing(true);
-      
+
       try {
         let finalFile = file;
-        
+
         // Check file size and compress if needed
         const maxSize = 1024 * 1024; // 1MB in bytes
         if (file.size > maxSize) {
@@ -171,14 +175,14 @@ export default function PrayerDialog({
             title: t('prayer.compressingImage'),
             description: t('prayer.compressingImageDesc'),
           });
-          
+
           finalFile = await compressImage(file, { maxSizeInMB: 1 });
-          
+
           toast({
             title: t('prayer.imageCompressed'),
-            description: t('prayer.imageCompressedDesc', { 
+            description: t('prayer.imageCompressedDesc', {
               originalSize: (file.size / 1024 / 1024).toFixed(2),
-              compressedSize: (finalFile.size / 1024 / 1024).toFixed(2)
+              compressedSize: (finalFile.size / 1024 / 1024).toFixed(2),
             }),
           });
         }
@@ -188,12 +192,14 @@ export default function PrayerDialog({
         setImagePreview(previewUrl);
       } catch (error) {
         console.error('Compression error:', error);
-        
+
         // Check if it's the specific "too large" error from our compression algorithm
-        const errorMessage = error instanceof Error && error.message.includes('Unable to compress image below') 
-          ? t('prayer.fileTooLarge')
-          : t('prayer.compressionFailed');
-          
+        const errorMessage =
+          error instanceof Error &&
+          error.message.includes('Unable to compress image below')
+            ? t('prayer.fileTooLarge')
+            : t('prayer.compressionFailed');
+
         toast({
           title: t('prayer.error'),
           description: errorMessage,
@@ -231,22 +237,27 @@ export default function PrayerDialog({
 
       if (uploadError) {
         console.error('Upload error:', uploadError);
-        
+
         // Map specific Supabase errors to user-friendly messages
         let errorMessage = t('prayer.imageUploadError');
-        
-        if (uploadError.message?.includes('Payload too large') || uploadError.message?.includes('object exceeded the maximum allowed size')) {
+
+        if (
+          uploadError.message?.includes('Payload too large') ||
+          uploadError.message?.includes(
+            'object exceeded the maximum allowed size'
+          )
+        ) {
           errorMessage = t('prayer.fileTooLarge');
         } else if (uploadError.message?.includes('Invalid file type')) {
           errorMessage = t('prayer.invalidFileType');
         }
-        
+
         toast({
           title: t('prayer.error'),
           description: errorMessage,
           variant: 'destructive',
         });
-        
+
         return null;
       }
 
@@ -257,13 +268,13 @@ export default function PrayerDialog({
       return data.publicUrl;
     } catch (error) {
       console.error('Error uploading image:', error);
-      
+
       toast({
         title: t('prayer.error'),
         description: t('prayer.uploadUnexpectedError'),
         variant: 'destructive',
       });
-      
+
       return null;
     }
   };
@@ -422,8 +433,13 @@ export default function PrayerDialog({
                 </TabsList>
 
                 <TabsContent value="upload" className="space-y-2">
-                  {imagePreview && (imageFile || 
-                  form.watch('image_url')?.includes('/storage/v1/object/public/prayer-images/')) ? (
+                  {imagePreview &&
+                  (imageFile ||
+                    form
+                      .watch('image_url')
+                      ?.includes(
+                        '/storage/v1/object/public/prayer-images/'
+                      )) ? (
                     <div className="relative">
                       <img
                         src={imagePreview}

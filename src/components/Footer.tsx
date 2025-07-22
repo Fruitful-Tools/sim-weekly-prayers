@@ -10,9 +10,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-6">
         <div className="text-center text-sm text-muted-foreground space-y-4">
           <div className="max-w-2xl mx-auto">
-            <p className="text-xs leading-relaxed">
-              {t('home.footerMotto')}
-            </p>
+            <p className="text-xs leading-relaxed">{t('home.footerMotto')}</p>
           </div>
           <div className="mb-2">
             © 2025{' '}
