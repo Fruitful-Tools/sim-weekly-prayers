@@ -68,7 +68,7 @@ export default function Auth() {
           <div className="space-y-4">
             <div className="text-center p-4 bg-muted/50 rounded-lg border border-muted-foreground/25 mb-6">
               <p className="text-muted-foreground text-sm">
-                Sign in is only available for admin accounts
+                {t('auth.adminOnly')}
               </p>
             </div>
             

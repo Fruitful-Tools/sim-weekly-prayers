@@ -89,7 +89,8 @@
     "signedOut": "Signed out",
     "signedOutSuccess": "You have been signed out successfully.",
     "signOutError": "Error signing out. Please try again.",
-    "contactAdmin": "Please contact the site administrator to create your account"
+    "contactAdmin": "Please contact the site administrator to create your account",
+    "adminOnly": "Sign in is only available for admin accounts"
   },
   "profile": {
     "title": "Profile",
