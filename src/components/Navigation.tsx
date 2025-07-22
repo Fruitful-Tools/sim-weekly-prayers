@@ -1,10 +1,11 @@
+
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Heart, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
-import ThemeToggle from './ThemeToggle';
+import SettingsDropdown from './SettingsDropdown';
 import { useAuth } from '@/hooks/useAuth';
 
 const Navigation = () => {
@@ -38,7 +39,7 @@ const Navigation = () => {
           </div>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
           {user ? (
             <Link to="/profile">
               <Button variant="outline" size="sm" className="space-x-2">
@@ -54,8 +55,8 @@ const Navigation = () => {
             </Link>
           )}
 
-          <ThemeToggle />
           <LanguageSwitcher />
+          <SettingsDropdown />
         </div>
       </div>
     </nav>

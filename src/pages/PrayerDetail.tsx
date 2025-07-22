@@ -155,7 +155,7 @@ const PrayerDetail = () => {
               <img
                 src={safeImageUrl}
                 alt={safeTitle}
-                className="w-full h-auto object-contain"
+                className="w-full h-auto object-contain md:max-h-[400px]"
               />
             </div>
           )}

@@ -1,3 +1,4 @@
+
 {
   "nav": {
     "home": "首頁",
@@ -6,6 +7,17 @@
     "language": "語言",
     "profile": "個人資料",
     "signIn": "登入"
+  },
+  "settings": {
+    "title": "設定",
+    "theme": "主題",
+    "fontSize": {
+      "title": "字體大小",
+      "small": "小",
+      "medium": "中",
+      "large": "大",
+      "extraLarge": "特大"
+    }
   },
   "prayer": {
     "title": "為{{country}}禱告",
