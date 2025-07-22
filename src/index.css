@@ -86,37 +86,37 @@ All colors MUST be HSL.
 
   /* Font size variations */
   [data-font-size="small"] {
-    --font-scale: 0.9;
-  }
-
-  [data-font-size="medium"] {
     --font-scale: 1;
   }
 
-  [data-font-size="large"] {
+  [data-font-size="medium"] {
     --font-scale: 1.15;
   }
 
-  [data-font-size="extra-large"] {
+  [data-font-size="large"] {
     --font-scale: 1.3;
+  }
+
+  [data-font-size="extra-large"] {
+    --font-scale: 1.5;
   }
 
   /* Mobile-first responsive font scaling */
   @media (max-width: 768px) {
     [data-font-size="small"] {
-      --font-scale: 1;
-    }
-
-    [data-font-size="medium"] {
       --font-scale: 1.1;
     }
 
-    [data-font-size="large"] {
+    [data-font-size="medium"] {
       --font-scale: 1.25;
     }
 
-    [data-font-size="extra-large"] {
+    [data-font-size="large"] {
       --font-scale: 1.4;
+    }
+
+    [data-font-size="extra-large"] {
+      --font-scale: 1.6;
     }
   }
 
