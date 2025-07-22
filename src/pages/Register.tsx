@@ -19,7 +19,7 @@ const Register = () => {
   const { toast } = useToast();
 
   const validateEmail = (email: string) => {
-    return email === 'taiwansim@gmail.com';
+    return email === 'schwannden@gmail.com' || email === 'taiwansim@gmail.com';
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -27,9 +27,9 @@ const Register = () => {
 
     if (!validateEmail(email)) {
       toast({
-        title: 'Invalid Email Domain',
+        title: 'Registration Restricted',
         description:
-          'Only @simtaiwan.org email addresses are allowed to register.',
+          'Registration is only available to authorized administrators.',
         variant: 'destructive',
       });
       return;
@@ -115,7 +115,7 @@ const Register = () => {
               Register Account
             </CardTitle>
             <p className="text-sm text-muted-foreground">
-              Only SIM taiwan email addresses are allowed
+              Only authorized administrator emails are allowed
             </p>
           </CardHeader>
           <CardContent>
@@ -129,7 +129,7 @@ const Register = () => {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="your.email@simtaiwan.org"
+                    placeholder="schwannden@gmail.com or taiwansim@gmail.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10"
