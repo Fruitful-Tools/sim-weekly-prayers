@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'react-i18next';
 import { Settings, Type, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -27,11 +26,7 @@ const SettingsDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-9 w-9 p-0"
-        >
+        <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
           <Settings className="h-4 w-4" />
           <span className="sr-only">{t('settings.title')}</span>
         </Button>
@@ -42,7 +37,7 @@ const SettingsDropdown = () => {
           {t('settings.title')}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        
+
         <DropdownMenuLabel className="flex items-center gap-2 text-xs text-muted-foreground">
           <Palette className="h-3 w-3" />
           {t('settings.theme')}
@@ -50,9 +45,9 @@ const SettingsDropdown = () => {
         <div className="px-2 py-1">
           <ThemeToggle />
         </div>
-        
+
         <DropdownMenuSeparator />
-        
+
         <DropdownMenuLabel className="flex items-center gap-2 text-xs text-muted-foreground">
           <Type className="h-3 w-3" />
           {t('settings.fontSize.title')}

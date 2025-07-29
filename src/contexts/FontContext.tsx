@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type FontSize = 'small' | 'medium' | 'large' | 'extra-large';
@@ -18,13 +17,20 @@ export const useFontSize = () => {
   return context;
 };
 
-export const FontProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const FontProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [fontSize, setFontSizeState] = useState<FontSize>('medium');
 
   useEffect(() => {
     // Load saved font size from localStorage
-    const savedFontSize = localStorage.getItem('font-size-preference') as FontSize;
-    if (savedFontSize && ['small', 'medium', 'large', 'extra-large'].includes(savedFontSize)) {
+    const savedFontSize = localStorage.getItem(
+      'font-size-preference'
+    ) as FontSize;
+    if (
+      savedFontSize &&
+      ['small', 'medium', 'large', 'extra-large'].includes(savedFontSize)
+    ) {
       setFontSizeState(savedFontSize);
     }
   }, []);
@@ -33,7 +39,7 @@ export const FontProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Apply font size to document root
     const root = document.documentElement;
     root.setAttribute('data-font-size', fontSize);
-    
+
     // Save to localStorage
     localStorage.setItem('font-size-preference', fontSize);
   }, [fontSize]);

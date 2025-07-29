@@ -54,7 +54,6 @@ export default function Auth() {
     setLoading(false);
   };
 
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-subtle px-4">
       <Card className="w-full max-w-md shadow-elegant">
@@ -71,7 +70,7 @@ export default function Auth() {
                 {t('auth.adminOnly')}
               </p>
             </div>
-            
+
             <form onSubmit={handleSignIn} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">{t('auth.email')}</Label>
