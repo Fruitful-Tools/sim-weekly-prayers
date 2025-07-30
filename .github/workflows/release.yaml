@@ -22,10 +22,10 @@ on:
         default: false
 
 jobs:
-    release-please:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: googleapis/release-please-action@v4
-          if: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'release:') }}
-          with:
-            token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        if: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'release:') }}
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
