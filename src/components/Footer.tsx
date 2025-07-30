@@ -34,7 +34,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
             >
-              SIM home
+              SIM Taiwan Home
               <ExternalLink className="h-3 w-3" />
             </a>
           </div>
