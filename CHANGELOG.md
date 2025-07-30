@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.2](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.1.1...v0.1.2) (2025-07-30)
+
+
+### Chores
+
+* **deps:** bump lucide-react from 0.525.0 to 0.534.0 ([#10](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/10)) ([3c62f80](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/3c62f80aafd9e33262815a94f558a17a16641152))
+* **deps:** bump react-resizable-panels from 2.1.9 to 3.0.4 ([#4](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/4)) ([82e607d](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/82e607de133d08542af8d0a4f566106a67e9fec2))
+
+
+### Documentation
+
+* adding contributing doc and footer info ([d8737ca](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/d8737ca886969374f460276af3504a3de828a628))
+
 ## [0.1.1](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.1.0...v0.1.1) (2025-07-30)
 
 
