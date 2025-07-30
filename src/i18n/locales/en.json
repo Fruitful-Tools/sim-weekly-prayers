@@ -123,5 +123,8 @@
     "shareButton": "Share",
     "instagramNote": "Link Copied",
     "instagramDesc": "Please open Instagram and paste the link in your post or story"
+  },
+  "footer": {
+    "contribute": "Contribute"
   }
 }

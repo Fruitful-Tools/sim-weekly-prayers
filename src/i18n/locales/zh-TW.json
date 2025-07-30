@@ -134,5 +134,8 @@
     "shareButton": "分享",
     "instagramNote": "已複製連結",
     "instagramDesc": "請開啟 Instagram 並貼上連結到您的貼文或限時動態中"
+  },
+  "footer": {
+    "contribute": "參與貢獻"
   }
 }

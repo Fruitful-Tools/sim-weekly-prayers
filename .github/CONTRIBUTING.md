@@ -4,7 +4,50 @@ Thank you for your interest in contributing to SIM Weekly Prayer! This document 
 
 For a comprehensive overview of the project, tech stack, and features, please see our [main README](../README.md).
 
-**Join Discussion**: https://discord.gg/hnQrfUvFk3
+**Join Discussion**: <https://discord.gg/hnQrfUvFk3>
+
+## Getting Started
+
+### 1. Create an Issue First
+
+Before starting any work, please create an issue to discuss your planned changes:
+
+1. **Check existing issues**: Search through [existing issues](https://github.com/schwannden/sim-weekly-prayers/issues) to see if your idea or bug report already exists
+2. **Create a new issue**: If no existing issue covers your topic, create a new one:
+   - **For bugs**: Use the bug report template and provide clear reproduction steps
+   - **For features**: Use the feature request template and describe the proposed functionality
+   - **For documentation**: Describe what documentation needs to be added or improved
+3. **Wait for discussion**: Allow maintainers and community members to discuss the issue before starting work
+4. **Get assignment**: Wait for a maintainer to assign the issue to you before beginning development
+
+This process helps avoid duplicate work and ensures your contribution aligns with the project's goals.
+
+### 2. Fork and Create Pull Request
+
+Once you have an assigned issue:
+
+1. **Fork the repository**: Click the "Fork" button on the [main repository page](https://github.com/schwannden/sim-weekly-prayers)
+
+2. **Clone your fork**:
+
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/sim-weekly-prayers.git
+   cd sim-weekly-prayers
+   ```
+
+3. **Add upstream remote** (to keep your fork updated):
+
+   ```bash
+   git remote add upstream https://github.com/schwannden/sim-weekly-prayers.git
+   ```
+
+4. **Follow the development workflow** (detailed below) to make your changes
+
+5. **Create a Pull Request**:
+   - Push your changes to your fork
+   - Go to your fork on GitHub and click "New Pull Request"
+   - Reference the issue number in your PR description (e.g., "Closes #123")
+   - Provide a clear description of what your PR does
 
 ## Prerequisites
 
@@ -27,13 +70,7 @@ volta install node
 
 ## Running SIM Weekly Prayer Locally
 
-1. Fork the repository
-2. Clone your fork:
-
-   ```bash
-   git clone https://github.com/YOUR-USERNAME/sim-weekly-prayers.git
-   cd sim-weekly-prayers
-   ```
+After forking and cloning the repository (see "Getting Started" section above):
 
 ### Setup Local Supabase (First Time)
 
@@ -92,7 +129,7 @@ see [Official Docs](https://supabase.com/docs/reference/cli/supabase-db) for mor
 
 4. Commit your changes using [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) messages.
 
-   ```
+   ```text
    <type>: <short summary>
    ```
 
@@ -104,10 +141,49 @@ see [Official Docs](https://supabase.com/docs/reference/cli/supabase-db) for mor
 
 ## Pull Request Process
 
-1. Update the README.md or documentation with details of changes if applicable
-2. Update the package.json version if applicable
-3. The PR must pass all CI/CD checks before it will be merged
-4. A maintainer will review your PR and may request changes
+When you're ready to submit your changes:
+
+1. **Ensure your branch is up to date**:
+
+   ```bash
+   git fetch upstream
+   git rebase upstream/main
+   ```
+
+2. **Run all checks locally**:
+
+   ```bash
+   npm run format
+   npm run lint:fix
+   npm run test
+   ```
+
+3. **Push to your fork**:
+
+   ```bash
+   git push origin your-branch-name
+   ```
+
+4. **Create the Pull Request**:
+   - Go to your fork on GitHub and click "New Pull Request"
+   - **Title**: Use a clear, descriptive title that follows conventional commit format
+   - **Description**:
+     - Reference the issue number (e.g., "Closes #123" or "Fixes #456")
+     - Describe what your PR does and why
+     - Include any breaking changes or migration notes
+     - Add screenshots for UI changes
+
+5. **Required for merge**:
+   - Link to the related issue
+   - All CI/CD checks must pass
+   - Update documentation if applicable (README.md, etc.)
+   - Update package.json version if applicable (for releases)
+   - At least one maintainer approval
+
+6. **After submission**:
+   - A maintainer will review your PR and may request changes
+   - Address any feedback by pushing new commits to your branch
+   - Once approved, a maintainer will merge your PR
 
 ## Code Style
 

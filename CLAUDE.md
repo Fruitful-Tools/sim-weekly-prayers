@@ -77,7 +77,7 @@ Authentication uses Supabase Auth with Row Level Security (RLS) policies.
 
 ## Development Notes
 
-- **Lovable Integration**: Built for Lovable platform with automatic deployment
+- **Deployment**: Self-hosted deployment
 - **PWA Features**: Configured with service worker and comprehensive icon set
 - **Type Safety**: Full TypeScript coverage with generated Supabase types
 - **Real-time**: Supabase provides real-time subscription capabilities (not actively used but available)

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { ExternalLink } from 'lucide-react';
+import { siGithub } from 'simple-icons';
 
 const Footer = () => {
   const { t, i18n } = useTranslation();
@@ -27,7 +28,7 @@ const Footer = () => {
               ? '．為數位世界精心製作'
               : '. Crafted with care for the digital world.'}
           </div>
-          <div className="text-xs">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-xs">
             <a
               href="https://simtaiwan.org/"
               target="_blank"
@@ -36,6 +37,22 @@ const Footer = () => {
             >
               SIM Taiwan Home
               <ExternalLink className="h-3 w-3" />
+            </a>
+            <a
+              href="https://github.com/Fruitful-Tools/sim-weekly-prayers"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
+            >
+              <svg
+                role="img"
+                viewBox="0 0 24 24"
+                className="h-3 w-3 fill-current"
+                aria-label="GitHub"
+              >
+                <path d={siGithub.path} />
+              </svg>
+              {t('footer.contribute')}
             </a>
           </div>
         </div>
