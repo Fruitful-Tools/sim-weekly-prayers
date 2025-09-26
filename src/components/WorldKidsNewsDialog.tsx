@@ -110,6 +110,8 @@ export default function WorldKidsNewsDialog({
     const file = event.target.files?.[0];
     if (!file) return;
 
+    console.log(`📁 File selected for ${imageKey}:`, file.name, file.size);
+
     // Validate file type
     if (!file.type.startsWith('image/')) {
       toast.error(`檔案 ${file.name} 不是有效的圖片格式`);
@@ -117,13 +119,17 @@ export default function WorldKidsNewsDialog({
     }
 
     try {
+      console.log(`🔄 Starting compression for ${imageKey}...`);
       const compressedFile = await compressImage(file);
+      console.log(`✅ Compression complete for ${imageKey}:`, compressedFile.size);
+      
       form.setValue(imageKey, compressedFile);
       
       // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result) {
+          console.log(`🖼️ Preview created for ${imageKey}`);
           setImagePreviews(prev => ({
             ...prev,
             [imageKey]: e.target.result as string
@@ -294,31 +300,43 @@ export default function WorldKidsNewsDialog({
                 <div key={imageKey} className="space-y-3 p-4 border rounded-lg">
                   <div className="flex items-center justify-between">
                     <h3 className="font-medium">圖片 {index + 1}</h3>
-                    <div className="flex gap-2">
-                      <Button
-                        type="button"
-                        variant={imageInputModes[imageKey] === 'upload' ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setImageInputModes(prev => ({ ...prev, [imageKey]: 'upload' }))}
-                      >
-                        <Upload className="h-4 w-4 mr-1" />
-                        上傳
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={imageInputModes[imageKey] === 'url' ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setImageInputModes(prev => ({ ...prev, [imageKey]: 'url' }))}
-                      >
-                        <Link className="h-4 w-4 mr-1" />
-                        連結
-                      </Button>
-                    </div>
+                     <div className="flex gap-2">
+                       <Button
+                         type="button"
+                         variant={imageInputModes[imageKey] === 'upload' ? 'default' : 'outline'}
+                         size="sm"
+                         onClick={() => {
+                           console.log(`🔘 Upload button clicked for ${imageKey}, current mode:`, imageInputModes[imageKey]);
+                           setImageInputModes(prev => ({ ...prev, [imageKey]: 'upload' }));
+                           // If already in upload mode, trigger file selection
+                           if (imageInputModes[imageKey] === 'upload') {
+                             console.log(`📂 Triggering file dialog for ${imageKey}`);
+                             setTimeout(() => {
+                               const input = document.getElementById(`${imageKey}-upload`);
+                               console.log(`🎯 Found input element:`, input);
+                               input?.click();
+                             }, 100);
+                           }
+                         }}
+                       >
+                         <Upload className="h-4 w-4 mr-1" />
+                         上傳檔案
+                       </Button>
+                       <Button
+                         type="button"
+                         variant={imageInputModes[imageKey] === 'url' ? 'default' : 'outline'}
+                         size="sm"
+                         onClick={() => setImageInputModes(prev => ({ ...prev, [imageKey]: 'url' }))}
+                       >
+                         <Link className="h-4 w-4 mr-1" />
+                         網址連結
+                       </Button>
+                     </div>
                   </div>
 
                   {/* Image Input */}
                   {imageInputModes[imageKey] === 'upload' ? (
-                    <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center">
+                    <div>
                       <Input
                         type="file"
                         accept="image/*"
@@ -326,12 +344,19 @@ export default function WorldKidsNewsDialog({
                         className="hidden"
                         id={`${imageKey}-upload`}
                       />
-                      <label htmlFor={`${imageKey}-upload`} className="cursor-pointer">
-                        <Image className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                        <p className="text-sm text-muted-foreground">
-                          點擊選擇圖片
-                        </p>
-                      </label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full border-2 border-dashed border-muted-foreground/25 h-20"
+                        onClick={() => document.getElementById(`${imageKey}-upload`)?.click()}
+                      >
+                        <div className="flex flex-col items-center gap-2">
+                          <Image className="h-6 w-6 text-muted-foreground" />
+                          <span className="text-sm text-muted-foreground">
+                            點擊選擇圖片
+                          </span>
+                        </div>
+                      </Button>
                     </div>
                   ) : (
                     <div className="flex gap-2">
