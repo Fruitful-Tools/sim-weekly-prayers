@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.3.0](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.2.0...v0.3.0) (2025-09-26)
+
+
+### Features
+
+* Add language toggle and warning for World Kids News ([0a48463](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/0a48463078690b9fa7d8756b66e778ada4de46ac))
+
+
+### Bug Fixes
+
+* **format:** formatting ([ceb9db0](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/ceb9db0f0e12b84b8afd8b24d92c77edd589be49))
+
+
+### Chores
+
+* **deps-dev:** bump @eslint/js from 9.31.0 to 9.36.0 ([#39](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/39)) ([4a9447e](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/4a9447e47f1eac4197c6b65d7244addfbb20809b))
+* **deps-dev:** bump globals from 15.15.0 to 16.4.0 ([#34](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/34)) ([b289e34](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/b289e34fc965887cf44c2a4481910eff7ca60336))
+* **deps-dev:** bump typescript from 5.8.3 to 5.9.2 ([#17](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/17)) ([1dd0d61](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/1dd0d61f66b660ced6ee6b948bd59f9afeed74ec))
+* **deps:** bump @hookform/resolvers from 3.10.0 to 5.2.2 ([#35](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/35)) ([6e1c509](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/6e1c509fc839c326b7e7e2dbb6aef18e7742ac96))
+* **deps:** bump react-hook-form from 7.60.0 to 7.63.0 ([#38](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/38)) ([f1dab9f](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/f1dab9f05a4a1d114bd6e55e5e65ddcd4ff03ffd))
+* **deps:** bump react-router-dom from 6.30.1 to 7.9.1 ([#33](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/33)) ([53990bb](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/53990bb33b94f7d1e3c59d4b31e97385e1e82759))
+
 ## [0.2.0](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.1.2...v0.2.0) (2025-09-26)
 
 
