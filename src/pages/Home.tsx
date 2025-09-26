@@ -36,7 +36,7 @@ const Home = () => {
 
   const fetchLatestPrayers = useCallback(async () => {
     try {
-      const limit = isMobile ? 2 : 3;
+      const limit = 3; // Always show 3 latest prayers for preview
       const { data, error } = await supabase
         .from('prayers')
         .select(
@@ -58,11 +58,11 @@ const Home = () => {
     } finally {
       setLoading(false);
     }
-  }, [i18n.language, isMobile]);
+  }, [i18n.language]);
 
   const fetchLatestWorldKidsNews = useCallback(async () => {
     try {
-      const limit = isMobile ? 2 : 3;
+      const limit = 3; // Always show 3 latest world kids news for preview
       const { data, error } = await supabase
         .from('world_kids_news')
         .select('*')
@@ -76,7 +76,7 @@ const Home = () => {
     } finally {
       setNewsLoading(false);
     }
-  }, [isMobile]);
+  }, []);
 
   useEffect(() => {
     fetchLatestPrayers();
@@ -146,9 +146,7 @@ const Home = () => {
             </div>
           ) : latestPrayers.length > 0 ? (
             <>
-              <div
-                className={`grid gap-6 ${isMobile ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}
-              >
+              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {latestPrayers.map((prayer) => (
                   <PrayerCard
                     key={prayer.id}
@@ -190,9 +188,7 @@ const Home = () => {
             </div>
           ) : latestWorldKidsNews.length > 0 ? (
             <>
-              <div
-                className={`grid gap-6 ${isMobile ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}
-              >
+              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {latestWorldKidsNews.map((newsItem) => (
                   <WorldKidsNewsCard key={newsItem.id} newsItem={newsItem} />
                 ))}
