@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.0](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.1.2...v0.2.0) (2025-09-26)
+
+
+### Features
+
+* Enable Lovable tool use ([6b6db65](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/6b6db65dd059334261c553ab26b1366dd03725b2))
+* Enhance prayer and news features ([672c1e3](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/672c1e3ba6a2e0717ec492f66c683bcef80bf5ee))
+
+
+### Bug Fixes
+
+* Delete associated S3 objects on deletion ([834c206](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/834c20659ec98c093ff6b0f9e23a675151a2b7c6))
+* **lint:** remove explicit any in chart, disable react-refresh rule ([8cec9d5](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/8cec9d545b57915b9ea43c38cc91a835ce93f933))
+* Prayers page shows no content ([4130e8d](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/4130e8d40410c631e85129fda7be3872b3d62361))
+
 ## [0.1.2](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.1.1...v0.1.2) (2025-07-30)
 
 
