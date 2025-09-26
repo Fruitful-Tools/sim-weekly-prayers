@@ -106,15 +106,27 @@ const Home = () => {
             </p>
           </div>
 
-          <Link to="/prayers">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-primary to-primary-glow hover:shadow-prayer transition-all duration-300"
-            >
-              {t('home.viewAllPrayers')}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/prayers">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-primary to-primary-glow hover:shadow-prayer transition-all duration-300"
+              >
+                {t('home.viewAllPrayers')}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link to="/world-kids-news">
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+              >
+                查看所有萬國小新聞
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
