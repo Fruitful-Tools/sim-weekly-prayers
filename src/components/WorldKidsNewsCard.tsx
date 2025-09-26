@@ -34,8 +34,9 @@ export default function WorldKidsNewsCard({ newsItem, isPreview = false }: World
   };
 
   const handleCarouselClick = (e: React.MouseEvent) => {
-    // Prevent navigation when clicking on carousel controls
-    if (e.target !== e.currentTarget) {
+    // Prevent navigation when clicking on carousel controls or dots
+    const target = e.target as HTMLElement;
+    if (target.closest('[data-carousel-control]') || target.closest('.dots-indicator')) {
       e.stopPropagation();
     }
   };
@@ -45,7 +46,7 @@ export default function WorldKidsNewsCard({ newsItem, isPreview = false }: World
       {/* Image Carousel */}
       <div className="relative">
         <Card 
-          className={`overflow-hidden ${!isPreview ? 'cursor-pointer hover:shadow-lg transition-shadow' : ''}`}
+          className={`overflow-hidden ${!isPreview ? 'cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02]' : ''}`}
           onClick={handleCardClick}
         >
           <CardContent className="p-0">
@@ -57,7 +58,7 @@ export default function WorldKidsNewsCard({ newsItem, isPreview = false }: World
                       <img
                         src={imageUrl}
                         alt={`萬國小新聞 ${new Date(newsItem.week_date).toLocaleDateString('zh-TW')} - 圖片 ${index + 1}`}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover"
                         loading="lazy"
                       />
                     </div>
@@ -66,8 +67,8 @@ export default function WorldKidsNewsCard({ newsItem, isPreview = false }: World
               </CarouselContent>
               {newsItem.image_urls.length > 1 && (
                 <>
-                  <CarouselPrevious className="left-2" />
-                  <CarouselNext className="right-2" />
+                  <CarouselPrevious className="left-2" data-carousel-control />
+                  <CarouselNext className="right-2" data-carousel-control />
                 </>
               )}
             </Carousel>
@@ -87,14 +88,17 @@ export default function WorldKidsNewsCard({ newsItem, isPreview = false }: World
 
       {/* Dots Indicator for Multiple Images */}
       {newsItem.image_urls.length > 1 && (
-        <div className="flex justify-center gap-1 pt-2">
+        <div className="flex justify-center gap-1 pt-2 dots-indicator">
           {newsItem.image_urls.map((_, index) => (
             <button
               key={index}
               className={`w-2 h-2 rounded-full transition-colors ${
                 index === currentSlide ? 'bg-primary' : 'bg-muted-foreground/30'
               }`}
-              onClick={() => setCurrentSlide(index)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentSlide(index);
+              }}
               aria-label={`前往第 ${index + 1} 張圖片`}
             />
           ))}
@@ -104,6 +108,7 @@ export default function WorldKidsNewsCard({ newsItem, isPreview = false }: World
       {!isPreview && (
         <div className="text-sm text-muted-foreground">
           共 {newsItem.image_urls.length} 張圖片
+          {!isPreview && <span className="ml-2 text-xs opacity-60">點擊查看詳情</span>}
         </div>
       )}
     </div>

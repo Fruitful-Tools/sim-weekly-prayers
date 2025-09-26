@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import SocialShareDropdown from '@/components/SocialShareDropdown';
 
 interface WorldKidsNews {
   id: string;
@@ -87,7 +88,7 @@ export default function WorldKidsNewsDetail() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Header */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 mb-6">
             <Button
               variant="ghost"
               onClick={() => navigate('/world-kids-news')}
@@ -96,16 +97,29 @@ export default function WorldKidsNewsDetail() {
               <ArrowLeft className="h-4 w-4" />
               返回列表
             </Button>
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-2xl font-bold">
+              <h1 className="text-2xl font-bold flex items-center gap-2">
+                <Calendar className="h-5 w-5" />
                 {new Date(news.week_date).toLocaleDateString('zh-TW', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric'
                 })}
               </h1>
-              <p className="text-muted-foreground">萬國小新聞 - 禱告大冒險</p>
+              <p className="text-muted-foreground mt-1">萬國小新聞 - 禱告大冒險</p>
             </div>
+            
+            <SocialShareDropdown 
+              url={`${window.location.origin}/world-kids-news/${news.id}`}
+              title={`萬國小新聞 - ${new Date(news.week_date).toLocaleDateString('zh-TW', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}`}
+            />
           </div>
 
           {/* Image Carousel */}
