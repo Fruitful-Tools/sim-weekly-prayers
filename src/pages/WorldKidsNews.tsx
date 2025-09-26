@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
-import { Plus, Search, Edit, Trash2, AlertTriangle } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
@@ -14,12 +14,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import WorldKidsNewsDialog from '@/components/WorldKidsNewsDialog';
@@ -45,7 +39,23 @@ export default function WorldKidsNews() {
   const [editingNews, setEditingNews] = useState<WorldKidsNews | null>(null);
   const [deletingNews, setDeletingNews] = useState<WorldKidsNews | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showEnglishWarning, setShowEnglishWarning] = useState(true);
   const itemsPerPage = 6;
+
+  // Check if user has dismissed the English warning banner
+  useEffect(() => {
+    const dismissed = localStorage.getItem('worldKidsNews-english-warning-dismissed');
+    if (dismissed === 'true') {
+      setShowEnglishWarning(false);
+    }
+  }, []);
+
+  const dismissEnglishWarning = (permanent = false) => {
+    setShowEnglishWarning(false);
+    if (permanent) {
+      localStorage.setItem('worldKidsNews-english-warning-dismissed', 'true');
+    }
+  };
 
   const fetchNews = async () => {
     try {
@@ -156,29 +166,53 @@ export default function WorldKidsNews() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      {/* English Warning Banner */}
+      {i18n.language === 'en' && showEnglishWarning && (
+        <div className="bg-amber-50 border-b border-amber-200 dark:bg-amber-950/20 dark:border-amber-800">
+          <div className="container mx-auto px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="text-amber-600 dark:text-amber-400">
+                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <p className="text-amber-800 dark:text-amber-200 text-sm font-medium">
+                  This feature currently does not support English. Content will be displayed in Chinese.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => dismissEnglishWarning(true)}
+                  className="text-amber-700 hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-100 text-xs"
+                >
+                  Don't show again
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => dismissEnglishWarning(false)}
+                  className="text-amber-700 hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-100 p-1"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col space-y-6">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div>
-                <h1 className="text-3xl font-bold tracking-tight">萬國小新聞</h1>
-                <p className="text-muted-foreground mt-1">
-                  禱告大冒險 - 幫助家庭與孩子參與代禱
-                </p>
-              </div>
-              {i18n.language === 'en' && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <AlertTriangle className="h-5 w-5 text-amber-500" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>This feature currently does not support English</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )}
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">萬國小新聞</h1>
+              <p className="text-muted-foreground mt-1">
+                禱告大冒險 - 幫助家庭與孩子參與代禱
+              </p>
             </div>
             {user && (
               <Button onClick={handleCreateNews} className="w-fit">
