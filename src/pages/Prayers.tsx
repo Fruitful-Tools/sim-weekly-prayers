@@ -161,6 +161,20 @@ const Prayers = () => {
 
       if (fetchError) throw fetchError;
 
+      console.log('🗑️ Deleting prayer:', prayerId, 'with image:', prayer?.image_url);
+
+      // Delete the image from storage first if it exists
+      if (prayer?.image_url) {
+        console.log('📸 Attempting to delete prayer image:', prayer.image_url);
+        const { deleteImageFromStorage } = await import('@/lib/storageUtils');
+        const deleteResult = await deleteImageFromStorage(prayer.image_url);
+        console.log('🗑️ Prayer image deletion result:', deleteResult);
+        
+        if (!deleteResult) {
+          console.warn('⚠️ Failed to delete prayer image, but continuing with prayer deletion');
+        }
+      }
+
       // Delete the prayer (this will cascade delete translations)
       const { error } = await supabase
         .from('prayers')
@@ -169,13 +183,7 @@ const Prayers = () => {
 
       if (error) throw error;
 
-      // Delete the image from storage if it exists
-      if (prayer?.image_url) {
-        console.log('Attempting to delete image:', prayer.image_url);
-        const { deleteImageFromStorage } = await import('@/lib/storageUtils');
-        const deleteResult = await deleteImageFromStorage(prayer.image_url);
-        console.log('Image deletion result:', deleteResult);
-      }
+      console.log('✅ Prayer deleted successfully');
 
       toast({
         title: t('prayer.success'),
@@ -184,7 +192,7 @@ const Prayers = () => {
 
       fetchPrayers();
     } catch (error) {
-      console.error('Error deleting prayer:', error);
+      console.error('❌ Error deleting prayer:', error);
       toast({
         title: t('prayer.error'),
         description: t('prayer.deleteError'),

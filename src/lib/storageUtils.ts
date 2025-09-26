@@ -38,12 +38,16 @@ export const deleteImageFromStorage = async (
 ): Promise<boolean> => {
   if (!imageUrl) return true;
 
+  console.log('🔍 Analyzing image URL for deletion:', imageUrl);
+
   const filePath = extractFilePathFromUrl(imageUrl);
   if (!filePath) {
     // This is expected for external URLs (imgur, etc.) - no cleanup needed
-    console.log('External URL detected, skipping storage deletion:', imageUrl);
+    console.log('🌐 External URL detected, skipping storage deletion:', imageUrl);
     return true;
   }
+
+  console.log('📂 Extracted file path for deletion:', filePath);
 
   try {
     const { data, error } = await supabase.storage
@@ -51,7 +55,7 @@ export const deleteImageFromStorage = async (
       .remove([filePath]);
 
     if (error) {
-      console.error('Error deleting image from storage:', error);
+      console.error('❌ Error deleting image from storage:', error);
       return false;
     }
 
@@ -59,7 +63,7 @@ export const deleteImageFromStorage = async (
     // Supabase returns an array of deleted file info or empty array if nothing was deleted
     if (!data || data.length === 0) {
       console.warn(
-        'File deletion returned empty data - file may not have been deleted:',
+        '⚠️ File deletion returned empty data - file may not have been deleted:',
         filePath
       );
 
@@ -68,28 +72,33 @@ export const deleteImageFromStorage = async (
         .from('prayer-images')
         .getPublicUrl(filePath);
 
+      console.log('🔗 Checking if file still exists at:', urlData.publicUrl);
+
       // Try to fetch the URL to see if file still exists
       try {
         const response = await fetch(urlData.publicUrl, { method: 'HEAD' });
         if (response.ok) {
-          console.error('File still exists after deletion attempt:', filePath);
+          console.error('❌ File still exists after deletion attempt:', filePath);
           return false;
+        } else {
+          console.log('✅ File appears to be deleted (HEAD request failed):', filePath);
         }
       } catch (fetchError) {
         // If fetch fails, the file might be deleted (or network issue)
-        console.log('File appears to be deleted (fetch failed):', filePath);
+        console.log('✅ File appears to be deleted (fetch failed):', filePath);
       }
+    } else {
+      console.log(
+        '✅ Successfully deleted image:',
+        filePath,
+        'Response data:',
+        data
+      );
     }
 
-    console.log(
-      'Successfully deleted image:',
-      filePath,
-      'Response data:',
-      data
-    );
     return true;
   } catch (error) {
-    console.error('Error deleting image:', error);
+    console.error('❌ Error deleting image:', error);
     return false;
   }
 };
@@ -100,26 +109,37 @@ export const deleteImageFromStorage = async (
 export const deleteImagesFromStorage = async (
   imageUrls: string[]
 ): Promise<boolean> => {
+  console.log('🗑️ Starting batch deletion for images:', imageUrls);
+
   const filePaths = imageUrls
-    .map((url) => extractFilePathFromUrl(url))
+    .map((url) => {
+      const path = extractFilePathFromUrl(url);
+      console.log(`📂 URL: ${url} → Path: ${path}`);
+      return path;
+    })
     .filter((path) => path !== null) as string[];
 
-  if (filePaths.length === 0) return true;
+  if (filePaths.length === 0) {
+    console.log('🌐 No Supabase storage files to delete (all external URLs)');
+    return true;
+  }
+
+  console.log('📂 File paths to delete:', filePaths);
 
   try {
-    const { error } = await supabase.storage
+    const { data, error } = await supabase.storage
       .from('prayer-images')
       .remove(filePaths);
 
     if (error) {
-      console.error('Error deleting images from storage:', error);
+      console.error('❌ Error deleting images from storage:', error);
       return false;
     }
 
-    console.log('Successfully deleted images:', filePaths);
+    console.log('✅ Successfully deleted images:', filePaths, 'Response:', data);
     return true;
   } catch (error) {
-    console.error('Error deleting images:', error);
+    console.error('❌ Error deleting images:', error);
     return false;
   }
 };

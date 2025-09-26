@@ -80,9 +80,17 @@ export default function WorldKidsNews() {
 
   const handleDeleteNews = async (newsItem: WorldKidsNews) => {
     try {
-      // Delete images from storage
+      console.log('🗑️ Deleting world kids news:', newsItem.id, 'with images:', newsItem.image_urls);
+
+      // Delete images from storage first
       if (newsItem.image_urls.length > 0) {
-        await deleteImagesFromStorage(newsItem.image_urls);
+        console.log('📸 Attempting to delete world kids news images:', newsItem.image_urls);
+        const deleteResult = await deleteImagesFromStorage(newsItem.image_urls);
+        console.log('🗑️ World kids news images deletion result:', deleteResult);
+        
+        if (!deleteResult) {
+          console.warn('⚠️ Failed to delete some or all world kids news images, but continuing with news deletion');
+        }
       }
 
       // Delete news from database
@@ -93,10 +101,12 @@ export default function WorldKidsNews() {
 
       if (error) throw error;
 
+      console.log('✅ World kids news deleted successfully');
+
       toast.success('萬國小新聞已刪除');
       fetchNews();
     } catch (error) {
-      console.error('Error deleting world kids news:', error);
+      console.error('❌ Error deleting world kids news:', error);
       toast.error('刪除失敗');
     } finally {
       setDeletingNews(null);
