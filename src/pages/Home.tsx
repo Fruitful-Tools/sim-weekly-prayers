@@ -30,7 +30,9 @@ const Home = () => {
   const { t, i18n } = useTranslation();
   const isMobile = useIsMobile();
   const [latestPrayers, setLatestPrayers] = useState<Prayer[]>([]);
-  const [latestWorldKidsNews, setLatestWorldKidsNews] = useState<WorldKidsNews[]>([]);
+  const [latestWorldKidsNews, setLatestWorldKidsNews] = useState<
+    WorldKidsNews[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [newsLoading, setNewsLoading] = useState(true);
 
