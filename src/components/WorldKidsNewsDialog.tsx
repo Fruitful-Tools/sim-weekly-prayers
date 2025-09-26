@@ -170,7 +170,7 @@ export default function WorldKidsNewsDialog({
 
         const { data, error } = await supabase.storage
           .from('prayer-images')
-          .upload(fileName, image);
+          .upload(`prayer-school/${fileName}`, image);
 
         if (error) throw error;
 
@@ -326,20 +326,25 @@ export default function WorldKidsNewsDialog({
                   {imagePreviews.map((preview, index) => (
                     <Card key={index} className="relative">
                       <CardContent className="p-2">
-                        <img
-                          src={preview}
-                          alt={`預覽 ${index + 1}`}
-                          className="w-full h-32 object-cover rounded"
-                        />
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="sm"
-                          className="absolute top-1 right-1"
-                          onClick={() => removeImage(index)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
+                        <div className="relative">
+                          <img
+                            src={preview}
+                            alt={`預覽 ${index + 1}`}
+                            className="w-full h-32 object-cover rounded"
+                          />
+                          <div className="absolute top-2 left-2 bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-medium">
+                            圖片 {index + 1}
+                          </div>
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            className="absolute top-1 right-1"
+                            onClick={() => removeImage(index)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </CardContent>
                     </Card>
                   ))}

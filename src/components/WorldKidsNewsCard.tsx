@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Carousel,
   CarouselContent,
@@ -24,33 +25,54 @@ interface WorldKidsNewsCardProps {
 
 export default function WorldKidsNewsCard({ newsItem, isPreview = false }: WorldKidsNewsCardProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    if (!isPreview) {
+      navigate(`/world-kids-news/${newsItem.id}`);
+    }
+  };
+
+  const handleCarouselClick = (e: React.MouseEvent) => {
+    // Prevent navigation when clicking on carousel controls
+    if (e.target !== e.currentTarget) {
+      e.stopPropagation();
+    }
+  };
 
   return (
     <div className="space-y-2">
       {/* Image Carousel */}
       <div className="relative">
-        <Carousel className="w-full">
-          <CarouselContent>
-            {newsItem.image_urls.map((imageUrl, index) => (
-              <CarouselItem key={index}>
-                <div className="aspect-[4/3] relative overflow-hidden rounded-lg">
-                  <img
-                    src={imageUrl}
-                    alt={`萬國小新聞 ${new Date(newsItem.week_date).toLocaleDateString('zh-TW')} - 圖片 ${index + 1}`}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          {newsItem.image_urls.length > 1 && (
-            <>
-              <CarouselPrevious className="left-2" />
-              <CarouselNext className="right-2" />
-            </>
-          )}
-        </Carousel>
+        <Card 
+          className={`overflow-hidden ${!isPreview ? 'cursor-pointer hover:shadow-lg transition-shadow' : ''}`}
+          onClick={handleCardClick}
+        >
+          <CardContent className="p-0">
+            <Carousel className="w-full" onClick={handleCarouselClick}>
+              <CarouselContent>
+                {newsItem.image_urls.map((imageUrl, index) => (
+                  <CarouselItem key={index}>
+                    <div className="aspect-[4/3] relative overflow-hidden">
+                      <img
+                        src={imageUrl}
+                        alt={`萬國小新聞 ${new Date(newsItem.week_date).toLocaleDateString('zh-TW')} - 圖片 ${index + 1}`}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              {newsItem.image_urls.length > 1 && (
+                <>
+                  <CarouselPrevious className="left-2" />
+                  <CarouselNext className="right-2" />
+                </>
+              )}
+            </Carousel>
+          </CardContent>
+        </Card>
 
         {/* Image Counter Badge */}
         {newsItem.image_urls.length > 1 && (

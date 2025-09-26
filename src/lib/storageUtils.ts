@@ -2,8 +2,8 @@ import { supabase } from '@/integrations/supabase/client';
 
 /**
  * Extracts the file path from a Supabase storage URL
- * Example: https://...supabase.co/storage/v1/object/public/prayer-images/path/to/file.jpg
- * Returns: path/to/file.jpg
+ * Example: https://...supabase.co/storage/v1/object/public/prayer-images/prayer-school/file.jpg
+ * Returns: prayer-school/file.jpg
  */
 export const extractFilePathFromUrl = (url: string): string | null => {
   if (!url) return null;
