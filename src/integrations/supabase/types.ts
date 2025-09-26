@@ -76,6 +76,30 @@ export type Database = {
         }
         Relationships: []
       }
+      world_kids_news: {
+        Row: {
+          created_at: string
+          id: string
+          image_urls: string[]
+          updated_at: string
+          week_date: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_urls?: string[]
+          updated_at?: string
+          week_date: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_urls?: string[]
+          updated_at?: string
+          week_date?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

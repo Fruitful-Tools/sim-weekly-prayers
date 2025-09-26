@@ -10,6 +10,7 @@ import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Prayers from './pages/Prayers';
+import WorldKidsNews from './pages/WorldKidsNews';
 import PrayerDetail from './pages/PrayerDetail';
 import Register from './pages/Register';
 import Auth from './pages/Auth';
@@ -35,6 +36,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/prayers" element={<Prayers />} />
+        <Route path="/world-kids-news" element={<WorldKidsNews />} />
         <Route path="/prayer/:date" element={<PrayerDetail />} />
         <Route path="/prayer/id/:id" element={<PrayerDetail />} />
         {/* Fallback for old URLs */}
