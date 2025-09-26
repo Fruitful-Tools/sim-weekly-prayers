@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { User } from 'lucide-react';
-import LanguageSwitcher from './LanguageSwitcher';
 import SettingsDropdown from './SettingsDropdown';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -65,7 +64,6 @@ const Navigation = () => {
             </Link>
           )}
 
-          <LanguageSwitcher />
           <SettingsDropdown />
         </div>
       </div>

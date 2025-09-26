@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import PrayerCard from '@/components/PrayerCard';
+import WorldKidsNewsCard from '@/components/WorldKidsNewsCard';
 import { ArrowRight, Globe2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -17,11 +18,21 @@ interface Prayer {
   }[];
 }
 
+interface WorldKidsNews {
+  id: string;
+  week_date: string;
+  image_urls: string[];
+  created_at: string;
+  updated_at: string;
+}
+
 const Home = () => {
   const { t, i18n } = useTranslation();
   const isMobile = useIsMobile();
   const [latestPrayers, setLatestPrayers] = useState<Prayer[]>([]);
+  const [latestWorldKidsNews, setLatestWorldKidsNews] = useState<WorldKidsNews[]>([]);
   const [loading, setLoading] = useState(true);
+  const [newsLoading, setNewsLoading] = useState(true);
 
   const fetchLatestPrayers = useCallback(async () => {
     try {
@@ -49,9 +60,28 @@ const Home = () => {
     }
   }, [i18n.language, isMobile]);
 
+  const fetchLatestWorldKidsNews = useCallback(async () => {
+    try {
+      const limit = isMobile ? 2 : 3;
+      const { data, error } = await supabase
+        .from('world_kids_news')
+        .select('*')
+        .order('week_date', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      setLatestWorldKidsNews(data || []);
+    } catch (error) {
+      console.error('Error fetching world kids news:', error);
+    } finally {
+      setNewsLoading(false);
+    }
+  }, [isMobile]);
+
   useEffect(() => {
     fetchLatestPrayers();
-  }, [fetchLatestPrayers]);
+    fetchLatestWorldKidsNews();
+  }, [fetchLatestPrayers, fetchLatestWorldKidsNews]);
 
   const formatPrayerForCard = (prayer: Prayer) => ({
     id: prayer.id,
@@ -127,6 +157,46 @@ const Home = () => {
           ) : (
             <div className="text-center text-muted-foreground">
               {t('prayer.noResults')}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Latest World Kids News Section */}
+      <section className="py-16 px-4 bg-muted/20">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              {t('home.latestWorldKidsNews')}
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-primary-glow mx-auto"></div>
+          </div>
+
+          {newsLoading ? (
+            <div className="text-center text-muted-foreground">
+              {t('common.loading')}
+            </div>
+          ) : latestWorldKidsNews.length > 0 ? (
+            <>
+              <div
+                className={`grid gap-6 ${isMobile ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}
+              >
+                {latestWorldKidsNews.map((newsItem) => (
+                  <WorldKidsNewsCard key={newsItem.id} newsItem={newsItem} />
+                ))}
+              </div>
+              <div className="text-center mt-8">
+                <Link to="/world-kids-news">
+                  <Button variant="outline" size="lg">
+                    查看所有萬國小新聞
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </>
+          ) : (
+            <div className="text-center text-muted-foreground">
+              尚無萬國小新聞內容
             </div>
           )}
         </div>

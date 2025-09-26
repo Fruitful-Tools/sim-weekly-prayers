@@ -73,9 +73,10 @@
     "copyFailedDesc": "無法複製連結到剪貼板"
   },
   "home": {
-    "title": "每週禱告",
-    "subtitle": "跟著時事脈動，與我們同為世界萬國禱告",
+    "title": "禱告大冒險",
+    "subtitle": "為未得之民的兒童與家庭禱告",
     "latestPrayer": "最新禱告",
+    "latestWorldKidsNews": "最新萬國小新聞",
     "viewAllPrayers": "查看所有禱告",
     "footerMotto": "「藉著禱告」一直是 SIM 國際事工差會的座右銘，我們鼓勵教會、基督徒在參與跨文化宣教事奉中，優先以禱告開始，並持續在禱告中求告神。"
   },

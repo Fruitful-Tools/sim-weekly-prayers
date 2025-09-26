@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
-import { Plus, Search, Edit, Trash2 } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
@@ -14,6 +14,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import WorldKidsNewsDialog from '@/components/WorldKidsNewsDialog';
@@ -30,7 +36,7 @@ interface WorldKidsNews {
 }
 
 export default function WorldKidsNews() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [news, setNews] = useState<WorldKidsNews[]>([]);
   const [loading, setLoading] = useState(true);
@@ -154,11 +160,25 @@ export default function WorldKidsNews() {
         <div className="flex flex-col space-y-6">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">萬國小新聞</h1>
-              <p className="text-muted-foreground mt-1">
-                禱告大冒險 - 幫助家庭與孩子參與代禱
-              </p>
+            <div className="flex items-center gap-3">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">萬國小新聞</h1>
+                <p className="text-muted-foreground mt-1">
+                  禱告大冒險 - 幫助家庭與孩子參與代禱
+                </p>
+              </div>
+              {i18n.language === 'en' && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <AlertTriangle className="h-5 w-5 text-amber-500" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>This feature currently does not support English</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
             </div>
             {user && (
               <Button onClick={handleCreateNews} className="w-fit">

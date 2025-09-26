@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Settings, Type, Palette } from 'lucide-react';
+import { Settings, Type, Palette, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -13,8 +13,17 @@ import { useFontSize } from '@/contexts/FontContext';
 import ThemeToggle from './ThemeToggle';
 
 const SettingsDropdown = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { fontSize, setFontSize } = useFontSize();
+
+  const toggleLanguage = () => {
+    const newLanguage = i18n.language === 'en' ? 'zh-TW' : 'en';
+    i18n.changeLanguage(newLanguage);
+  };
+
+  const getCurrentLanguageLabel = () => {
+    return i18n.language === 'en' ? '繁體中文' : 'English';
+  };
 
   const fontSizes = [
     { value: 'small' as const, label: t('settings.fontSize.small') },
@@ -45,6 +54,17 @@ const SettingsDropdown = () => {
         <div className="px-2 py-1">
           <ThemeToggle />
         </div>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuLabel className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Globe className="h-3 w-3" />
+          {t('nav.language')}
+        </DropdownMenuLabel>
+        <DropdownMenuItem onClick={toggleLanguage}>
+          <Globe className="h-4 w-4 mr-2" />
+          {getCurrentLanguageLabel()}
+        </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 

@@ -62,9 +62,10 @@
     "copyFailedDesc": "Failed to copy link to clipboard"
   },
   "home": {
-    "title": "Weekly Prayers",
-    "subtitle": "Join us in prayer for nations around the world with current news pulse",
+    "title": "Mission Adventure Prayer",
+    "subtitle": "Praying for children and families in unreached areas",
     "latestPrayer": "Latest Prayer",
+    "latestWorldKidsNews": "Latest World Kids News",
     "viewAllPrayers": "View All Prayers",
     "footerMotto": "\"By Prayer\" has always been the motto of SIM, as an international mission organization. We encourage churches and Christians to begin their involvement in cross-cultural missions with prayer, and to continue calling on God through persistent prayer."
   },
