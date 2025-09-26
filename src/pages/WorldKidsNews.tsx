@@ -4,7 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Plus, Search, Edit, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import WorldKidsNewsDialog from '@/components/WorldKidsNewsDialog';
@@ -80,16 +89,26 @@ export default function WorldKidsNews() {
 
   const handleDeleteNews = async (newsItem: WorldKidsNews) => {
     try {
-      console.log('🗑️ Deleting world kids news:', newsItem.id, 'with images:', newsItem.image_urls);
+      console.log(
+        '🗑️ Deleting world kids news:',
+        newsItem.id,
+        'with images:',
+        newsItem.image_urls
+      );
 
       // Delete images from storage first
       if (newsItem.image_urls.length > 0) {
-        console.log('📸 Attempting to delete world kids news images:', newsItem.image_urls);
+        console.log(
+          '📸 Attempting to delete world kids news images:',
+          newsItem.image_urls
+        );
         const deleteResult = await deleteImagesFromStorage(newsItem.image_urls);
         console.log('🗑️ World kids news images deletion result:', deleteResult);
-        
+
         if (!deleteResult) {
-          console.warn('⚠️ Failed to delete some or all world kids news images, but continuing with news deletion');
+          console.warn(
+            '⚠️ Failed to delete some or all world kids news images, but continuing with news deletion'
+          );
         }
       }
 
@@ -170,15 +189,21 @@ export default function WorldKidsNews() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {currentNews.map((newsItem) => (
-                <Card key={newsItem.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <Card
+                  key={newsItem.id}
+                  className="overflow-hidden hover:shadow-lg transition-shadow"
+                >
                   <CardHeader className="pb-3">
                     <div className="flex justify-between items-start">
                       <CardTitle className="text-lg">
-                        {new Date(newsItem.week_date).toLocaleDateString('zh-TW', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
+                        {new Date(newsItem.week_date).toLocaleDateString(
+                          'zh-TW',
+                          {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          }
+                        )}
                       </CardTitle>
                       {user && (
                         <div className="flex gap-1">
@@ -223,7 +248,9 @@ export default function WorldKidsNews() {
               </span>
               <Button
                 variant="outline"
-                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                onClick={() =>
+                  setCurrentPage(Math.min(totalPages, currentPage + 1))
+                }
                 disabled={currentPage === totalPages}
               >
                 下一頁
@@ -242,7 +269,10 @@ export default function WorldKidsNews() {
       />
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={!!deletingNews} onOpenChange={() => setDeletingNews(null)}>
+      <AlertDialog
+        open={!!deletingNews}
+        onOpenChange={() => setDeletingNews(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>確認刪除</AlertDialogTitle>
@@ -252,7 +282,9 @@ export default function WorldKidsNews() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>取消</AlertDialogCancel>
-            <AlertDialogAction onClick={() => deletingNews && handleDeleteNews(deletingNews)}>
+            <AlertDialogAction
+              onClick={() => deletingNews && handleDeleteNews(deletingNews)}
+            >
               刪除
             </AlertDialogAction>
           </AlertDialogFooter>

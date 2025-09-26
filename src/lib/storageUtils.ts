@@ -43,7 +43,10 @@ export const deleteImageFromStorage = async (
   const filePath = extractFilePathFromUrl(imageUrl);
   if (!filePath) {
     // This is expected for external URLs (imgur, etc.) - no cleanup needed
-    console.log('🌐 External URL detected, skipping storage deletion:', imageUrl);
+    console.log(
+      '🌐 External URL detected, skipping storage deletion:',
+      imageUrl
+    );
     return true;
   }
 
@@ -78,10 +81,16 @@ export const deleteImageFromStorage = async (
       try {
         const response = await fetch(urlData.publicUrl, { method: 'HEAD' });
         if (response.ok) {
-          console.error('❌ File still exists after deletion attempt:', filePath);
+          console.error(
+            '❌ File still exists after deletion attempt:',
+            filePath
+          );
           return false;
         } else {
-          console.log('✅ File appears to be deleted (HEAD request failed):', filePath);
+          console.log(
+            '✅ File appears to be deleted (HEAD request failed):',
+            filePath
+          );
         }
       } catch (fetchError) {
         // If fetch fails, the file might be deleted (or network issue)
@@ -136,7 +145,12 @@ export const deleteImagesFromStorage = async (
       return false;
     }
 
-    console.log('✅ Successfully deleted images:', filePaths, 'Response:', data);
+    console.log(
+      '✅ Successfully deleted images:',
+      filePaths,
+      'Response:',
+      data
+    );
     return true;
   } catch (error) {
     console.error('❌ Error deleting images:', error);

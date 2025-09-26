@@ -161,7 +161,12 @@ const Prayers = () => {
 
       if (fetchError) throw fetchError;
 
-      console.log('🗑️ Deleting prayer:', prayerId, 'with image:', prayer?.image_url);
+      console.log(
+        '🗑️ Deleting prayer:',
+        prayerId,
+        'with image:',
+        prayer?.image_url
+      );
 
       // Delete the image from storage first if it exists
       if (prayer?.image_url) {
@@ -169,9 +174,11 @@ const Prayers = () => {
         const { deleteImageFromStorage } = await import('@/lib/storageUtils');
         const deleteResult = await deleteImageFromStorage(prayer.image_url);
         console.log('🗑️ Prayer image deletion result:', deleteResult);
-        
+
         if (!deleteResult) {
-          console.warn('⚠️ Failed to delete prayer image, but continuing with prayer deletion');
+          console.warn(
+            '⚠️ Failed to delete prayer image, but continuing with prayer deletion'
+          );
         }
       }
 

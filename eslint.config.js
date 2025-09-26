@@ -26,10 +26,8 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      // Disable Fast Refresh only-export-components rule; our UI modules export helper constants/types intentionally.
+      'react-refresh/only-export-components': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       'prettier/prettier': 'error',
     },

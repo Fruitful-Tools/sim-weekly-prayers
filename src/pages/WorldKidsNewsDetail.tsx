@@ -106,18 +106,22 @@ export default function WorldKidsNewsDetail() {
                 {new Date(news.week_date).toLocaleDateString('zh-TW', {
                   year: 'numeric',
                   month: 'long',
-                  day: 'numeric'
+                  day: 'numeric',
                 })}
               </h1>
-              <p className="text-muted-foreground mt-1">萬國小新聞 - 禱告大冒險</p>
+              <p className="text-muted-foreground mt-1">
+                萬國小新聞 - 禱告大冒險
+              </p>
             </div>
-            
-            <SocialShareDropdown 
+
+            <SocialShareDropdown
               url={`${window.location.origin}/world-kids-news/${news.id}`}
-              title={`萬國小新聞 - ${new Date(news.week_date).toLocaleDateString('zh-TW', {
+              title={`萬國小新聞 - ${new Date(
+                news.week_date
+              ).toLocaleDateString('zh-TW', {
                 year: 'numeric',
                 month: 'long',
-                day: 'numeric'
+                day: 'numeric',
               })}`}
             />
           </div>
@@ -131,7 +135,7 @@ export default function WorldKidsNewsDetail() {
                   alt={`萬國小新聞 圖片 ${currentImageIndex + 1}`}
                   className="w-full h-full object-contain"
                 />
-                
+
                 {/* Navigation Arrows */}
                 {news.image_urls.length > 1 && (
                   <>
@@ -149,7 +153,9 @@ export default function WorldKidsNewsDetail() {
                       size="icon"
                       className="absolute right-4 top-1/2 -translate-y-1/2"
                       onClick={nextImage}
-                      disabled={currentImageIndex === news.image_urls.length - 1}
+                      disabled={
+                        currentImageIndex === news.image_urls.length - 1
+                      }
                     >
                       <ChevronRight className="h-4 w-4" />
                     </Button>

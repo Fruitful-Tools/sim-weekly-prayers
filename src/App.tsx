@@ -37,8 +37,8 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/prayers" element={<Prayers />} />
-          <Route path="/world-kids-news" element={<WorldKidsNews />} />
-          <Route path="/world-kids-news/:id" element={<WorldKidsNewsDetail />} />
+        <Route path="/world-kids-news" element={<WorldKidsNews />} />
+        <Route path="/world-kids-news/:id" element={<WorldKidsNewsDetail />} />
         <Route path="/prayer/:date" element={<PrayerDetail />} />
         <Route path="/prayer/id/:id" element={<PrayerDetail />} />
         {/* Fallback for old URLs */}

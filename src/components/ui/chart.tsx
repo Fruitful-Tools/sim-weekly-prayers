@@ -6,6 +6,21 @@ import { cn } from '@/lib/utils';
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: '', dark: '.dark' } as const;
 
+// Recharts payload items are loosely typed. Define minimal shapes we rely on.
+type TooltipPayloadItem = {
+  dataKey?: string;
+  name?: string;
+  color?: string;
+  value?: number | string | null;
+  payload: Record<string, unknown> & { fill?: string };
+};
+
+type LegendPayloadItem = {
+  dataKey?: string;
+  value?: string;
+  color?: string;
+};
+
 export type ChartConfig = {
   [k in string]: {
     label?: React.ReactNode;
@@ -104,15 +119,24 @@ const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<'div'> & {
     active?: boolean;
-    payload?: Array<any>;
-    label?: any;
+    payload?: TooltipPayloadItem[];
+    label?: string | number | React.ReactNode;
     hideLabel?: boolean;
     hideIndicator?: boolean;
     indicator?: 'line' | 'dot' | 'dashed';
     nameKey?: string;
     labelKey?: string;
-    labelFormatter?: (value: any, payload: any) => React.ReactNode;
-    formatter?: (value: any, name: any, item: any, index: number, payload: any) => React.ReactNode;
+    labelFormatter?: (
+      value: React.ReactNode,
+      payload: TooltipPayloadItem[]
+    ) => React.ReactNode;
+    formatter?: (
+      value: unknown,
+      name: string | undefined,
+      item: TooltipPayloadItem,
+      index: number,
+      payload: TooltipPayloadItem['payload']
+    ) => React.ReactNode;
     labelClassName?: string;
     color?: string;
   }
@@ -244,7 +268,10 @@ const ChartTooltipContent = React.forwardRef<
                       </div>
                       {item.value && (
                         <span className="font-mono font-medium tabular-nums text-foreground">
-                          {item.value.toLocaleString()}
+                          {typeof item.value === 'number' ||
+                          typeof item.value === 'string'
+                            ? item.value.toLocaleString()
+                            : String(item.value)}
                         </span>
                       )}
                     </div>
@@ -265,7 +292,7 @@ const ChartLegend = RechartsPrimitive.Legend;
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<'div'> & {
-    payload?: Array<any>;
+    payload?: LegendPayloadItem[];
     verticalAlign?: 'top' | 'bottom';
     hideIcon?: boolean;
     nameKey?: string;
@@ -290,7 +317,7 @@ const ChartLegendContent = React.forwardRef<
           className
         )}
       >
-        {payload.map((item: any) => {
+        {payload.map((item) => {
           const key = `${nameKey || item.dataKey || 'value'}`;
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
 

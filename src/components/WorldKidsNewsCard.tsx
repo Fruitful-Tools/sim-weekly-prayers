@@ -23,7 +23,10 @@ interface WorldKidsNewsCardProps {
   isPreview?: boolean;
 }
 
-export default function WorldKidsNewsCard({ newsItem, isPreview = false }: WorldKidsNewsCardProps) {
+export default function WorldKidsNewsCard({
+  newsItem,
+  isPreview = false,
+}: WorldKidsNewsCardProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
 
@@ -36,7 +39,10 @@ export default function WorldKidsNewsCard({ newsItem, isPreview = false }: World
   const handleCarouselClick = (e: React.MouseEvent) => {
     // Prevent navigation when clicking on carousel controls or dots
     const target = e.target as HTMLElement;
-    if (target.closest('[data-carousel-control]') || target.closest('.dots-indicator')) {
+    if (
+      target.closest('[data-carousel-control]') ||
+      target.closest('.dots-indicator')
+    ) {
       e.stopPropagation();
     }
   };
@@ -45,7 +51,7 @@ export default function WorldKidsNewsCard({ newsItem, isPreview = false }: World
     <div className="space-y-2">
       {/* Image Carousel */}
       <div className="relative">
-        <Card 
+        <Card
           className={`overflow-hidden ${!isPreview ? 'cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02]' : ''}`}
           onClick={handleCardClick}
         >
@@ -77,8 +83,8 @@ export default function WorldKidsNewsCard({ newsItem, isPreview = false }: World
 
         {/* Image Counter Badge */}
         {newsItem.image_urls.length > 1 && (
-          <Badge 
-            variant="secondary" 
+          <Badge
+            variant="secondary"
             className="absolute top-2 right-2 bg-black/70 text-white"
           >
             {currentSlide + 1} / {newsItem.image_urls.length}
@@ -108,7 +114,9 @@ export default function WorldKidsNewsCard({ newsItem, isPreview = false }: World
       {!isPreview && (
         <div className="text-sm text-muted-foreground">
           共 {newsItem.image_urls.length} 張圖片
-          {!isPreview && <span className="ml-2 text-xs opacity-60">點擊查看詳情</span>}
+          {!isPreview && (
+            <span className="ml-2 text-xs opacity-60">點擊查看詳情</span>
+          )}
         </div>
       )}
     </div>

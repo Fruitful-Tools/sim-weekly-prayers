@@ -7,7 +7,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Upload, X, Link, Image } from 'lucide-react';
@@ -42,32 +49,36 @@ export default function WorldKidsNewsDialog({
   open,
   onOpenChange,
   onSuccess,
-  news
+  news,
 }: WorldKidsNewsDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imageInputModes, setImageInputModes] = useState<{[key: string]: 'upload' | 'url'}>({
+  const [imageInputModes, setImageInputModes] = useState<{
+    [key: string]: 'upload' | 'url';
+  }>({
     image1: 'upload',
-    image2: 'upload', 
-    image3: 'upload'
+    image2: 'upload',
+    image3: 'upload',
   });
-  const [imageUrls, setImageUrls] = useState<{[key: string]: string}>({
+  const [imageUrls, setImageUrls] = useState<{ [key: string]: string }>({
     image1: '',
     image2: '',
-    image3: ''
+    image3: '',
   });
-  const [imagePreviews, setImagePreviews] = useState<{[key: string]: string}>({
-    image1: '',
-    image2: '',
-    image3: ''
-  });
+  const [imagePreviews, setImagePreviews] = useState<{ [key: string]: string }>(
+    {
+      image1: '',
+      image2: '',
+      image3: '',
+    }
+  );
 
   const form = useForm<WorldKidsNewsFormData>({
     defaultValues: {
       week_date: '',
       image1: null,
       image2: null,
-      image3: null
-    }
+      image3: null,
+    },
   });
 
   // Reset form when dialog opens/closes or news changes
@@ -78,35 +89,38 @@ export default function WorldKidsNewsDialog({
           week_date: news.week_date,
           image1: news.image_urls[0] || null,
           image2: news.image_urls[1] || null,
-          image3: news.image_urls[2] || null
+          image3: news.image_urls[2] || null,
         });
         setImagePreviews({
           image1: news.image_urls[0] || '',
           image2: news.image_urls[1] || '',
-          image3: news.image_urls[2] || ''
+          image3: news.image_urls[2] || '',
         });
       } else {
         form.reset({
           week_date: '',
           image1: null,
           image2: null,
-          image3: null
+          image3: null,
         });
         setImagePreviews({
           image1: '',
           image2: '',
-          image3: ''
+          image3: '',
         });
       }
     }
     setImageUrls({
       image1: '',
       image2: '',
-      image3: ''
+      image3: '',
     });
   }, [open, news, form]);
 
-  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>, imageKey: 'image1' | 'image2' | 'image3') => {
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    imageKey: 'image1' | 'image2' | 'image3'
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -121,18 +135,21 @@ export default function WorldKidsNewsDialog({
     try {
       console.log(`🔄 Starting compression for ${imageKey}...`);
       const compressedFile = await compressImage(file);
-      console.log(`✅ Compression complete for ${imageKey}:`, compressedFile.size);
-      
+      console.log(
+        `✅ Compression complete for ${imageKey}:`,
+        compressedFile.size
+      );
+
       form.setValue(imageKey, compressedFile);
-      
+
       // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result) {
           console.log(`🖼️ Preview created for ${imageKey}`);
-          setImagePreviews(prev => ({
+          setImagePreviews((prev) => ({
             ...prev,
-            [imageKey]: e.target.result as string
+            [imageKey]: e.target.result as string,
           }));
         }
       };
@@ -156,9 +173,9 @@ export default function WorldKidsNewsDialog({
     }
 
     form.setValue(imageKey, null);
-    setImagePreviews(prev => ({
+    setImagePreviews((prev) => ({
       ...prev,
-      [imageKey]: ''
+      [imageKey]: '',
     }));
   };
 
@@ -167,17 +184,19 @@ export default function WorldKidsNewsDialog({
     if (!url.trim()) return;
 
     form.setValue(imageKey, url);
-    setImagePreviews(prev => ({
+    setImagePreviews((prev) => ({
       ...prev,
-      [imageKey]: url
+      [imageKey]: url,
     }));
-    setImageUrls(prev => ({
+    setImageUrls((prev) => ({
       ...prev,
-      [imageKey]: ''
+      [imageKey]: '',
     }));
   };
 
-  const uploadImages = async (data: WorldKidsNewsFormData): Promise<string[]> => {
+  const uploadImages = async (
+    data: WorldKidsNewsFormData
+  ): Promise<string[]> => {
     const uploadedUrls: string[] = [];
     const images = [data.image1, data.image2, data.image3];
 
@@ -201,7 +220,9 @@ export default function WorldKidsNewsDialog({
 
         if (error) throw error;
 
-        const { data: { publicUrl } } = supabase.storage
+        const {
+          data: { publicUrl },
+        } = supabase.storage
           .from('prayer-images')
           .getPublicUrl(uploadData.path);
 
@@ -210,12 +231,14 @@ export default function WorldKidsNewsDialog({
     }
 
     // Filter out empty URLs
-    return uploadedUrls.filter(url => url !== '');
+    return uploadedUrls.filter((url) => url !== '');
   };
 
   const onSubmit = async (data: WorldKidsNewsFormData) => {
-    const imageCount = [data.image1, data.image2, data.image3].filter(img => img !== null).length;
-    
+    const imageCount = [data.image1, data.image2, data.image3].filter(
+      (img) => img !== null
+    ).length;
+
     if (imageCount === 0) {
       toast.error('請至少上傳一張圖片');
       return;
@@ -294,112 +317,163 @@ export default function WorldKidsNewsDialog({
 
             {/* Images Section */}
             <div className="space-y-6">
-              <FormLabel className="text-lg font-semibold">圖片上傳 (需要正好 3 張)</FormLabel>
-              
-              {(['image1', 'image2', 'image3'] as const).map((imageKey, index) => (
-                <div key={imageKey} className="space-y-3 p-4 border rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium">圖片 {index + 1}</h3>
-                     <div className="flex gap-2">
-                       <Button
-                         type="button"
-                         variant={imageInputModes[imageKey] === 'upload' ? 'default' : 'outline'}
-                         size="sm"
-                         onClick={() => {
-                           console.log(`🔘 Upload button clicked for ${imageKey}, current mode:`, imageInputModes[imageKey]);
-                           setImageInputModes(prev => ({ ...prev, [imageKey]: 'upload' }));
-                           // If already in upload mode, trigger file selection
-                           if (imageInputModes[imageKey] === 'upload') {
-                             console.log(`📂 Triggering file dialog for ${imageKey}`);
-                             setTimeout(() => {
-                               const input = document.getElementById(`${imageKey}-upload`);
-                               console.log(`🎯 Found input element:`, input);
-                               input?.click();
-                             }, 100);
-                           }
-                         }}
-                       >
-                         <Upload className="h-4 w-4 mr-1" />
-                         上傳檔案
-                       </Button>
-                       <Button
-                         type="button"
-                         variant={imageInputModes[imageKey] === 'url' ? 'default' : 'outline'}
-                         size="sm"
-                         onClick={() => setImageInputModes(prev => ({ ...prev, [imageKey]: 'url' }))}
-                       >
-                         <Link className="h-4 w-4 mr-1" />
-                         網址連結
-                       </Button>
-                     </div>
+              <FormLabel className="text-lg font-semibold">
+                圖片上傳 (需要正好 3 張)
+              </FormLabel>
+
+              {(['image1', 'image2', 'image3'] as const).map(
+                (imageKey, index) => (
+                  <div
+                    key={imageKey}
+                    className="space-y-3 p-4 border rounded-lg"
+                  >
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-medium">圖片 {index + 1}</h3>
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          variant={
+                            imageInputModes[imageKey] === 'upload'
+                              ? 'default'
+                              : 'outline'
+                          }
+                          size="sm"
+                          onClick={() => {
+                            console.log(
+                              `🔘 Upload button clicked for ${imageKey}, current mode:`,
+                              imageInputModes[imageKey]
+                            );
+                            setImageInputModes((prev) => ({
+                              ...prev,
+                              [imageKey]: 'upload',
+                            }));
+                            // If already in upload mode, trigger file selection
+                            if (imageInputModes[imageKey] === 'upload') {
+                              console.log(
+                                `📂 Triggering file dialog for ${imageKey}`
+                              );
+                              setTimeout(() => {
+                                const input = document.getElementById(
+                                  `${imageKey}-upload`
+                                );
+                                console.log(`🎯 Found input element:`, input);
+                                input?.click();
+                              }, 100);
+                            }
+                          }}
+                        >
+                          <Upload className="h-4 w-4 mr-1" />
+                          上傳檔案
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={
+                            imageInputModes[imageKey] === 'url'
+                              ? 'default'
+                              : 'outline'
+                          }
+                          size="sm"
+                          onClick={() =>
+                            setImageInputModes((prev) => ({
+                              ...prev,
+                              [imageKey]: 'url',
+                            }))
+                          }
+                        >
+                          <Link className="h-4 w-4 mr-1" />
+                          網址連結
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Image Input */}
+                    {imageInputModes[imageKey] === 'upload' ? (
+                      <div>
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleImageChange(e, imageKey)}
+                          className="hidden"
+                          id={`${imageKey}-upload`}
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full border-2 border-dashed border-muted-foreground/25 h-20"
+                          onClick={() =>
+                            document
+                              .getElementById(`${imageKey}-upload`)
+                              ?.click()
+                          }
+                        >
+                          <div className="flex flex-col items-center gap-2">
+                            <Image className="h-6 w-6 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">
+                              點擊選擇圖片
+                            </span>
+                          </div>
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="圖片網址..."
+                          value={imageUrls[imageKey]}
+                          onChange={(e) =>
+                            setImageUrls((prev) => ({
+                              ...prev,
+                              [imageKey]: e.target.value,
+                            }))
+                          }
+                          onKeyDown={(e) =>
+                            e.key === 'Enter' &&
+                            (e.preventDefault(), handleImageUrlAdd(imageKey))
+                          }
+                        />
+                        <Button
+                          type="button"
+                          onClick={() => handleImageUrlAdd(imageKey)}
+                        >
+                          添加
+                        </Button>
+                      </div>
+                    )}
+
+                    {/* Image Preview */}
+                    {imagePreviews[imageKey] && (
+                      <Card className="relative">
+                        <CardContent className="p-2">
+                          <div className="relative">
+                            <img
+                              src={imagePreviews[imageKey]}
+                              alt={`圖片 ${index + 1} 預覽`}
+                              className="w-full h-32 object-cover rounded"
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="sm"
+                              className="absolute top-1 right-1"
+                              onClick={() => removeImage(imageKey)}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
                   </div>
-
-                  {/* Image Input */}
-                  {imageInputModes[imageKey] === 'upload' ? (
-                    <div>
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageChange(e, imageKey)}
-                        className="hidden"
-                        id={`${imageKey}-upload`}
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-full border-2 border-dashed border-muted-foreground/25 h-20"
-                        onClick={() => document.getElementById(`${imageKey}-upload`)?.click()}
-                      >
-                        <div className="flex flex-col items-center gap-2">
-                          <Image className="h-6 w-6 text-muted-foreground" />
-                          <span className="text-sm text-muted-foreground">
-                            點擊選擇圖片
-                          </span>
-                        </div>
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex gap-2">
-                      <Input
-                        placeholder="圖片網址..."
-                        value={imageUrls[imageKey]}
-                        onChange={(e) => setImageUrls(prev => ({ ...prev, [imageKey]: e.target.value }))}
-                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleImageUrlAdd(imageKey))}
-                      />
-                      <Button type="button" onClick={() => handleImageUrlAdd(imageKey)}>
-                        添加
-                      </Button>
-                    </div>
-                  )}
-
-                  {/* Image Preview */}
-                  {imagePreviews[imageKey] && (
-                    <Card className="relative">
-                      <CardContent className="p-2">
-                        <div className="relative">
-                          <img
-                            src={imagePreviews[imageKey]}
-                            alt={`圖片 ${index + 1} 預覽`}
-                            className="w-full h-32 object-cover rounded"
-                          />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="sm"
-                            className="absolute top-1 right-1"
-                            onClick={() => removeImage(imageKey)}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
-              ))}
+                )
+              )}
 
               <p className="text-sm text-muted-foreground">
-                已上傳 {Object.values(imagePreviews).filter(preview => preview !== '').length} / 3 張圖片
+                已上傳{' '}
+                {
+                  Object.values(imagePreviews).filter(
+                    (preview) => preview !== ''
+                  ).length
+                }{' '}
+                / 3 張圖片
               </p>
             </div>
 
