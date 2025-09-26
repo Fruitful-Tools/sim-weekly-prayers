@@ -25,7 +25,6 @@ interface Prayer {
   prayer_translations: {
     title: string;
     content: string;
-    language: string;
   }[];
   translations?: {
     title: string;
@@ -56,25 +55,15 @@ const Prayers = () => {
           id,
           week_date,
           image_url,
-          prayer_translations(title, content, language)
+          prayer_translations!inner(title, content)
         `
         )
+        .eq('prayer_translations.language', i18n.language)
         .order('week_date', { ascending: false });
 
       if (error) throw error;
 
-      // Filter and format prayers for current language
-      const formattedPrayers =
-        data
-          ?.map((prayer) => ({
-            ...prayer,
-            prayer_translations: prayer.prayer_translations.filter(
-              (t) => t.language === i18n.language
-            ),
-          }))
-          .filter((prayer) => prayer.prayer_translations.length > 0) || [];
-
-      setPrayers(formattedPrayers);
+      setPrayers(data || []);
     } catch (error) {
       console.error('Error fetching prayers:', error);
     } finally {
