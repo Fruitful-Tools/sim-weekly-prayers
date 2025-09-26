@@ -26,7 +26,9 @@ interface WorldKidsNews {
 
 interface WorldKidsNewsFormData {
   week_date: string;
-  images: (File | string)[];
+  image1: File | string | null;
+  image2: File | string | null;
+  image3: File | string | null;
 }
 
 interface WorldKidsNewsDialogProps {
@@ -43,14 +45,28 @@ export default function WorldKidsNewsDialog({
   news
 }: WorldKidsNewsDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imageInputMode, setImageInputMode] = useState<'upload' | 'url'>('upload');
-  const [imageUrl, setImageUrl] = useState('');
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [imageInputModes, setImageInputModes] = useState<{[key: string]: 'upload' | 'url'}>({
+    image1: 'upload',
+    image2: 'upload', 
+    image3: 'upload'
+  });
+  const [imageUrls, setImageUrls] = useState<{[key: string]: string}>({
+    image1: '',
+    image2: '',
+    image3: ''
+  });
+  const [imagePreviews, setImagePreviews] = useState<{[key: string]: string}>({
+    image1: '',
+    image2: '',
+    image3: ''
+  });
 
   const form = useForm<WorldKidsNewsFormData>({
     defaultValues: {
       week_date: '',
-      images: []
+      image1: null,
+      image2: null,
+      image3: null
     }
   });
 
@@ -60,68 +76,69 @@ export default function WorldKidsNewsDialog({
       if (news) {
         form.reset({
           week_date: news.week_date,
-          images: news.image_urls
+          image1: news.image_urls[0] || null,
+          image2: news.image_urls[1] || null,
+          image3: news.image_urls[2] || null
         });
-        setImagePreviews(news.image_urls);
+        setImagePreviews({
+          image1: news.image_urls[0] || '',
+          image2: news.image_urls[1] || '',
+          image3: news.image_urls[2] || ''
+        });
       } else {
         form.reset({
           week_date: '',
-          images: []
+          image1: null,
+          image2: null,
+          image3: null
         });
-        setImagePreviews([]);
+        setImagePreviews({
+          image1: '',
+          image2: '',
+          image3: ''
+        });
       }
     }
-    setImageUrl('');
+    setImageUrls({
+      image1: '',
+      image2: '',
+      image3: ''
+    });
   }, [open, news, form]);
 
-  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files) return;
+  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>, imageKey: 'image1' | 'image2' | 'image3') => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-    const currentImages = form.getValues('images');
-    const newImages = [...currentImages];
-    const newPreviews = [...imagePreviews];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      
-      // Check total count (enforce 3 image limit in frontend)
-      if (newImages.length >= 3) {
-        toast.error('最多只能上傳 3 張圖片');
-        break;
-      }
-
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        toast.error(`檔案 ${file.name} 不是有效的圖片格式`);
-        continue;
-      }
-
-      try {
-        const compressedFile = await compressImage(file);
-        newImages.push(compressedFile);
-        
-        // Create preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          if (e.target?.result) {
-            newPreviews.push(e.target.result as string);
-            setImagePreviews([...newPreviews]);
-          }
-        };
-        reader.readAsDataURL(compressedFile);
-      } catch (error) {
-        console.error('Error compressing image:', error);
-        toast.error(`圖片 ${file.name} 壓縮失敗`);
-      }
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error(`檔案 ${file.name} 不是有效的圖片格式`);
+      return;
     }
 
-    form.setValue('images', newImages);
+    try {
+      const compressedFile = await compressImage(file);
+      form.setValue(imageKey, compressedFile);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          setImagePreviews(prev => ({
+            ...prev,
+            [imageKey]: e.target.result as string
+          }));
+        }
+      };
+      reader.readAsDataURL(compressedFile);
+    } catch (error) {
+      console.error('Error compressing image:', error);
+      toast.error(`圖片 ${file.name} 壓縮失敗`);
+    }
   };
 
-  const removeImage = async (index: number) => {
-    const images = form.getValues('images');
-    const imageToRemove = images[index];
+  const removeImage = async (imageKey: 'image1' | 'image2' | 'image3') => {
+    const imageToRemove = form.getValues(imageKey);
 
     // If it's an existing URL (string), delete from storage
     if (typeof imageToRemove === 'string' && news) {
@@ -132,34 +149,38 @@ export default function WorldKidsNewsDialog({
       }
     }
 
-    const newImages = images.filter((_, i) => i !== index);
-    const newPreviews = imagePreviews.filter((_, i) => i !== index);
-    
-    form.setValue('images', newImages);
-    setImagePreviews(newPreviews);
+    form.setValue(imageKey, null);
+    setImagePreviews(prev => ({
+      ...prev,
+      [imageKey]: ''
+    }));
   };
 
-  const handleImageUrlAdd = () => {
-    if (!imageUrl.trim()) return;
+  const handleImageUrlAdd = (imageKey: 'image1' | 'image2' | 'image3') => {
+    const url = imageUrls[imageKey];
+    if (!url.trim()) return;
 
-    const currentImages = form.getValues('images');
-    if (currentImages.length >= 3) {
-      toast.error('最多只能上傳 3 張圖片');
-      return;
-    }
-
-    const newImages = [...currentImages, imageUrl];
-    const newPreviews = [...imagePreviews, imageUrl];
-    
-    form.setValue('images', newImages);
-    setImagePreviews(newPreviews);
-    setImageUrl('');
+    form.setValue(imageKey, url);
+    setImagePreviews(prev => ({
+      ...prev,
+      [imageKey]: url
+    }));
+    setImageUrls(prev => ({
+      ...prev,
+      [imageKey]: ''
+    }));
   };
 
-  const uploadImages = async (images: (File | string)[]): Promise<string[]> => {
+  const uploadImages = async (data: WorldKidsNewsFormData): Promise<string[]> => {
     const uploadedUrls: string[] = [];
+    const images = [data.image1, data.image2, data.image3];
 
     for (const image of images) {
+      if (!image) {
+        uploadedUrls.push(''); // Placeholder for missing images
+        continue;
+      }
+
       if (typeof image === 'string') {
         // Already a URL, keep as is
         uploadedUrls.push(image);
@@ -168,7 +189,7 @@ export default function WorldKidsNewsDialog({
         const fileExt = image.name.split('.').pop();
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
 
-        const { data, error } = await supabase.storage
+        const { data: uploadData, error } = await supabase.storage
           .from('prayer-images')
           .upload(`prayer-school/${fileName}`, image);
 
@@ -176,22 +197,25 @@ export default function WorldKidsNewsDialog({
 
         const { data: { publicUrl } } = supabase.storage
           .from('prayer-images')
-          .getPublicUrl(data.path);
+          .getPublicUrl(uploadData.path);
 
         uploadedUrls.push(publicUrl);
       }
     }
 
-    return uploadedUrls;
+    // Filter out empty URLs
+    return uploadedUrls.filter(url => url !== '');
   };
 
   const onSubmit = async (data: WorldKidsNewsFormData) => {
-    if (data.images.length === 0) {
+    const imageCount = [data.image1, data.image2, data.image3].filter(img => img !== null).length;
+    
+    if (imageCount === 0) {
       toast.error('請至少上傳一張圖片');
       return;
     }
 
-    if (data.images.length !== 3) {
+    if (imageCount !== 3) {
       toast.error('請上傳正好 3 張圖片');
       return;
     }
@@ -200,7 +224,7 @@ export default function WorldKidsNewsDialog({
       setIsSubmitting(true);
 
       // Upload new images and keep existing URLs
-      const imageUrls = await uploadImages(data.images);
+      const imageUrls = await uploadImages(data);
 
       const newsData = {
         week_date: data.week_date,
@@ -263,96 +287,94 @@ export default function WorldKidsNewsDialog({
             />
 
             {/* Images Section */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <FormLabel>圖片 (需要正好 3 張)</FormLabel>
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant={imageInputMode === 'upload' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setImageInputMode('upload')}
-                  >
-                    <Upload className="h-4 w-4 mr-1" />
-                    上傳
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={imageInputMode === 'url' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setImageInputMode('url')}
-                  >
-                    <Link className="h-4 w-4 mr-1" />
-                    連結
-                  </Button>
-                </div>
-              </div>
+            <div className="space-y-6">
+              <FormLabel className="text-lg font-semibold">圖片上傳 (需要正好 3 張)</FormLabel>
+              
+              {(['image1', 'image2', 'image3'] as const).map((imageKey, index) => (
+                <div key={imageKey} className="space-y-3 p-4 border rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-medium">圖片 {index + 1}</h3>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant={imageInputModes[imageKey] === 'upload' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setImageInputModes(prev => ({ ...prev, [imageKey]: 'upload' }))}
+                      >
+                        <Upload className="h-4 w-4 mr-1" />
+                        上傳
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={imageInputModes[imageKey] === 'url' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setImageInputModes(prev => ({ ...prev, [imageKey]: 'url' }))}
+                      >
+                        <Link className="h-4 w-4 mr-1" />
+                        連結
+                      </Button>
+                    </div>
+                  </div>
 
-              {/* Image Input */}
-              {imageInputMode === 'upload' ? (
-                <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center">
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleImageChange}
-                    className="hidden"
-                    id="image-upload"
-                  />
-                  <label htmlFor="image-upload" className="cursor-pointer">
-                    <Image className="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground">
-                      點擊選擇圖片或拖放到這裡
-                    </p>
-                  </label>
-                </div>
-              ) : (
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="圖片網址..."
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleImageUrlAdd())}
-                  />
-                  <Button type="button" onClick={handleImageUrlAdd}>
-                    添加
-                  </Button>
-                </div>
-              )}
+                  {/* Image Input */}
+                  {imageInputModes[imageKey] === 'upload' ? (
+                    <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageChange(e, imageKey)}
+                        className="hidden"
+                        id={`${imageKey}-upload`}
+                      />
+                      <label htmlFor={`${imageKey}-upload`} className="cursor-pointer">
+                        <Image className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                        <p className="text-sm text-muted-foreground">
+                          點擊選擇圖片
+                        </p>
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="圖片網址..."
+                        value={imageUrls[imageKey]}
+                        onChange={(e) => setImageUrls(prev => ({ ...prev, [imageKey]: e.target.value }))}
+                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleImageUrlAdd(imageKey))}
+                      />
+                      <Button type="button" onClick={() => handleImageUrlAdd(imageKey)}>
+                        添加
+                      </Button>
+                    </div>
+                  )}
 
-              {/* Image Previews */}
-              {imagePreviews.length > 0 && (
-                <div className="grid grid-cols-3 gap-4">
-                  {imagePreviews.map((preview, index) => (
-                    <Card key={index} className="relative">
+                  {/* Image Preview */}
+                  {imagePreviews[imageKey] && (
+                    <Card className="relative">
                       <CardContent className="p-2">
                         <div className="relative">
                           <img
-                            src={preview}
-                            alt={`預覽 ${index + 1}`}
+                            src={imagePreviews[imageKey]}
+                            alt={`圖片 ${index + 1} 預覽`}
                             className="w-full h-32 object-cover rounded"
                           />
-                          <div className="absolute top-2 left-2 bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-medium">
-                            圖片 {index + 1}
-                          </div>
                           <Button
                             type="button"
                             variant="destructive"
                             size="sm"
                             className="absolute top-1 right-1"
-                            onClick={() => removeImage(index)}
+                            onClick={() => removeImage(imageKey)}
                           >
                             <X className="h-4 w-4" />
                           </Button>
                         </div>
                       </CardContent>
                     </Card>
-                  ))}
+                  )}
                 </div>
-              )}
+              ))}
 
               <p className="text-sm text-muted-foreground">
-                已選擇 {imagePreviews.length} / 3 張圖片
+                已上傳 {Object.values(imagePreviews).filter(preview => preview !== '').length} / 3 張圖片
               </p>
             </div>
 
