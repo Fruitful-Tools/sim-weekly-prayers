@@ -61,7 +61,7 @@ function SortableItem({ id, index, preview, onRemove }: SortableItemProps) {
 
   return (
     <div ref={setNodeRef} style={style} className="relative group">
-      <div className="aspect-video rounded-lg overflow-hidden border bg-muted">
+      <div className="w-24 h-16 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
         <img
           src={preview}
           alt={`預覽 ${index + 1}`}
@@ -73,13 +73,13 @@ function SortableItem({ id, index, preview, onRemove }: SortableItemProps) {
       <div
         {...attributes}
         {...listeners}
-        className="absolute top-2 left-2 p-1 bg-black/60 text-white rounded cursor-grab hover:bg-black/80 transition-colors"
+        className="absolute top-1 left-1 p-1 bg-black/60 text-white rounded cursor-grab hover:bg-black/80 transition-colors"
       >
-        <GripVertical className="h-4 w-4" />
+        <GripVertical className="h-3 w-3" />
       </div>
       
       {/* Sequence number */}
-      <div className="absolute top-2 right-8 bg-primary text-primary-foreground w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">
+      <div className="absolute top-1 right-6 bg-primary text-primary-foreground w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">
         {index + 1}
       </div>
       
@@ -88,10 +88,10 @@ function SortableItem({ id, index, preview, onRemove }: SortableItemProps) {
         type="button"
         variant="destructive"
         size="icon"
-        className="absolute top-2 right-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute top-1 right-1 h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity"
         onClick={() => onRemove(index)}
       >
-        <X className="h-3 w-3" />
+        <X className="h-2 w-2" />
       </Button>
     </div>
   );
@@ -264,7 +264,7 @@ export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSe
                   items={data.imagePreviews.map((_, index) => index.toString())}
                   strategy={verticalListSortingStrategy}
                 >
-                  <div className="grid grid-cols-1 gap-4">
+                  <div className="flex flex-col gap-3">
                     {data.imagePreviews.map((preview, index) => (
                       <SortableItem
                         key={index}
