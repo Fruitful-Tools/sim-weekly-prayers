@@ -6,9 +6,26 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, GripVertical } from 'lucide-react';
 import { compressImage } from '@/lib/imageCompression';
 import { toast } from 'sonner';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface WorldKidsNewsData {
   images: File[];
@@ -19,6 +36,67 @@ interface WorldKidsNewsData {
   };
 }
 
+interface SortableItemProps {
+  id: string;
+  index: number;
+  preview: string;
+  onRemove: (index: number) => void;
+}
+
+function SortableItem({ id, index, preview, onRemove }: SortableItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="relative group">
+      <div className="aspect-video rounded-lg overflow-hidden border bg-muted">
+        <img
+          src={preview}
+          alt={`預覽 ${index + 1}`}
+          className="w-full h-full object-cover"
+        />
+      </div>
+      
+      {/* Drag handle */}
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute top-2 left-2 p-1 bg-black/60 text-white rounded cursor-grab hover:bg-black/80 transition-colors"
+      >
+        <GripVertical className="h-4 w-4" />
+      </div>
+      
+      {/* Sequence number */}
+      <div className="absolute top-2 right-8 bg-primary text-primary-foreground w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">
+        {index + 1}
+      </div>
+      
+      {/* Remove button */}
+      <Button
+        type="button"
+        variant="destructive"
+        size="icon"
+        className="absolute top-2 right-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+        onClick={() => onRemove(index)}
+      >
+        <X className="h-3 w-3" />
+      </Button>
+    </div>
+  );
+}
+
 interface WorldKidsNewsSectionProps {
   data: WorldKidsNewsData;
   onChange: (data: WorldKidsNewsData) => void;
@@ -27,6 +105,31 @@ interface WorldKidsNewsSectionProps {
 export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSectionProps) {
   const { t } = useTranslation();
   const [compressing, setCompressing] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = data.imagePreviews.findIndex((_, index) => index.toString() === active.id);
+      const newIndex = data.imagePreviews.findIndex((_, index) => index.toString() === over.id);
+
+      const newImages = arrayMove(data.images, oldIndex, newIndex);
+      const newPreviews = arrayMove(data.imagePreviews, oldIndex, newIndex);
+
+      onChange({
+        ...data,
+        images: newImages,
+        imagePreviews: newPreviews,
+      });
+    }
+  };
 
   const handleImageChange = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,29 +249,34 @@ export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSe
             onChange={handleImageChange}
           />
 
-          {/* Image Previews */}
+          {/* Image Previews with Drag and Drop */}
           {data.imagePreviews.length > 0 && (
-            <div className="grid grid-cols-3 gap-4">
-              {data.imagePreviews.map((preview, index) => (
-                <div key={index} className="relative group">
-                  <div className="aspect-video rounded-lg overflow-hidden border">
-                    <img
-                      src={preview}
-                      alt={`預覽 ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
+            <div>
+              <Label className="text-sm text-muted-foreground mb-2 block">
+                拖拽圖片可調整順序 • 圖片將按此順序顯示
+              </Label>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={data.imagePreviews.map((_, index) => index.toString())}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="grid grid-cols-1 gap-4">
+                    {data.imagePreviews.map((preview, index) => (
+                      <SortableItem
+                        key={index}
+                        id={index.toString()}
+                        index={index}
+                        preview={preview}
+                        onRemove={removeImage}
+                      />
+                    ))}
                   </div>
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="icon"
-                    className="absolute -top-2 -right-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={() => removeImage(index)}
-                  >
-                    <X className="h-3 w-3" />
-                  </Button>
-                </div>
-              ))}
+                </SortableContext>
+              </DndContext>
             </div>
           )}
         </div>

@@ -48,6 +48,15 @@ interface PrayerWithTranslations {
   week_date: string;
   image_url?: string | null;
   translations?: Translation[];
+  world_kids_news?: {
+    id: string;
+    image_urls: string[];
+    world_kids_news_translations?: {
+      title?: string;
+      content?: string;
+      language: string;
+    }[];
+  }[];
 }
 
 interface PrayerDialogProps {
@@ -115,14 +124,39 @@ export default function PrayerDialog({
       setImageFile(null);
 
       // Reset world kids news data
-      setWorldKidsNewsData({
-        images: [],
-        imagePreviews: [],
-        translations: {
-          en: { title: '', content: '' },
-          'zh-TW': { title: '', content: '' },
-        },
-      });
+      const existingWorldKidsNews = prayer?.world_kids_news?.[0];
+      if (existingWorldKidsNews) {
+        // Convert existing URLs to previews for display
+        const imagePreviews = existingWorldKidsNews.image_urls.map(url => url);
+        
+        // Extract translations
+        const enTranslation = existingWorldKidsNews.world_kids_news_translations?.find(t => t.language === 'en');
+        const zhTranslation = existingWorldKidsNews.world_kids_news_translations?.find(t => t.language === 'zh-TW');
+        
+        setWorldKidsNewsData({
+          images: [], // No file objects for existing images
+          imagePreviews: imagePreviews,
+          translations: {
+            en: { 
+              title: enTranslation?.title || '', 
+              content: enTranslation?.content || '' 
+            },
+            'zh-TW': { 
+              title: zhTranslation?.title || '', 
+              content: zhTranslation?.content || '' 
+            },
+          },
+        });
+      } else {
+        setWorldKidsNewsData({
+          images: [],
+          imagePreviews: [],
+          translations: {
+            en: { title: '', content: '' },
+            'zh-TW': { title: '', content: '' },
+          },
+        });
+      }
 
       // Set the correct input mode based on the existing image URL
       if (prayer?.image_url) {

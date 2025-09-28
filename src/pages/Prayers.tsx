@@ -31,6 +31,15 @@ interface Prayer {
     content: string;
     language: string;
   }[];
+  world_kids_news?: {
+    id: string;
+    image_urls: string[];
+    world_kids_news_translations?: {
+      title?: string;
+      content?: string;
+      language: string;
+    }[];
+  }[];
 }
 
 const Prayers = () => {
@@ -55,7 +64,12 @@ const Prayers = () => {
           id,
           week_date,
           image_url,
-          prayer_translations!inner(title, content)
+          prayer_translations!inner(title, content),
+          world_kids_news(
+            id,
+            image_urls,
+            world_kids_news_translations(title, content, language)
+          )
         `
         )
         .eq('prayer_translations.language', i18n.language)
