@@ -120,7 +120,8 @@ export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSe
       const oldIndex = data.imagePreviews.findIndex((_, index) => index.toString() === active.id);
       const newIndex = data.imagePreviews.findIndex((_, index) => index.toString() === over.id);
 
-      const newImages = arrayMove(data.images, oldIndex, newIndex);
+      // Only reorder images array if it has items, otherwise keep it as is
+      const newImages = data.images.length > 0 ? arrayMove(data.images, oldIndex, newIndex) : data.images;
       const newPreviews = arrayMove(data.imagePreviews, oldIndex, newIndex);
 
       onChange({
