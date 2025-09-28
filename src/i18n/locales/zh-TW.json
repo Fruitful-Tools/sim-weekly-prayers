@@ -70,7 +70,10 @@
     "linkCopied": "連結已複製！",
     "linkCopiedDesc": "禱告連結已複製到剪貼板",
     "copyFailed": "複製失敗",
-    "copyFailedDesc": "無法複製連結到剪貼板"
+    "copyFailedDesc": "無法複製連結到剪貼板",
+    "worldKidsNewsToggle": "萬國小新聞版本",
+    "switchToPrayer": "切換至禱告",
+    "switchToWorldKidsNews": "切換至萬國小新聞"
   },
   "home": {
     "title": "禱告大冒險",

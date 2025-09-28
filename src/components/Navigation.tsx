@@ -34,17 +34,6 @@ const Navigation = () => {
             >
               {t('nav.prayers')}
             </Link>
-            <Link
-              to="/world-kids-news"
-              className={cn(
-                'text-sm font-medium transition-colors hover:text-primary',
-                isActive('/world-kids-news')
-                  ? 'text-primary'
-                  : 'text-muted-foreground'
-              )}
-            >
-              {t('nav.worldKidsNews')}
-            </Link>
           </div>
         </div>
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
+import WorldKidsNewsSection from '@/components/WorldKidsNewsSection';
 import {
   Dialog,
   DialogContent,
@@ -71,6 +72,14 @@ export default function PrayerDialog({
     'upload'
   );
   const [isCompressing, setIsCompressing] = useState(false);
+  const [worldKidsNewsData, setWorldKidsNewsData] = useState({
+    images: [] as File[],
+    imagePreviews: [] as string[],
+    translations: {
+      en: { title: '', content: '' },
+      'zh-TW': { title: '', content: '' },
+    },
+  });
 
   const form = useForm<PrayerFormData>({
     defaultValues: {

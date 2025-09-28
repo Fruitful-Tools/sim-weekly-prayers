@@ -59,7 +59,10 @@
     "linkCopied": "Link Copied!",
     "linkCopiedDesc": "Prayer link has been copied to clipboard",
     "copyFailed": "Copy Failed",
-    "copyFailedDesc": "Failed to copy link to clipboard"
+    "copyFailedDesc": "Failed to copy link to clipboard",
+    "worldKidsNewsToggle": "World Kids News Version",
+    "switchToPrayer": "Switch to Prayer",
+    "switchToWorldKidsNews": "Switch to World Kids News"
   },
   "home": {
     "title": "Mission Adventure Prayer",

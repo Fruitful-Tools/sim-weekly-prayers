@@ -5,8 +5,11 @@ import ReactMarkdown from 'react-markdown';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { ArrowLeft, Calendar } from 'lucide-react';
 import SocialShareDropdown from '@/components/SocialShareDropdown';
+import WorldKidsNewsSlides from '@/components/WorldKidsNewsSlides';
 
 interface Prayer {
   id: string;
@@ -18,11 +21,23 @@ interface Prayer {
   }[];
 }
 
+interface WorldKidsNews {
+  id: string;
+  image_urls: string[];
+  world_kids_news_translations?: {
+    title?: string;
+    content?: string;
+    language: string;
+  }[];
+}
+
 const PrayerDetail = () => {
   const { date, id } = useParams<{ date?: string; id?: string }>();
   const { t, i18n } = useTranslation();
   const [prayer, setPrayer] = useState<Prayer | null>(null);
+  const [worldKidsNews, setWorldKidsNews] = useState<WorldKidsNews | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showWorldKidsNews, setShowWorldKidsNews] = useState(false);
 
   const formatUrlDateToDbDate = (urlDate: string) => {
     // Convert "20240115" to "2024-01-15"
@@ -71,6 +86,11 @@ const PrayerDetail = () => {
         setPrayer(null);
       } else {
         setPrayer(data);
+        
+        // Fetch associated World Kids News
+        if (data?.id) {
+          await fetchWorldKidsNews(data.id);
+        }
       }
     } catch (error) {
       console.error('Error fetching prayer:', error);
@@ -79,6 +99,33 @@ const PrayerDetail = () => {
       setLoading(false);
     }
   }, [date, id, i18n.language]);
+
+  const fetchWorldKidsNews = useCallback(async (prayerId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('world_kids_news')
+        .select(`
+          id,
+          image_urls,
+          world_kids_news_translations(
+            title,
+            content,
+            language
+          )
+        `)
+        .eq('prayer_id', prayerId)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error fetching world kids news:', error);
+        return;
+      }
+
+      setWorldKidsNews(data);
+    } catch (error) {
+      console.error('Error fetching world kids news:', error);
+    }
+  }, []);
 
   useEffect(() => {
     if (date || id) {
@@ -148,81 +195,105 @@ const PrayerDetail = () => {
           </Link>
         </div>
 
-        {/* Prayer Content */}
-        <div className="max-w-4xl mx-auto">
-          {safeImageUrl && (
-            <div className="mb-8 overflow-hidden rounded-lg shadow-prayer">
-              <img
-                src={safeImageUrl}
-                alt={safeTitle}
-                className="w-full h-auto object-contain md:max-h-[400px]"
-              />
-            </div>
-          )}
-
-          <Card className="bg-gradient-to-br from-card to-card/80 border-border shadow-prayer">
-            <CardContent className="p-8">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  {formatDate(prayer.week_date)}
-                </div>
-
-                <SocialShareDropdown url={currentUrl} title={safeTitle} />
+          {/* Prayer Content */}
+          <div className="max-w-4xl mx-auto">
+            {/* Toggle for World Kids News */}
+            {worldKidsNews && (
+              <div className="mb-6 flex items-center justify-center space-x-4">
+                <Label htmlFor="world-kids-news-toggle" className="text-sm font-medium">
+                  {showWorldKidsNews ? t('prayer.switchToPrayer') : t('prayer.switchToWorldKidsNews')}
+                </Label>
+                <Switch
+                  id="world-kids-news-toggle"
+                  checked={showWorldKidsNews}
+                  onCheckedChange={setShowWorldKidsNews}
+                />
               </div>
+            )}
 
-              {/* Title */}
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8 leading-tight">
-                {safeTitle}
-              </h1>
-
-              {/* Content */}
-              <div className="prose prose-lg max-w-none text-foreground">
-                <ReactMarkdown
-                  components={{
-                    h1: ({ children }) => (
-                      <h1 className="text-2xl font-bold text-foreground mt-8 mb-4">
-                        {children}
-                      </h1>
-                    ),
-                    h2: ({ children }) => (
-                      <h2 className="text-xl font-semibold text-foreground mt-6 mb-3">
-                        {children}
-                      </h2>
-                    ),
-                    h3: ({ children }) => (
-                      <h3 className="text-lg font-medium text-foreground mt-4 mb-2">
-                        {children}
-                      </h3>
-                    ),
-                    p: ({ children }) => (
-                      <p className="text-foreground mb-4 leading-relaxed">
-                        {children}
-                      </p>
-                    ),
-                    blockquote: ({ children }) => (
-                      <blockquote className="border-l-4 border-primary pl-4 my-4 italic text-muted-foreground">
-                        {children}
-                      </blockquote>
-                    ),
-                    ul: ({ children }) => (
-                      <ul className="list-disc list-inside mb-4 text-foreground space-y-1">
-                        {children}
-                      </ul>
-                    ),
-                    ol: ({ children }) => (
-                      <ol className="list-decimal list-inside mb-4 text-foreground space-y-1">
-                        {children}
-                      </ol>
-                    ),
-                  }}
-                >
-                  {rawContent}
-                </ReactMarkdown>
+            {showWorldKidsNews && worldKidsNews ? (
+              /* World Kids News View */
+              <div>
+                <WorldKidsNewsSlides worldKidsNews={worldKidsNews} />
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            ) : (
+              /* Prayer View */
+              <>
+                {safeImageUrl && (
+                  <div className="mb-8 overflow-hidden rounded-lg shadow-prayer">
+                    <img
+                      src={safeImageUrl}
+                      alt={safeTitle}
+                      className="w-full h-auto object-contain md:max-h-[400px]"
+                    />
+                  </div>
+                )}
+
+                <Card className="bg-gradient-to-br from-card to-card/80 border-border shadow-prayer">
+                  <CardContent className="p-8">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <Calendar className="h-4 w-4 mr-2" />
+                        {formatDate(prayer.week_date)}
+                      </div>
+
+                      <SocialShareDropdown url={currentUrl} title={safeTitle} />
+                    </div>
+
+                    {/* Title */}
+                    <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8 leading-tight">
+                      {safeTitle}
+                    </h1>
+
+                    {/* Content */}
+                    <div className="prose prose-lg max-w-none text-foreground">
+                      <ReactMarkdown
+                        components={{
+                          h1: ({ children }) => (
+                            <h1 className="text-2xl font-bold text-foreground mt-8 mb-4">
+                              {children}
+                            </h1>
+                          ),
+                          h2: ({ children }) => (
+                            <h2 className="text-xl font-semibold text-foreground mt-6 mb-3">
+                              {children}
+                            </h2>
+                          ),
+                          h3: ({ children }) => (
+                            <h3 className="text-lg font-medium text-foreground mt-4 mb-2">
+                              {children}
+                            </h3>
+                          ),
+                          p: ({ children }) => (
+                            <p className="text-foreground mb-4 leading-relaxed">
+                              {children}
+                            </p>
+                          ),
+                          blockquote: ({ children }) => (
+                            <blockquote className="border-l-4 border-primary pl-4 my-4 italic text-muted-foreground">
+                              {children}
+                            </blockquote>
+                          ),
+                          ul: ({ children }) => (
+                            <ul className="list-disc list-inside mb-4 text-foreground space-y-1">
+                              {children}
+                            </ul>
+                          ),
+                          ol: ({ children }) => (
+                            <ol className="list-decimal list-inside mb-4 text-foreground space-y-1">
+                              {children}
+                            </ol>
+                          ),
+                        }}
+                      >
+                        {rawContent}
+                      </ReactMarkdown>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+          </div>
       </div>
     </div>
   );
