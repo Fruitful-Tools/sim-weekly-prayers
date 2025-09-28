@@ -114,6 +114,16 @@ export default function PrayerDialog({
       setImagePreview(prayer?.image_url || null);
       setImageFile(null);
 
+      // Reset world kids news data
+      setWorldKidsNewsData({
+        images: [],
+        imagePreviews: [],
+        translations: {
+          en: { title: '', content: '' },
+          'zh-TW': { title: '', content: '' },
+        },
+      });
+
       // Set the correct input mode based on the existing image URL
       if (prayer?.image_url) {
         // If it's a Supabase storage URL, use upload mode since it's an uploaded image
@@ -288,6 +298,30 @@ export default function PrayerDialog({
     }
   };
 
+  const uploadWorldKidsNewsImages = async (images: File[]): Promise<string[]> => {
+    const uploadPromises = images.map(async (file) => {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `world-kids-news/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('prayer-images')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw new Error(`Failed to upload ${file.name}: ${uploadError.message}`);
+      }
+
+      const { data } = supabase.storage
+        .from('prayer-images')
+        .getPublicUrl(filePath);
+
+      return data.publicUrl;
+    });
+
+    return await Promise.all(uploadPromises);
+  };
+
   const onSubmit = async (data: PrayerFormData) => {
     setIsSubmitting(true);
 
@@ -367,6 +401,81 @@ export default function PrayerDialog({
         .insert(translations);
 
       if (translationsError) throw translationsError;
+
+      // Handle World Kids News if there are images
+      if (worldKidsNewsData.images.length > 0) {
+        try {
+          // Upload world kids news images
+          const worldKidsNewsImageUrls = await uploadWorldKidsNewsImages(worldKidsNewsData.images);
+
+          // Delete existing world kids news if updating
+          if (prayer) {
+            await supabase
+              .from('world_kids_news')
+              .delete()
+              .eq('prayer_id', prayer.id);
+          }
+
+          // Create world kids news entry
+          const { data: worldKidsNews, error: worldKidsNewsError } = await supabase
+            .from('world_kids_news')
+            .insert({
+              prayer_id: prayerId,
+              week_date: data.week_date,
+              image_urls: worldKidsNewsImageUrls,
+            })
+            .select()
+            .single();
+
+          if (worldKidsNewsError) throw worldKidsNewsError;
+
+          // Insert world kids news translations (only if there's content)
+          const worldKidsNewsTranslations = [];
+          
+          // Add English translation if there's content
+          if (worldKidsNewsData.translations.en.title || worldKidsNewsData.translations.en.content) {
+            worldKidsNewsTranslations.push({
+              world_kids_news_id: worldKidsNews.id,
+              language: 'en',
+              title: worldKidsNewsData.translations.en.title || null,
+              content: worldKidsNewsData.translations.en.content || null,
+            });
+          }
+
+          // Add Chinese translation if there's content
+          if (worldKidsNewsData.translations['zh-TW'].title || worldKidsNewsData.translations['zh-TW'].content) {
+            worldKidsNewsTranslations.push({
+              world_kids_news_id: worldKidsNews.id,
+              language: 'zh-TW',
+              title: worldKidsNewsData.translations['zh-TW'].title || null,
+              content: worldKidsNewsData.translations['zh-TW'].content || null,
+            });
+          }
+
+          // Insert translations only if we have any
+          if (worldKidsNewsTranslations.length > 0) {
+            const { error: worldKidsNewsTranslationsError } = await supabase
+              .from('world_kids_news_translations')
+              .insert(worldKidsNewsTranslations);
+
+            if (worldKidsNewsTranslationsError) throw worldKidsNewsTranslationsError;
+          }
+        } catch (worldKidsNewsError) {
+          console.error('Error saving world kids news:', worldKidsNewsError);
+          toast({
+            title: t('prayer.error'),
+            description: 'Failed to save 萬國小新聞. Please try again.',
+            variant: 'destructive',
+          });
+          return;
+        }
+      } else if (prayer) {
+        // Delete existing world kids news if no images provided during update
+        await supabase
+          .from('world_kids_news')
+          .delete()
+          .eq('prayer_id', prayer.id);
+      }
 
       // Delete old image if a new one was uploaded and they're different
       if (oldImageUrl && imageFile && oldImageUrl !== imageUrl) {
@@ -638,6 +747,12 @@ export default function PrayerDialog({
                 </Card>
               </TabsContent>
             </Tabs>
+
+            {/* World Kids News Section */}
+            <WorldKidsNewsSection
+              data={worldKidsNewsData}
+              onChange={setWorldKidsNewsData}
+            />
 
             {/* Submit Button */}
             <div className="flex justify-end space-x-2">

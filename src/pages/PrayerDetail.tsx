@@ -58,7 +58,12 @@ const PrayerDetail = () => {
           id,
           week_date,
           image_url,
-          prayer_translations!inner(title, content)
+          prayer_translations!inner(title, content, language),
+          world_kids_news(
+            id,
+            image_urls,
+            world_kids_news_translations(title, content, language)
+          )
         `
         )
         .eq('prayer_translations.language', i18n.language);
@@ -87,9 +92,11 @@ const PrayerDetail = () => {
       } else {
         setPrayer(data);
         
-        // Fetch associated World Kids News
-        if (data?.id) {
-          await fetchWorldKidsNews(data.id);
+        // Set world kids news if it exists
+        if (data?.world_kids_news && data.world_kids_news.length > 0) {
+          setWorldKidsNews(data.world_kids_news[0]);
+        } else {
+          setWorldKidsNews(null);
         }
       }
     } catch (error) {
@@ -100,38 +107,14 @@ const PrayerDetail = () => {
     }
   }, [date, id, i18n.language]);
 
-  const fetchWorldKidsNews = useCallback(async (prayerId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('world_kids_news')
-        .select(`
-          id,
-          image_urls,
-          world_kids_news_translations(
-            title,
-            content,
-            language
-          )
-        `)
-        .eq('prayer_id', prayerId)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error fetching world kids news:', error);
-        return;
-      }
-
-      setWorldKidsNews(data);
-    } catch (error) {
-      console.error('Error fetching world kids news:', error);
-    }
-  }, []);
-
   useEffect(() => {
     if (date || id) {
       fetchPrayer();
     }
   }, [date, id, fetchPrayer]);
+
+  // Check if world kids news exists and has images
+  const hasWorldKidsNews = Boolean(worldKidsNews?.image_urls?.length > 0);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -197,8 +180,8 @@ const PrayerDetail = () => {
 
           {/* Prayer Content */}
           <div className="max-w-4xl mx-auto">
-            {/* Toggle for World Kids News */}
-            {worldKidsNews && (
+            {/* Toggle for World Kids News - Only show if world kids news exists */}
+            {hasWorldKidsNews && (
               <div className="mb-6 flex items-center justify-center space-x-4">
                 <Label htmlFor="world-kids-news-toggle" className="text-sm font-medium">
                   {showWorldKidsNews ? t('prayer.switchToPrayer') : t('prayer.switchToWorldKidsNews')}
@@ -211,10 +194,10 @@ const PrayerDetail = () => {
               </div>
             )}
 
-            {showWorldKidsNews && worldKidsNews ? (
+            {showWorldKidsNews && hasWorldKidsNews ? (
               /* World Kids News View */
               <div>
-                <WorldKidsNewsSlides worldKidsNews={worldKidsNews} />
+                <WorldKidsNewsSlides worldKidsNews={worldKidsNews!} />
               </div>
             ) : (
               /* Prayer View */
