@@ -436,11 +436,19 @@ export default function PrayerDialog({
 
       if (translationsError) throw translationsError;
 
-      // Handle World Kids News if there are images
-      if (worldKidsNewsData.images.length > 0) {
+      // Handle World Kids News if there are images (new or existing)
+      if (worldKidsNewsData.images.length > 0 || worldKidsNewsData.imagePreviews.length > 0) {
         try {
-          // Upload world kids news images
-          const worldKidsNewsImageUrls = await uploadWorldKidsNewsImages(worldKidsNewsData.images);
+          // Prepare image URLs - mix of new uploads and existing URLs
+          let worldKidsNewsImageUrls: string[] = [];
+          
+          if (worldKidsNewsData.images.length > 0) {
+            // Upload new images
+            worldKidsNewsImageUrls = await uploadWorldKidsNewsImages(worldKidsNewsData.images);
+          } else {
+            // Use existing image URLs in their current order
+            worldKidsNewsImageUrls = worldKidsNewsData.imagePreviews;
+          }
 
           // Delete existing world kids news if updating
           if (prayer) {
