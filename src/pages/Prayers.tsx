@@ -139,7 +139,12 @@ const Prayers = () => {
           id,
           week_date,
           image_url,
-          prayer_translations(title, content, language)
+          prayer_translations(title, content, language),
+          world_kids_news(
+            id,
+            image_urls,
+            world_kids_news_translations(title, content, language)
+          )
         `
         )
         .eq('id', prayerId)
