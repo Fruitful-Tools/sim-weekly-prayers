@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import PrayerCard from '@/components/PrayerCard';
+import FamilyPrayerCard from '@/components/FamilyPrayerCard';
 import { ArrowRight, Globe2 } from 'lucide-react';
 
 interface Prayer {
@@ -16,10 +17,23 @@ interface Prayer {
   }[];
 }
 
+interface FamilyPrayer {
+  id: string;
+  week_date: string;
+  image_urls: string[];
+  world_kids_news_translations?: {
+    title?: string;
+    content?: string;
+    language: string;
+  }[];
+}
+
 const Home = () => {
   const { t, i18n } = useTranslation();
   const [latestPrayers, setLatestPrayers] = useState<Prayer[]>([]);
+  const [latestFamilyPrayers, setLatestFamilyPrayers] = useState<FamilyPrayer[]>([]);
   const [loading, setLoading] = useState(true);
+  const [familyLoading, setFamilyLoading] = useState(true);
 
   const fetchLatestPrayers = useCallback(async () => {
     try {
@@ -47,9 +61,37 @@ const Home = () => {
     }
   }, [i18n.language]);
 
+  const fetchLatestFamilyPrayers = useCallback(async () => {
+    try {
+      const limit = 3;
+      const { data, error } = await supabase
+        .from('world_kids_news')
+        .select(
+          `
+          id,
+          week_date,
+          image_urls,
+          world_kids_news_translations!inner(title, content, language)
+        `
+        )
+        .eq('world_kids_news_translations.language', i18n.language)
+        .not('image_urls', 'eq', '{}')
+        .order('week_date', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      setLatestFamilyPrayers(data || []);
+    } catch (error) {
+      console.error('Error fetching family prayers:', error);
+    } finally {
+      setFamilyLoading(false);
+    }
+  }, [i18n.language]);
+
   useEffect(() => {
     fetchLatestPrayers();
-  }, [fetchLatestPrayers]);
+    fetchLatestFamilyPrayers();
+  }, [fetchLatestPrayers, fetchLatestFamilyPrayers]);
 
   const formatPrayerForCard = (prayer: Prayer) => ({
     id: prayer.id,
@@ -57,6 +99,14 @@ const Home = () => {
     image_url: prayer.image_url,
     title: prayer.prayer_translations[0]?.title || '',
     content: prayer.prayer_translations[0]?.content || '',
+  });
+
+  const formatFamilyPrayerForCard = (familyPrayer: FamilyPrayer) => ({
+    id: familyPrayer.id,
+    week_date: familyPrayer.week_date,
+    image_urls: familyPrayer.image_urls,
+    title: familyPrayer.world_kids_news_translations?.[0]?.title,
+    content: familyPrayer.world_kids_news_translations?.[0]?.content,
   });
 
   return (
@@ -81,6 +131,16 @@ const Home = () => {
                 className="bg-gradient-to-r from-primary to-primary-glow hover:shadow-prayer transition-all duration-300"
               >
                 {t('home.viewAllPrayers')}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link to="/family-prayers">
+              <Button
+                size="lg"
+                variant="outline"
+                className="hover:shadow-prayer transition-all duration-300"
+              >
+                {t('home.viewAllFamilyPrayers')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -117,6 +177,48 @@ const Home = () => {
                 <Link to="/prayers">
                   <Button variant="outline" size="lg">
                     {t('home.viewAllPrayers')}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </>
+          ) : (
+            <div className="text-center text-muted-foreground">
+              {t('prayer.noResults')}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Latest Family Prayers Section */}
+      <section className="py-16 px-4 bg-accent/5">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              {t('home.latestFamilyPrayer')}
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-primary-glow mx-auto"></div>
+          </div>
+
+          {familyLoading ? (
+            <div className="text-center text-muted-foreground">
+              {t('prayer.loading')}
+            </div>
+          ) : latestFamilyPrayers.length > 0 ? (
+            <>
+              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                {latestFamilyPrayers.map((familyPrayer) => (
+                  <FamilyPrayerCard
+                    key={familyPrayer.id}
+                    familyPrayer={formatFamilyPrayerForCard(familyPrayer)}
+                    isPreview
+                  />
+                ))}
+              </div>
+              <div className="text-center mt-8">
+                <Link to="/family-prayers">
+                  <Button variant="outline" size="lg">
+                    {t('home.viewAllFamilyPrayers')}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>

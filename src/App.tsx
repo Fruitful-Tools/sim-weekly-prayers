@@ -11,6 +11,8 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Prayers from './pages/Prayers';
 import PrayerDetail from './pages/PrayerDetail';
+import FamilyPrayers from './pages/FamilyPrayers';
+import FamilyPrayerDetail from './pages/FamilyPrayerDetail';
 import Register from './pages/Register';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
@@ -37,6 +39,9 @@ function AppRoutes() {
         <Route path="/prayers" element={<Prayers />} />
         <Route path="/prayer/:date" element={<PrayerDetail />} />
         <Route path="/prayer/id/:id" element={<PrayerDetail />} />
+        <Route path="/family-prayers" element={<FamilyPrayers />} />
+        <Route path="/family-prayer/:date" element={<FamilyPrayerDetail />} />
+        <Route path="/family-prayer/id/:id" element={<FamilyPrayerDetail />} />
         {/* Fallback for old URLs */}
         {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/auth" element={<Auth />} />

@@ -2,7 +2,7 @@
   "nav": {
     "home": "首頁",
     "prayers": "禱告",
-    "worldKidsNews": "萬國小新聞",
+    "familyPrayers": "全家來禱告",
     "search": "搜尋",
     "language": "語言",
     "profile": "個人資料",
@@ -71,16 +71,17 @@
     "linkCopiedDesc": "禱告連結已複製到剪貼板",
     "copyFailed": "複製失敗",
     "copyFailedDesc": "無法複製連結到剪貼板",
-    "worldKidsNewsToggle": "萬國小新聞版本",
+    "familyPrayerToggle": "全家來禱告版本",
     "switchToPrayer": "切換至禱告",
-    "switchToWorldKidsNews": "切換至萬國小新聞"
+    "switchToFamilyPrayer": "切換至全家來禱告"
   },
   "home": {
     "title": "每週禱告",
     "subtitle": "跟著時事脈動，與我們同為世界萬國禱告",
     "latestPrayer": "最新禱告",
-    "latestWorldKidsNews": "最新萬國小新聞",
+    "latestFamilyPrayer": "最新全家來禱告",
     "viewAllPrayers": "查看所有禱告",
+    "viewAllFamilyPrayers": "查看全家來禱告",
     "footerMotto": "「藉著禱告」一直是 SIM 國際事工差會的座右銘，我們鼓勵教會、基督徒在參與跨文化宣教事奉中，優先以禱告開始，並持續在禱告中求告神。"
   },
   "meta": {

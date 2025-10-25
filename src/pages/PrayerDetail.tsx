@@ -184,7 +184,7 @@ const PrayerDetail = () => {
             {hasWorldKidsNews && (
               <div className="mb-6 flex items-center justify-center space-x-4">
                 <Label htmlFor="world-kids-news-toggle" className="text-sm font-medium">
-                  {showWorldKidsNews ? t('prayer.switchToPrayer') : t('prayer.switchToWorldKidsNews')}
+                  {showWorldKidsNews ? t('prayer.switchToPrayer') : t('prayer.switchToFamilyPrayer')}
                 </Label>
                 <Switch
                   id="world-kids-news-toggle"

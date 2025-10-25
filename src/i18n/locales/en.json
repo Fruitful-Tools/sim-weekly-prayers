@@ -2,7 +2,7 @@
   "nav": {
     "home": "Home",
     "prayers": "Prayers",
-    "worldKidsNews": "World Kids News",
+    "familyPrayers": "Family Prayer",
     "search": "Search",
     "language": "Language",
     "profile": "Profile",
@@ -60,16 +60,17 @@
     "linkCopiedDesc": "Prayer link has been copied to clipboard",
     "copyFailed": "Copy Failed",
     "copyFailedDesc": "Failed to copy link to clipboard",
-    "worldKidsNewsToggle": "World Kids News Version",
+    "familyPrayerToggle": "Family Prayer Version",
     "switchToPrayer": "Switch to Prayer",
-    "switchToWorldKidsNews": "Switch to World Kids News"
+    "switchToFamilyPrayer": "Switch to Family Prayer"
   },
   "home": {
     "title": "Weekly Prayers",
     "subtitle": "Following current events, praying with us for all nations of the world",
     "latestPrayer": "Latest Prayer",
-    "latestWorldKidsNews": "Latest World Kids News",
+    "latestFamilyPrayer": "Latest Family Prayers",
     "viewAllPrayers": "View All Prayers",
+    "viewAllFamilyPrayers": "View All Family Prayers",
     "footerMotto": "\"By Prayer\" has always been the motto of SIM, as an international mission organization. We encourage churches and Christians to begin their involvement in cross-cultural missions with prayer, and to continue calling on God through persistent prayer."
   },
   "meta": {
