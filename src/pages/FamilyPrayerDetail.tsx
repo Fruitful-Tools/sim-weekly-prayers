@@ -65,7 +65,8 @@ const FamilyPrayerDetail = () => {
           )
         `
         )
-        .eq('world_kids_news_translations.language', i18n.language);
+        .eq('world_kids_news_translations.language', i18n.language)
+        .eq('prayers.prayer_translations.language', i18n.language);
 
       if (date) {
         const formattedDate = formatUrlDateToDbDate(date);
