@@ -31,7 +31,9 @@ interface FamilyPrayer {
 const Home = () => {
   const { t, i18n } = useTranslation();
   const [latestPrayers, setLatestPrayers] = useState<Prayer[]>([]);
-  const [latestFamilyPrayers, setLatestFamilyPrayers] = useState<FamilyPrayer[]>([]);
+  const [latestFamilyPrayers, setLatestFamilyPrayers] = useState<
+    FamilyPrayer[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [familyLoading, setFamilyLoading] = useState(true);
 

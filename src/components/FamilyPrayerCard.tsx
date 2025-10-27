@@ -17,7 +17,10 @@ interface FamilyPrayerCardProps {
   isPreview?: boolean;
 }
 
-const FamilyPrayerCard = ({ familyPrayer, isPreview = false }: FamilyPrayerCardProps) => {
+const FamilyPrayerCard = ({
+  familyPrayer,
+  isPreview = false,
+}: FamilyPrayerCardProps) => {
   const { t } = useTranslation();
 
   const formatDate = (dateString: string) => {

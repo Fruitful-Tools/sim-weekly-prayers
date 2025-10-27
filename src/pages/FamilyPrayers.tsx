@@ -35,7 +35,9 @@ const FamilyPrayers = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [familyPrayers, setFamilyPrayers] = useState<FamilyPrayer[]>([]);
-  const [filteredFamilyPrayers, setFilteredFamilyPrayers] = useState<FamilyPrayer[]>([]);
+  const [filteredFamilyPrayers, setFilteredFamilyPrayers] = useState<
+    FamilyPrayer[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -80,8 +82,10 @@ const FamilyPrayers = () => {
 
       const searchLower = searchQuery.toLowerCase();
       return (
-        (translation.title?.toLowerCase().includes(searchLower) || false) ||
-        (translation.content?.toLowerCase().includes(searchLower) || false)
+        translation.title?.toLowerCase().includes(searchLower) ||
+        false ||
+        translation.content?.toLowerCase().includes(searchLower) ||
+        false
       );
     });
 
@@ -110,7 +114,7 @@ const FamilyPrayers = () => {
 
   const handleEditFamilyPrayer = async (prayerId: string) => {
     // Navigate to the prayer edit page if prayer_id exists
-    const familyPrayer = familyPrayers.find(fp => fp.id === prayerId);
+    const familyPrayer = familyPrayers.find((fp) => fp.id === prayerId);
     if (familyPrayer?.prayer_id) {
       window.location.href = `/prayers`;
       toast({
@@ -168,7 +172,10 @@ const FamilyPrayers = () => {
   const totalPages = Math.ceil(filteredFamilyPrayers.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const currentFamilyPrayers = filteredFamilyPrayers.slice(startIndex, endIndex);
+  const currentFamilyPrayers = filteredFamilyPrayers.slice(
+    startIndex,
+    endIndex
+  );
 
   const generatePageNumbers = () => {
     const pages = [];
@@ -259,9 +266,9 @@ const FamilyPrayers = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {currentFamilyPrayers.map((familyPrayer) => (
                 <div key={familyPrayer.id} className="relative group">
-                  <FamilyPrayerCard 
-                    familyPrayer={formatFamilyPrayerForCard(familyPrayer)} 
-                    isPreview 
+                  <FamilyPrayerCard
+                    familyPrayer={formatFamilyPrayerForCard(familyPrayer)}
+                    isPreview
                   />
                   {user && (
                     <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -269,7 +276,9 @@ const FamilyPrayers = () => {
                         <Button
                           size="sm"
                           variant="destructive"
-                          onClick={() => handleDeleteFamilyPrayer(familyPrayer.id)}
+                          onClick={() =>
+                            handleDeleteFamilyPrayer(familyPrayer.id)
+                          }
                           className="h-8 w-8 p-0"
                         >
                           <Trash2 className="h-3 w-3" />

@@ -127,23 +127,31 @@ export default function PrayerDialog({
       const existingWorldKidsNews = prayer?.world_kids_news?.[0];
       if (existingWorldKidsNews) {
         // Convert existing URLs to previews for display
-        const imagePreviews = existingWorldKidsNews.image_urls.map(url => url);
-        
+        const imagePreviews = existingWorldKidsNews.image_urls.map(
+          (url) => url
+        );
+
         // Extract translations
-        const enTranslation = existingWorldKidsNews.world_kids_news_translations?.find(t => t.language === 'en');
-        const zhTranslation = existingWorldKidsNews.world_kids_news_translations?.find(t => t.language === 'zh-TW');
-        
+        const enTranslation =
+          existingWorldKidsNews.world_kids_news_translations?.find(
+            (t) => t.language === 'en'
+          );
+        const zhTranslation =
+          existingWorldKidsNews.world_kids_news_translations?.find(
+            (t) => t.language === 'zh-TW'
+          );
+
         setWorldKidsNewsData({
           images: [], // No file objects for existing images
           imagePreviews: imagePreviews,
           translations: {
-            en: { 
-              title: enTranslation?.title || '', 
-              content: enTranslation?.content || '' 
+            en: {
+              title: enTranslation?.title || '',
+              content: enTranslation?.content || '',
             },
-            'zh-TW': { 
-              title: zhTranslation?.title || '', 
-              content: zhTranslation?.content || '' 
+            'zh-TW': {
+              title: zhTranslation?.title || '',
+              content: zhTranslation?.content || '',
             },
           },
         });
@@ -332,7 +340,9 @@ export default function PrayerDialog({
     }
   };
 
-  const uploadWorldKidsNewsImages = async (images: File[]): Promise<string[]> => {
+  const uploadWorldKidsNewsImages = async (
+    images: File[]
+  ): Promise<string[]> => {
     const uploadPromises = images.map(async (file) => {
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
@@ -343,7 +353,9 @@ export default function PrayerDialog({
         .upload(filePath, file);
 
       if (uploadError) {
-        throw new Error(`Failed to upload ${file.name}: ${uploadError.message}`);
+        throw new Error(
+          `Failed to upload ${file.name}: ${uploadError.message}`
+        );
       }
 
       const { data } = supabase.storage
@@ -437,14 +449,19 @@ export default function PrayerDialog({
       if (translationsError) throw translationsError;
 
       // Handle World Kids News if there are images (new or existing)
-      if (worldKidsNewsData.images.length > 0 || worldKidsNewsData.imagePreviews.length > 0) {
+      if (
+        worldKidsNewsData.images.length > 0 ||
+        worldKidsNewsData.imagePreviews.length > 0
+      ) {
         try {
           // Prepare image URLs - mix of new uploads and existing URLs
           let worldKidsNewsImageUrls: string[] = [];
-          
+
           if (worldKidsNewsData.images.length > 0) {
             // Upload new images
-            worldKidsNewsImageUrls = await uploadWorldKidsNewsImages(worldKidsNewsData.images);
+            worldKidsNewsImageUrls = await uploadWorldKidsNewsImages(
+              worldKidsNewsData.images
+            );
           } else {
             // Use existing image URLs in their current order
             worldKidsNewsImageUrls = worldKidsNewsData.imagePreviews;
@@ -459,23 +476,27 @@ export default function PrayerDialog({
           }
 
           // Create world kids news entry
-          const { data: worldKidsNews, error: worldKidsNewsError } = await supabase
-            .from('world_kids_news')
-            .insert({
-              prayer_id: prayerId,
-              week_date: data.week_date,
-              image_urls: worldKidsNewsImageUrls,
-            })
-            .select()
-            .single();
+          const { data: worldKidsNews, error: worldKidsNewsError } =
+            await supabase
+              .from('world_kids_news')
+              .insert({
+                prayer_id: prayerId,
+                week_date: data.week_date,
+                image_urls: worldKidsNewsImageUrls,
+              })
+              .select()
+              .single();
 
           if (worldKidsNewsError) throw worldKidsNewsError;
 
           // Insert world kids news translations (only if there's content)
           const worldKidsNewsTranslations = [];
-          
+
           // Add English translation if there's content
-          if (worldKidsNewsData.translations.en.title || worldKidsNewsData.translations.en.content) {
+          if (
+            worldKidsNewsData.translations.en.title ||
+            worldKidsNewsData.translations.en.content
+          ) {
             worldKidsNewsTranslations.push({
               world_kids_news_id: worldKidsNews.id,
               language: 'en',
@@ -485,7 +506,10 @@ export default function PrayerDialog({
           }
 
           // Add Chinese translation if there's content
-          if (worldKidsNewsData.translations['zh-TW'].title || worldKidsNewsData.translations['zh-TW'].content) {
+          if (
+            worldKidsNewsData.translations['zh-TW'].title ||
+            worldKidsNewsData.translations['zh-TW'].content
+          ) {
             worldKidsNewsTranslations.push({
               world_kids_news_id: worldKidsNews.id,
               language: 'zh-TW',
@@ -500,7 +524,8 @@ export default function PrayerDialog({
               .from('world_kids_news_translations')
               .insert(worldKidsNewsTranslations);
 
-            if (worldKidsNewsTranslationsError) throw worldKidsNewsTranslationsError;
+            if (worldKidsNewsTranslationsError)
+              throw worldKidsNewsTranslationsError;
           }
         } catch (worldKidsNewsError) {
           console.error('Error saving world kids news:', worldKidsNewsError);

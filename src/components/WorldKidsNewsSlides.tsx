@@ -14,7 +14,9 @@ interface WorldKidsNewsSlidesProps {
   worldKidsNews: WorldKidsNewsData;
 }
 
-export default function WorldKidsNewsSlides({ worldKidsNews }: WorldKidsNewsSlidesProps) {
+export default function WorldKidsNewsSlides({
+  worldKidsNews,
+}: WorldKidsNewsSlidesProps) {
   const { i18n } = useTranslation();
 
   const currentTranslation = worldKidsNews.world_kids_news_translations?.find(
@@ -28,16 +30,19 @@ export default function WorldKidsNewsSlides({ worldKidsNews }: WorldKidsNewsSlid
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6">
       {/* Title and Content */}
-      {currentTranslation && (currentTranslation.title || currentTranslation.content) && (
-        <div className="space-y-3 text-center">
-          {currentTranslation.title && (
-            <h3 className="text-2xl font-bold">{currentTranslation.title}</h3>
-          )}
-          {currentTranslation.content && (
-            <p className="text-muted-foreground text-lg leading-relaxed">{currentTranslation.content}</p>
-          )}
-        </div>
-      )}
+      {currentTranslation &&
+        (currentTranslation.title || currentTranslation.content) && (
+          <div className="space-y-3 text-center">
+            {currentTranslation.title && (
+              <h3 className="text-2xl font-bold">{currentTranslation.title}</h3>
+            )}
+            {currentTranslation.content && (
+              <p className="text-muted-foreground text-lg leading-relaxed">
+                {currentTranslation.content}
+              </p>
+            )}
+          </div>
+        )}
 
       {/* Images - Vertically Stacked */}
       <div className="space-y-4">

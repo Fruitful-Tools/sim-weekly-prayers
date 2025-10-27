@@ -38,7 +38,9 @@ const Navigation = () => {
               to="/family-prayers"
               className={cn(
                 'text-sm font-medium transition-colors hover:text-primary',
-                isActive('/family-prayers') ? 'text-primary' : 'text-muted-foreground'
+                isActive('/family-prayers')
+                  ? 'text-primary'
+                  : 'text-muted-foreground'
               )}
             >
               {t('nav.familyPrayers')}

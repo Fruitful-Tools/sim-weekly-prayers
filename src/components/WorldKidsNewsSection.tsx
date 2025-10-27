@@ -1,7 +1,13 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -68,7 +74,7 @@ function SortableItem({ id, index, preview, onRemove }: SortableItemProps) {
           className="w-full h-full object-cover"
         />
       </div>
-      
+
       {/* Drag handle */}
       <div
         {...attributes}
@@ -77,12 +83,12 @@ function SortableItem({ id, index, preview, onRemove }: SortableItemProps) {
       >
         <GripVertical className="h-3 w-3" />
       </div>
-      
+
       {/* Sequence number */}
       <div className="absolute top-1 right-6 bg-primary text-primary-foreground w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">
         {index + 1}
       </div>
-      
+
       {/* Remove button */}
       <Button
         type="button"
@@ -102,7 +108,10 @@ interface WorldKidsNewsSectionProps {
   onChange: (data: WorldKidsNewsData) => void;
 }
 
-export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSectionProps) {
+export default function WorldKidsNewsSection({
+  data,
+  onChange,
+}: WorldKidsNewsSectionProps) {
   const { t } = useTranslation();
   const [compressing, setCompressing] = useState(false);
 
@@ -117,11 +126,18 @@ export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSe
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const oldIndex = data.imagePreviews.findIndex((_, index) => index.toString() === active.id);
-      const newIndex = data.imagePreviews.findIndex((_, index) => index.toString() === over.id);
+      const oldIndex = data.imagePreviews.findIndex(
+        (_, index) => index.toString() === active.id
+      );
+      const newIndex = data.imagePreviews.findIndex(
+        (_, index) => index.toString() === over.id
+      );
 
       // Only reorder images array if it has items, otherwise keep it as is
-      const newImages = data.images.length > 0 ? arrayMove(data.images, oldIndex, newIndex) : data.images;
+      const newImages =
+        data.images.length > 0
+          ? arrayMove(data.images, oldIndex, newIndex)
+          : data.images;
       const newPreviews = arrayMove(data.imagePreviews, oldIndex, newIndex);
 
       onChange({
@@ -139,7 +155,7 @@ export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSe
 
       // Limit to 3 images
       const selectedFiles = files.slice(0, 3 - data.images.length);
-      
+
       if (selectedFiles.length + data.images.length > 3) {
         toast.error('最多只能上傳 3 張圖片');
         return;
@@ -183,10 +199,10 @@ export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSe
   const removeImage = (index: number) => {
     const newImages = [...data.images];
     const newPreviews = [...data.imagePreviews];
-    
+
     // Revoke object URL to prevent memory leaks
     URL.revokeObjectURL(newPreviews[index]);
-    
+
     newImages.splice(index, 1);
     newPreviews.splice(index, 1);
 
@@ -197,7 +213,11 @@ export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSe
     });
   };
 
-  const updateTranslation = (language: 'en' | 'zh-TW', field: 'title' | 'content', value: string) => {
+  const updateTranslation = (
+    language: 'en' | 'zh-TW',
+    field: 'title' | 'content',
+    value: string
+  ) => {
     onChange({
       ...data,
       translations: {
@@ -222,7 +242,7 @@ export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSe
         {/* Image Upload Section */}
         <div className="space-y-4">
           <Label>圖片 (最多 3 張)</Label>
-          
+
           {/* Upload Button */}
           {data.images.length < 3 && (
             <div className="flex items-center gap-4">
@@ -230,7 +250,9 @@ export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSe
                 type="button"
                 variant="outline"
                 disabled={compressing}
-                onClick={() => document.getElementById('worldKidsNewsImages')?.click()}
+                onClick={() =>
+                  document.getElementById('worldKidsNewsImages')?.click()
+                }
               >
                 <Upload className="h-4 w-4 mr-2" />
                 {compressing ? '處理中...' : '選擇圖片'}
@@ -290,14 +312,16 @@ export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSe
               <TabsTrigger value="zh-TW">中文</TabsTrigger>
               <TabsTrigger value="en">English</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="zh-TW" className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="worldKidsNews-title-zh">標題</Label>
                 <Input
                   id="worldKidsNews-title-zh"
                   value={data.translations['zh-TW'].title}
-                  onChange={(e) => updateTranslation('zh-TW', 'title', e.target.value)}
+                  onChange={(e) =>
+                    updateTranslation('zh-TW', 'title', e.target.value)
+                  }
                   placeholder="輸入萬國小新聞標題..."
                 />
               </div>
@@ -306,20 +330,24 @@ export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSe
                 <Textarea
                   id="worldKidsNews-content-zh"
                   value={data.translations['zh-TW'].content}
-                  onChange={(e) => updateTranslation('zh-TW', 'content', e.target.value)}
+                  onChange={(e) =>
+                    updateTranslation('zh-TW', 'content', e.target.value)
+                  }
                   placeholder="輸入萬國小新聞內容..."
                   className="min-h-[120px]"
                 />
               </div>
             </TabsContent>
-            
+
             <TabsContent value="en" className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="worldKidsNews-title-en">Title</Label>
                 <Input
                   id="worldKidsNews-title-en"
                   value={data.translations.en.title}
-                  onChange={(e) => updateTranslation('en', 'title', e.target.value)}
+                  onChange={(e) =>
+                    updateTranslation('en', 'title', e.target.value)
+                  }
                   placeholder="Enter World Kids News title..."
                 />
               </div>
@@ -328,7 +356,9 @@ export default function WorldKidsNewsSection({ data, onChange }: WorldKidsNewsSe
                 <Textarea
                   id="worldKidsNews-content-en"
                   value={data.translations.en.content}
-                  onChange={(e) => updateTranslation('en', 'content', e.target.value)}
+                  onChange={(e) =>
+                    updateTranslation('en', 'content', e.target.value)
+                  }
                   placeholder="Enter World Kids News content..."
                   className="min-h-[120px]"
                 />
