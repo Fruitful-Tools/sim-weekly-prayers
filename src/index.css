@@ -1,6 +1,24 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@config '../tailwind.config.ts';
+
+/* Tailwind v4 dropped the `theme.container` option and ships a container with
+   built-in responsive max-widths. Reproduce the previous shadcn config instead:
+   centered, 2rem padding, full-width until 1400px, then capped at 1400px. The
+   two media rules below override v4's default per-breakpoint max-widths. */
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
+@media (min-width: 40rem) {
+  .container {
+    max-width: none;
+  }
+}
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1400px;
+  }
+}
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
