@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.1](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.5.0...v0.5.1) (2026-06-15)
+
+
+### Build Related
+
+* migrate Node to 22/24 matrix and pin active version to 24 ([#84](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/84)) ([4dc68d1](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/4dc68d1644016cc4bc12c6289c95cb970e4ee7d2))
+
+
+### Chores
+
+* track remaining GEO work as issues, remove GEO_PLAN.md ([#83](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/83)) ([66bbdcc](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/66bbdcc7ae0a74dde89436da9be9f425735432d5))
+
 ## [0.5.0](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.4.1...v0.5.0) (2026-06-15)
 
 
