@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.4.1](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.4.0...v0.4.1) (2026-06-15)
+
+
+### Chores
+
+* **deps-dev:** bump eslint from 9.31.0 to 9.38.0 ([#55](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/55)) ([1cf6701](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/1cf67011b9b0b90af20620d65329e2ac43b339e3))
+* **deps-dev:** bump lint-staged from 16.1.2 to 16.2.6 ([#62](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/62)) ([6342c8d](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/6342c8d0d02f5b5f12961557c62869d7d9dcfa55))
+* **deps:** batch update (tailwind v4, react-query, zod, radix scroll-area) + align React 19 ([#65](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/65)) ([a9fb658](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/a9fb658f76ca2240e0d1b3b31eb8fb3b3adbef2f))
+* **deps:** bump @radix-ui/react-accordion from 1.2.11 to 1.2.12 ([#61](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/61)) ([9d5ea33](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/9d5ea33e981c0a80d1b5202a09a7dc648da909f1))
+* **deps:** bump @radix-ui/react-hover-card from 1.1.14 to 1.1.15 ([#64](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/64)) ([36b8c77](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/36b8c77d091a8cec5e0cd0e6a788b7698eae1183))
+* **deps:** bump @radix-ui/react-navigation-menu from 1.2.13 to 1.2.14 ([#63](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/63)) ([428fc20](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/428fc209b68c317d649561c44332b215b04e6d7c))
+* **deps:** bump react-day-picker from 9.8.1 to 9.11.1 ([#53](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/53)) ([aed3f9c](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/aed3f9c2ae08383de5a32d26d277d904757b6819))
+* **deps:** bump simple-icons from 15.8.0 to 15.18.0 ([#59](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/59)) ([5554a4f](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/5554a4feef422e8c5f4ee2ac5ae143e2362af4c5))
+* **deps:** bump tailwind-merge from 2.6.0 to 3.3.1 ([#60](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/60)) ([9e0e575](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/9e0e575c3026b25f52763c97cf564f1059b09655))
+
 ## [0.4.0](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.3.0...v0.4.0) (2025-10-27)
 
 
