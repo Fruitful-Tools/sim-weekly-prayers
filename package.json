@@ -70,7 +70,7 @@
     "react-resizable-panels": "^3.0.4",
     "react-router-dom": "^7.9.1",
     "recharts": "^3.1.0",
-    "simple-icons": "^15.8.0",
+    "simple-icons": "^15.18.0",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
