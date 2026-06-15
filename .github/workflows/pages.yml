@@ -32,10 +32,18 @@ jobs:
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
           restore-keys: |
             ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}-
+      - name: Cache Puppeteer browser
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/puppeteer
+          key: ${{ runner.os }}-puppeteer-${{ hashFiles('**/package-lock.json') }}
       - run: npm ci
-      - run: npm run build
+      # build:static = vite build + sitemap.xml + prerender each route to static
+      # HTML (via headless Chromium) so AI crawlers see real content.
+      - run: npm run build:static
         env:
           BASE_PATH: ${{ steps.configurepages.outputs.base_path }}
+          SITE_ORIGIN: https://prayer.simtaiwan.org
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
