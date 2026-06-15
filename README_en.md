@@ -22,7 +22,7 @@ A bilingual web application for weekly prayers, allowing you to stay updated wit
 
 ### Prerequisites
 
-- Node.js 18 or higher
+- Node.js 22 or higher (24 recommended)
 - npm or yarn
 
 ### Installation & Setup
