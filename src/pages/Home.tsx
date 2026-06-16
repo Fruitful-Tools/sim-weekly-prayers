@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import PrayerCard from '@/components/PrayerCard';
 import FamilyPrayerCard from '@/components/FamilyPrayerCard';
+import SeoHead from '@/components/SeoHead';
 import { ArrowRight, Globe2 } from 'lucide-react';
 
 interface Prayer {
@@ -113,6 +114,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
+      <SeoHead title={t('home.title')} description={t('home.subtitle')} />
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">

@@ -86,7 +86,14 @@
   },
   "meta": {
     "title": "SIM 每週禱告中心",
-    "description": "為世界各國的每週禱告"
+    "description": "為世界各國的每週禱告",
+    "titleSuffix": "SIM 台灣",
+    "prayers": {
+      "description": "瀏覽每週禱告，跟著時事脈動，與我們同為世界萬國禱告。"
+    },
+    "familyPrayers": {
+      "description": "適合全家大小的每週禱告與世界兒童新聞，帶著孩子一起為萬國禱告。"
+    }
   },
   "auth": {
     "welcome": "歡迎來到 SIM 禱告",

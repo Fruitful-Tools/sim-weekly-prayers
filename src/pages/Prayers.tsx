@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import PrayerCard from '@/components/PrayerCard';
 import SearchBox from '@/components/SearchBox';
 import PrayerDialog from '@/components/PrayerDialog';
+import SeoHead from '@/components/SeoHead';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -274,6 +275,10 @@ const Prayers = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
+      <SeoHead
+        title={t('nav.prayers')}
+        description={t('meta.prayers.description')}
+      />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">

@@ -75,7 +75,14 @@
   },
   "meta": {
     "title": "SIM Weekly Prayers Hub",
-    "description": "Weekly prayers for nations around the world"
+    "description": "Weekly prayers for nations around the world",
+    "titleSuffix": "SIM Taiwan",
+    "prayers": {
+      "description": "Browse weekly prayers that follow current world events — pray with us for the nations."
+    },
+    "familyPrayers": {
+      "description": "Family-friendly weekly prayers and World Kids News to pray for the nations together with your children."
+    }
   },
   "auth": {
     "welcome": "Welcome to SIM Prayer",
