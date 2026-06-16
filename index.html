@@ -1,29 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-Hant-TW">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title>Weekly Prayers for Nations| SIM Taiwan</title>
-    <meta
-      name="description"
-      content="Weekly Prayers for the Nations from SIM"
-    />
     <meta name="author" content="SIM Taiwan" />
 
-    <meta property="og:title" content="sim-weekly-prayers-hub" />
-    <meta
-      property="og:description"
-      content="Weekly Prayers for the Nations from SIM"
-    />
+    <!--
+      Title, description and og:title/og:description/og:image are set per-page at
+      runtime by react-helmet-async (see src/components/SeoHead.tsx) and captured
+      into each prerendered snapshot. They are intentionally NOT declared
+      statically here: Helmet appends its managed tags without removing static
+      ones, so duplicating them would leave two of each in every snapshot and
+      social crawlers would pick the generic static value over the per-page one.
+    -->
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/twitter-card.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@sim_taiwan" />
-    <meta name="twitter:image" content="/twitter-card.png" />
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />

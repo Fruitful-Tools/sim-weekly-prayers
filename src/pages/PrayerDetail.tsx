@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import { ArrowLeft, Calendar } from 'lucide-react';
 import SocialShareDropdown from '@/components/SocialShareDropdown';
 import WorldKidsNewsSlides from '@/components/WorldKidsNewsSlides';
+import SeoHead from '@/components/SeoHead';
+import { toMetaDescription } from '@/lib/seo';
 
 interface Prayer {
   id: string;
@@ -145,6 +147,7 @@ const PrayerDetail = () => {
   if (!prayer) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10 flex items-center justify-center">
+        <SeoHead title={t('prayer.noResults')} />
         <div className="text-center">
           <div className="text-muted-foreground mb-4">
             {t('prayer.noResults')}
@@ -169,6 +172,11 @@ const PrayerDetail = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
+      <SeoHead
+        title={`${safeTitle} · ${formatDate(prayer.week_date)}`}
+        description={toMetaDescription(rawContent)}
+        image={safeImageUrl || undefined}
+      />
       <div className="container mx-auto px-4 py-8">
         {/* Back Button */}
         <div className="mb-6">

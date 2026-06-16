@@ -76,8 +76,12 @@ async function snapshot(route) {
     // Wait until the app has rendered real content into #root — specifically,
     // past the "載入中..." / "Loading..." placeholder that all list/detail pages
     // show while their Supabase fetch is in flight. Without this the snapshot
-    // can capture the loading state. Falls through after the timeout so a page
-    // that genuinely never resolves still gets snapshotted as-is.
+    // can capture the loading state. We also require react-helmet-async to have
+    // applied the per-page <head> (it marks managed tags with `data-rh`), so the
+    // snapshot carries page-specific title/description/og rather than the static
+    // index.html shell — every public route renders a <SeoHead>. Falls through
+    // after the timeout so a page that genuinely never resolves still gets
+    // snapshotted as-is.
     await page
       .waitForFunction(
         () => {
@@ -85,7 +89,8 @@ async function snapshot(route) {
           if (!root) return false;
           const text = (root.innerText || '').trim();
           if (text.length <= 50) return false;
-          return !/載入中|Loading/i.test(text);
+          if (/載入中|Loading/i.test(text)) return false;
+          return Boolean(document.querySelector('title[data-rh]'));
         },
         { timeout: 20000 }
       )
