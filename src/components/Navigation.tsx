@@ -2,14 +2,16 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { User } from 'lucide-react';
+import { Download, User } from 'lucide-react';
 import SettingsDropdown from './SettingsDropdown';
 import { useAuth } from '@/hooks/useAuth';
+import { usePWAInstall } from '@/hooks/use-pwa-install';
 
 const Navigation = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const { user } = useAuth();
+  const { canInstall, promptInstall } = usePWAInstall();
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -49,6 +51,18 @@ const Navigation = () => {
         </div>
 
         <div className="flex items-center space-x-2">
+          {canInstall && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="space-x-2"
+              onClick={promptInstall}
+            >
+              <Download className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('pwa.install')}</span>
+            </Button>
+          )}
+
           {user ? (
             <Link to="/profile">
               <Button variant="outline" size="sm" className="space-x-2">

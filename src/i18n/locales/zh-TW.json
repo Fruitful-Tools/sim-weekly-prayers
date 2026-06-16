@@ -150,5 +150,11 @@
   },
   "footer": {
     "contribute": "參與貢獻"
+  },
+  "pwa": {
+    "install": "安裝應用程式",
+    "updateAvailable": "有新版本可用。",
+    "reload": "重新載入",
+    "offlineReady": "已可離線使用。"
   }
 }
