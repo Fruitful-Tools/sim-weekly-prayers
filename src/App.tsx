@@ -9,6 +9,7 @@ import { FontProvider } from '@/contexts/FontContext';
 import { useEffect } from 'react';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
+import PWAUpdatePrompt from './components/PWAUpdatePrompt';
 import Home from './pages/Home';
 import Prayers from './pages/Prayers';
 import PrayerDetail from './pages/PrayerDetail';
@@ -62,6 +63,7 @@ const App = () => (
           <TooltipProvider>
             <Toaster />
             <Sonner />
+            <PWAUpdatePrompt />
             <BrowserRouter>
               <div className="min-h-screen bg-background flex flex-col">
                 <Navigation />
