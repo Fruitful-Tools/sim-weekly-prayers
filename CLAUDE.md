@@ -66,6 +66,17 @@ Two content domains, each with **date-based and id-based** routes:
 
 Routes must be declared **above** the `*` catch-all. SPA deep-linking on GitHub Pages works via `public/404.html`, which stashes the path in `sessionStorage.redirectPath`; `AppRoutes` reads and replays it on mount. Don't remove that handshake.
 
+### Static generation / prerender (don't break the deploy)
+The production deploy is **not** a plain `vite build`. `npm run build:static` (run by `.github/workflows/pages.yml`) does `vite build` → `npm run sitemap` → `npm run prerender`. The prerender step (`scripts/prerender.mjs`) serves `dist/` with an SPA fallback, drives **headless Puppeteer** over every route, waits for the Supabase-backed content to render, and writes the snapshot to `dist/<route>/index.html` so AI crawlers and search engines see real content instead of an empty SPA shell. Route discovery is shared with the sitemap via `scripts/site.mjs` (`getRoutes()`), which reads the live Supabase tables (`prayers`, `world_kids_news`) with the public anon key.
+
+**None of the three CI gates (`format:check`, `lint`, `build`) exercise prerender** — only the Pages deploy does. So these are invariants you must preserve or the deploy ships empty/broken static pages with no warning:
+
+- **The app must boot with `createRoot`, not `hydrate`** (`src/main.tsx`). Snapshots are re-rendered over, not hydrated; switching to `hydrate` crashes on the prerendered tree (React #299) and yields empty snapshots.
+- **Keep the loading-placeholder copy recognizable.** The prerender wait-gate blocks until `#root` text is past `載入中…`/`Loading…`; if you rename that loading state, update the regex in `scripts/prerender.mjs` or snapshots may capture the spinner.
+- **Every new public route must be added to route discovery.** Add fixed routes to `STATIC_ROUTES` and data-driven routes to `getRoutes()` in `scripts/site.mjs`, or they won't be prerendered or listed in `sitemap.xml`. Auth-gated routes (`/auth`, `/profile`) are intentionally excluded.
+- **The service worker (`public/sw.js`) is cache-first.** Prerender bypasses it per-page (`setBypassServiceWorker(true)`); keep that assumption in mind when changing SW caching, and don't make routes un-renderable without network (prerender needs Supabase reachable at build time).
+- **`puppeteer` and `sirv` are runtime build deps**, and CI caches the Chromium download (`~/.cache/puppeteer`). Don't move them to a place where `npm ci` won't install the browser.
+
 ### Data layer (Supabase)
 - `src/integrations/supabase/client.ts` and `types.ts` are **auto-generated — do not hand-edit.** The client URL/anon key are inlined (anon key is public by design; real protection is RLS).
 - Core tables: `prayers` (`week_date`, `image_url`, timestamps) and `prayer_translations` (`language`, `title`, `content`) linked per prayer. Auth is Supabase Auth with **Row Level Security**.
@@ -80,9 +91,11 @@ User-uploaded prayer images are compressed client-side (`compressorjs`) before u
 
 ## Commits, Releases & CI
 
+For the human-facing contributor workflow (fork → issue → PR, local setup, Volta/Node pin, Supabase migrations), see [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md). This section is the quick reference for the mechanics CI/release tooling enforces.
+
 - **Conventional Commits are mandatory** — release-please parses them. Recognized types map to changelog sections: `feat`, `fix`, `build`, `chore`, `refactor`, `docs`, `test` (`.github/release-please-config.json`).
 - **Releases are commit-driven.** The release-please workflow only runs on `workflow_dispatch` or when a commit message starts with `release:`. It maintains a release PR; merging it tags a version and updates `CHANGELOG.md`.
-- **Deployment = GitHub Pages on release publish** (`.github/workflows/pages.yml`), not self-hosted. A published GitHub Release triggers build + deploy; `BASE_PATH` is injected for correct asset paths.
+- **Deployment = GitHub Pages on release publish** (`.github/workflows/pages.yml`), not self-hosted. A published GitHub Release triggers `npm run build:static` (build + sitemap + headless-Chromium prerender) + deploy; `BASE_PATH` is injected for correct asset paths and `SITE_ORIGIN` (`https://prayer.simtaiwan.org`) sets canonical sitemap URLs. See **Static generation / prerender** under Architecture for the invariants that protect this deploy — CI's three gates do not test it.
 - **Pre-commit:** Husky runs `lint-staged` — ESLint+Prettier on `*.{ts,tsx}`, Prettier on `*.{js,jsx,json,css,md}`. Don't bypass with `--no-verify`.
 
 ## Conventions
