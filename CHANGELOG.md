@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.5.2](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.5.1...v0.5.2) (2026-06-16)
+
+
+### Bug Fixes
+
+* page lang, body-text contrast, and per-page SEO/social metadata ([#89](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/89)) ([93ef484](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/93ef484ff2e8e31cff89ef333000c5508e801ea1))
+
+
+### Chores
+
+* remove 31 unused dependencies and orphaned shadcn/ui components ([#87](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/87)) ([0b92bcd](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/0b92bcddb8c7a54714c21c3e7719673dbaee2996))
+
+
+### Documentation
+
+* document prerender deploy invariants and refresh CONTRIBUTING guide ([#86](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/86)) ([5d0a9eb](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/5d0a9eb62b4b026417ed91131df47143ca280823))
+
 ## [0.5.1](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.5.0...v0.5.1) (2026-06-15)
 
 
