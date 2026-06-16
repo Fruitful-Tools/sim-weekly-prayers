@@ -13,6 +13,14 @@ export function toMetaDescription(markdown: string, maxLength = 155): string {
     .replace(/\s+/g, ' ') // collapse whitespace
     .trim();
 
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength - 1).trimEnd() + '…';
+  // Slice by code points (Array.from), not UTF-16 units, so truncation never
+  // splits a surrogate pair (e.g. an emoji) into a broken trailing glyph.
+  const chars = Array.from(text);
+  if (chars.length <= maxLength) return text;
+  return (
+    chars
+      .slice(0, maxLength - 1)
+      .join('')
+      .trimEnd() + '…'
+  );
 }

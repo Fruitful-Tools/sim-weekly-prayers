@@ -138,6 +138,7 @@ const FamilyPrayerDetail = () => {
   if (!familyPrayer) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10 flex items-center justify-center">
+        <SeoHead title={t('prayer.noResults')} />
         <div className="text-center">
           <div className="text-muted-foreground mb-4">
             {t('prayer.noResults')}
