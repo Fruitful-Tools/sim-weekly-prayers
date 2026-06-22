@@ -67,7 +67,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.2.6",
     "postcss": "^8.5.6",
-    "prettier": "^3.6.2",
+    "prettier": "^3.8.4",
     "puppeteer": "^25.1.0",
     "sirv": "^3.0.2",
     "tailwindcss": "^4.3.1",
