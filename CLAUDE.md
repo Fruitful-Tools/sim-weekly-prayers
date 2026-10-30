@@ -16,7 +16,7 @@ npm run format:check # Prettier check — must pass in CI
 npm run preview      # Serve the production build locally
 ```
 
-There is **no test runner** configured. CI quality gates are exactly three steps: `format:check`, `lint`, `build`. Run all three before pushing — that is what `.github/workflows/ci.yml` enforces (on Node 20.x and 22.x).
+There is **no test runner** configured. CI quality gates are exactly three steps: `format:check`, `lint`, `build`. Run all three before pushing — that is what `.github/workflows/ci.yml` enforces (on Node 22.x and 24.x).
 
 ## Tech Stack Reality Check
 
@@ -80,7 +80,7 @@ The production deploy is **not** a plain `vite build`. `npm run build:static` (r
 ### Data layer (Supabase)
 - `src/integrations/supabase/client.ts` and `types.ts` are **auto-generated — do not hand-edit.** The client URL/anon key are inlined (anon key is public by design; real protection is RLS).
 - Core tables: `prayers` (`week_date`, `image_url`, timestamps) and `prayer_translations` (`language`, `title`, `content`) linked per prayer. Auth is Supabase Auth with **Row Level Security**.
-- Local DB / schema work uses the **Supabase CLI**: SQL migrations live in `supabase/migrations/`, seed in `supabase/seed.sql`. After a schema change, regenerate types (`supabase gen types typescript ...`) rather than editing `types.ts`.
+- Local DB / schema work uses the **Supabase CLI**: SQL migrations live in `supabase/migrations/`, seed in `supabase/seed.sql`. After a schema change, regenerate types (`supabase gen types typescript ...`) rather than editing `types.ts`. The generator's output is not Prettier-3.9-clean, so run `npm run format` before committing a regenerated `types.ts` or CI's `format:check` fails.
 - **Edge Functions are Deno**, not Node — `.vscode/settings.json` scopes the Deno extension to `supabase/functions/`. Don't apply the app's Node/Vite tooling there.
 
 ### Internationalization
