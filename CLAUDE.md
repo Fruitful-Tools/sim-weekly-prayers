@@ -24,7 +24,7 @@ The stack drifts from what older docs (README) claim. Trust this list:
 
 - **React 19** (`react@19` + `react-dom@19`, types aligned) — the README/older notes say React 18; they are stale.
 - **Vite 5 + `@vitejs/plugin-react-swc`** for build/dev.
-- **TypeScript 5.8**, `typescript-eslint` flat config (`eslint.config.js`).
+- **TypeScript 6.0**, `typescript-eslint` flat config (`eslint.config.js`). TypeScript is the parser backend for ESLint and the editor; no script runs `tsc`, so CI never type-checks. `tsc -b` on the repo reports one pre-existing error in `src/sw.ts`.
 - **shadcn/ui** (Radix primitives) + **Tailwind CSS 4** (CSS-first via `@import 'tailwindcss'` + `@config`, PostCSS plugin `@tailwindcss/postcss`) with HSL CSS-variable theming.
 - **Supabase** (`@supabase/supabase-js` v2) — Postgres + Auth + Storage.
 - **TanStack Query v5** for server state; **React Context** for auth/font/theme.

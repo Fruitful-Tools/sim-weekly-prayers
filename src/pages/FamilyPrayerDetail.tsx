@@ -124,7 +124,7 @@ const FamilyPrayerDetail = () => {
   // Check if corresponding prayer exists
   const hasCorrespondingPrayer = Boolean(
     familyPrayer?.prayers?.prayer_translations &&
-      familyPrayer.prayers.prayer_translations.length > 0
+    familyPrayer.prayers.prayer_translations.length > 0
   );
 
   if (loading) {
