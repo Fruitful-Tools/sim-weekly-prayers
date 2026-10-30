@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.6.1](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.6.0...v0.6.1) (2026-10-30)
+
+
+### Bug Fixes
+
+* **footer:** render the copyright year from the current date ([#103](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/103)) ([b58c2fe](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/b58c2fe8be8e61b581df640cf3f88c3f7a683e3f))
+
+
+### Chores
+
+* **deps-dev:** bump eslint-plugin-react-refresh from 0.4.20 to 0.5.3 ([#95](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/95)) ([6f41870](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/6f418709faaca358fec157eb75a3414830b9db59))
+* **deps:** bump @dnd-kit/sortable from 8.0.0 to 10.0.0 ([#92](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/92)) ([ea5f1f9](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/ea5f1f9aca471bda61ab5971ce60e3d7f1474408))
+* **deps:** bump @radix-ui/react-dropdown-menu from 2.1.15 to 2.1.18 ([#93](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/93)) ([d6a6453](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/d6a64538ac52bf53993fb78038fcc5c1d554edbc))
+* **deps:** bump @radix-ui/react-switch from 1.2.5 to 1.3.1 ([#98](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/98)) ([e78bd6f](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/e78bd6f4ddb5de0c35d14caf343f973271cfa973))
+* **deps:** bump @radix-ui/react-toast from 1.2.14 to 1.2.17 ([#96](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/96)) ([a302066](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/a30206683d7119934be299a168e8bfbb64f6f6fc))
+* **deps:** bump lucide-react from 1.18.0 to 1.21.0 ([#97](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/97)) ([9be1f7d](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/9be1f7db8daf2086a767e08f4d38ec621ac8cd88))
+* **deps:** bump react-router-dom from 7.17.0 to 7.18.0 ([#99](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/99)) ([8432bac](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/8432bac4427226ef030f0038f696fa2ba22ee68f))
+* **deps:** bump typescript to 6.0.3, prettier to 3.9.10, and i18next to 26 ([#102](https://github.com/Fruitful-Tools/sim-weekly-prayers/issues/102)) ([0ca70d9](https://github.com/Fruitful-Tools/sim-weekly-prayers/commit/0ca70d9c1b1029fa7cfcb5a947ad9bbb2f00e0f9))
+
 ## [0.6.0](https://github.com/Fruitful-Tools/sim-weekly-prayers/compare/v0.5.1...v0.6.0) (2026-06-16)
 
 
