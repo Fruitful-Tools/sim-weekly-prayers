@@ -5,6 +5,7 @@ import { siGithub } from 'simple-icons';
 const Footer = () => {
   const { t, i18n } = useTranslation();
   const isChineseLanguage = i18n.language === 'zh-TW';
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="bg-muted/30 border-t mt-auto">
@@ -14,7 +15,7 @@ const Footer = () => {
             <p className="text-xs leading-relaxed">{t('home.footerMotto')}</p>
           </div>
           <div className="mb-2">
-            © 2025{' '}
+            © {currentYear}{' '}
             <a
               href="https://home.fruitful-tools.com/"
               target="_blank"
